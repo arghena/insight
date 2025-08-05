@@ -1,0 +1,22 @@
+# NOTE:
+# If `labels: ['foo']` is not explicitly configured,
+# Dependabot will not follow `labels: []`.
+
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+    labels: ['build']
+    commit-message:
+      prefix: 'build(deps)'
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: daily
+    labels: ['ci']
+    commit-message:
+      prefix: 'ci(deps)'

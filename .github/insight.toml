@@ -1,0 +1,27 @@
+[match]
+dot = true
+
+[pull_request]
+check_title = true
+
+[push_tag]
+formatters = ['prettier']
+linters = ['eslint', 'ast_grep']
+
+[options.linters]
+yamllint = ['--strict']
+
+[formatters]
+prettier = ['**/*.yml', 'src/**/*.ts', '**/*.md']
+taplo = ['**/*.toml']
+
+[linters]
+typos = ['**/*']
+yamllint = ['**/*.yml']
+actionlint = ['.github/workflows/*.yml']
+eslint = ['src/**/*.ts']
+ast_grep = ['src/**/*.ts']
+alex = ['**/*.md']
+markdownlint_cli2 = ['**/*.md']
+vale = ['**/*.md']
+taplo = ['**/*.toml']

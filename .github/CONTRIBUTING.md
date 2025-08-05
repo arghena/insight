@@ -1,0 +1,7 @@
+# Contributing to Insight
+
+<!--
+
+TODO:
+
+-->
