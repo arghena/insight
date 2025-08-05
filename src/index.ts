@@ -1,6 +1,7 @@
 import { getInputs, getChangedFiles } from './github'
 import { resolveConfig } from './config'
 import {
+    // foo
     scheduler,
     formatter,
     linter,
