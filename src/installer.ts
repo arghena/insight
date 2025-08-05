@@ -34,7 +34,7 @@ export async function installer(
             'curl -fsSL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash',
         ],
         pipx: [],
-        go: ['export PATH="$(go env GOPATH)/bin:$PATH"', 'echo "$PATH"'],
+        go: ['bash -c echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"'],
         docker: [],
     }
 
