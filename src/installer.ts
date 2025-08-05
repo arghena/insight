@@ -36,7 +36,7 @@ export async function installer(
         pipx: [],
         go: [
             'echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"',
-            'echo "GITHUB_PATH"',
+            'echo "$GITHUB_PATH"',
         ],
         docker: [],
     }
