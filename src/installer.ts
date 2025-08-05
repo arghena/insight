@@ -70,7 +70,15 @@ export async function installer(
         eslint: {
             pm: 'npm',
             setup: setups.npm,
-            cmd: ['install', '--global', `eslint@${version}`],
+            cmd: [
+                'install',
+                '--global',
+                `eslint@${version}`,
+                // https://eslint.org/docs/latest/use/configure/configuration-files#typescript-configuration-files
+                'jiti',
+                // https://github.com/antfu-collective/ni
+                '@antfu/ni',
+            ],
         },
         typos: {
             pm: 'cargo',

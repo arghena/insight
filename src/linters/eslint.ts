@@ -13,5 +13,6 @@ export async function runner(
 
     info(`[runner] Checking ${paths.length} files with ${name}`)
 
+    await exec('ni', ['--dev'])
     await exec(name, [...options, ...paths])
 }
