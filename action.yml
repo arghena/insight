@@ -4,7 +4,7 @@ author: 'Shigure Kurosaki'
 inputs:
   token:
     description: 'Personal access token (PAT) used to fetch the repository.'
-    default: ${{ secrets.GITHUB_TOKEN }}
+    default: ${{ github.token }}
   repository:
     description: 'Repository name with owner.'
     default: ${{ github.repository }}
@@ -22,7 +22,7 @@ inputs:
     default: ${{ github.ref_type }}
   pull-request-type:
     description: 'The type of pull request event.'
-    default: ${{ github.event.pull_request.type }}
+    default: ${{ github.event.action }}
   pull-request-title:
     description: 'The title of pull request event.'
     default: ${{ github.event.pull_request.title }}

@@ -58,6 +58,7 @@ export async function installer(
             setup: setups.cargo,
             cmd: [
                 'binstall',
+                '--no-confirm',
                 version === 'latest' ? 'cargo-deny' : `cargo-deny@${version}`,
             ],
         },
@@ -69,13 +70,22 @@ export async function installer(
         eslint: {
             pm: 'npm',
             setup: setups.npm,
-            cmd: ['install', '--global', `eslint@${version}`],
+            cmd: [
+                'install',
+                '--global',
+                `eslint@${version}`,
+                // https://eslint.org/docs/latest/use/configure/configuration-files#typescript-configuration-files
+                'jiti',
+                // https://github.com/antfu-collective/ni
+                '@antfu/ni',
+            ],
         },
         typos: {
             pm: 'cargo',
             setup: setups.cargo,
             cmd: [
                 'binstall',
+                '--no-confirm',
                 version === 'latest' ? 'typos-cli' : `typos-cli@${version}`,
             ],
         },
@@ -100,6 +110,7 @@ export async function installer(
             setup: setups.cargo,
             cmd: [
                 'binstall',
+                '--no-confirm',
                 version === 'latest' ? 'ast-grep' : `ast-grep@${version}`,
             ],
         },
@@ -118,6 +129,7 @@ export async function installer(
             setup: setups.cargo,
             cmd: [
                 'binstall',
+                '--no-confirm',
                 version === 'latest' ? 'cargo-msrv' : `cargo-msrv@${version}`,
             ],
         },
@@ -126,6 +138,7 @@ export async function installer(
             setup: setups.cargo,
             cmd: [
                 'binstall',
+                '--no-confirm',
                 version === 'latest'
                     ? 'cargo-tarpaulin'
                     : `cargo-tarpaulin@${version}`,
@@ -166,6 +179,7 @@ export async function installer(
             setup: setups.cargo,
             cmd: [
                 'binstall',
+                '--no-confirm',
                 version === 'latest' ? 'taplo-cli' : `taplo-cli@${version}`,
             ],
         },
@@ -174,7 +188,7 @@ export async function installer(
     if (tools[name].setup.length !== 0) {
         info(`[installer] Setting up the ${name} environment`)
 
-        for (const cmd of tools[name].setup) await exec(cmd)
+        for (const cmd of tools[name].setup) await exec('bash', ['-c', cmd])
     }
 
     info(`[installer] Installing ${name} using ${tools[name].pm}`)

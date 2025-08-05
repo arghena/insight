@@ -102,10 +102,9 @@ async function run() {
 
         info(`[commitlint] Checking the pull request title`)
 
-        await exec(
-            `echo '${pull_request_title}' | commitlint`,
-            pull_request.commitlint,
-        )
+        await exec('commitlint', pull_request.commitlint, {
+            input: Buffer.from(pull_request_title + '\n'),
+        })
     }
 
     const changed_files = await getChangedFiles(

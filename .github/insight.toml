@@ -16,7 +16,7 @@ prettier = ['**/*.yml', 'src/**/*.ts', '**/*.md']
 taplo = ['**/*.toml']
 
 [linters]
-typos = ['**/*']
+typos = ['**/*', '!dist/**']
 yamllint = ['**/*.yml']
 actionlint = ['.github/workflows/*.yml']
 eslint = ['src/**/*.ts']
