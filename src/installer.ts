@@ -58,6 +58,7 @@ export async function installer(
             setup: setups.cargo,
             cmd: [
                 'binstall',
+                '--no-confirm',
                 version === 'latest' ? 'cargo-deny' : `cargo-deny@${version}`,
             ],
         },
@@ -76,6 +77,7 @@ export async function installer(
             setup: setups.cargo,
             cmd: [
                 'binstall',
+                '--no-confirm',
                 version === 'latest' ? 'typos-cli' : `typos-cli@${version}`,
             ],
         },
@@ -100,6 +102,7 @@ export async function installer(
             setup: setups.cargo,
             cmd: [
                 'binstall',
+                '--no-confirm',
                 version === 'latest' ? 'ast-grep' : `ast-grep@${version}`,
             ],
         },
@@ -118,6 +121,7 @@ export async function installer(
             setup: setups.cargo,
             cmd: [
                 'binstall',
+                '--no-confirm',
                 version === 'latest' ? 'cargo-msrv' : `cargo-msrv@${version}`,
             ],
         },
@@ -126,6 +130,7 @@ export async function installer(
             setup: setups.cargo,
             cmd: [
                 'binstall',
+                '--no-confirm',
                 version === 'latest'
                     ? 'cargo-tarpaulin'
                     : `cargo-tarpaulin@${version}`,
@@ -166,6 +171,7 @@ export async function installer(
             setup: setups.cargo,
             cmd: [
                 'binstall',
+                '--no-confirm',
                 version === 'latest' ? 'taplo-cli' : `taplo-cli@${version}`,
             ],
         },
