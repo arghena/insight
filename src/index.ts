@@ -1,13 +1,6 @@
 import { getInputs, getChangedFiles } from './github'
 import { resolveConfig } from './config'
-import {
-    scheduler,
-    formatter,
-    linter,
-    type SchedulerKey,
-    type FormatterKey,
-    type LinterKey,
-} from './map'
+import { formatter, linter, type FormatterKey, type LinterKey } from './map'
 import { installer } from './installer'
 import micromatch from 'micromatch'
 import { info, setFailed } from '@actions/core'
@@ -31,25 +24,22 @@ async function run() {
         pull_request,
         push_tag,
         options,
-        schedulers,
+        schedule,
         formatters,
         linters,
         versions,
     } = await resolveConfig(config_path)
     const ig = await resolveGitignore()
-    const scheduler_keys = Object.keys(scheduler) as SchedulerKey[]
     const formatter_keys = Object.keys(formatter) as FormatterKey[]
     const linter_keys = Object.keys(linter) as LinterKey[]
 
     if (event_name === 'schedule') {
-        for (const name of scheduler_keys) {
-            if (!options.schedulers[name]) continue
+        for (const name of schedule.tasks) {
+            info(`[schedule] Starting ${name} cron job`)
 
-            info(`[scheduler] Starting ${name} cron job`)
+            const { runner } = await linter[name]()
 
-            const { runner } = await scheduler[name]()
-
-            await runner(name, versions[name], schedulers[name])
+            await runner([], name, versions[name], options.linters[name])
         }
 
         return
