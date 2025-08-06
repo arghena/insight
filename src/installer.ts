@@ -34,7 +34,8 @@ export async function installer(
             'sh -c "curl -fsSL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | sh"',
         ],
         pipx: [],
-        go: [],
+        //
+        go: ['sh -c "echo $GOBIN"'],
         docker: [],
     }
 
