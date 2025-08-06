@@ -15,7 +15,7 @@ export async function runner(
 
     await exec('sh', [
         '-c',
-        `$(go env GOPATH)/bin/${name}`,
+        `"$(go env GOPATH)/bin/${name}"`,
         ...options,
         ...paths,
     ])
