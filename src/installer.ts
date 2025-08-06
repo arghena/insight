@@ -34,8 +34,10 @@ export async function installer(
             'sh -c "curl -fsSL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | sh"',
         ],
         pipx: [],
-        //
-        go: ['sh -c "echo $GOBIN"'],
+        // TODO:
+        // Add `go env GOPATH` to the `$PATH`.
+        // https://github.com/arghena/insight/pull/7
+        go: [],
         docker: [],
     }
 
