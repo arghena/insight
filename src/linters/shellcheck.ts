@@ -15,7 +15,12 @@ export async function runner(
 
     const tag = version === 'latest' ? 'stable' : `v${version}`
 
-    await exec(`docker run --rm -v "$PWD:/mnt" koalaman/${name}:${tag}`, [
+    await exec('docker', [
+        'run',
+        '--rm',
+        '-v',
+        '"$PWD:/mnt"',
+        `koalaman/${name}:${tag}`,
         ...options,
         ...paths,
     ])
