@@ -13,5 +13,5 @@ export async function runner(
 
     info(`[runner] Checking ${paths.length} files with ${name}`)
 
-    await exec(`$(go env GOPATH)/bin/${name}`, [...options, ...paths])
+    await exec(`sh -c $(go env GOPATH)/bin/${name}`, [...options, ...paths])
 }
