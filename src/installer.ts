@@ -31,7 +31,7 @@ export async function installer(
                       `rustup default ${version}`,
                   ],
         cargo: [
-            'sh -c "curl -fsSL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | sh"',
+            'sh -c "$(curl -fsSL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh)"',
         ],
         pipx: [],
         // TODO:
