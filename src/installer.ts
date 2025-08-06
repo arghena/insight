@@ -32,7 +32,7 @@ export async function installer(
                   ],
         cargo: [
             // NOTE: `#!/bin/sh` not found.
-            'curl -fsSL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | sh > /dev/null',
+            'curl -fsSL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | sh',
         ],
         pipx: [],
         // TODO: Add `go env GOPATH` to the `$PATH`.
