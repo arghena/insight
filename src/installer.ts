@@ -188,7 +188,7 @@ export async function installer(
     }
 
     if (tools[name].setup.length !== 0) {
-        info(`[installer] Setting up the ${name} environment`)
+        info(`[installer] Setting up the ${tools[name].pm} environment`)
 
         for (const cmd of tools[name].setup) await exec('sh', ['-c', cmd])
     }
