@@ -13,5 +13,5 @@ export async function runner(
 
     info(`[runner] Checking ${paths.length} files with ${name}`)
 
-    await exec(name, ['fmt', '--check', ...options, ...paths])
+    await exec(name, ['fmt', '--check', ...options, '--', ...paths])
 }

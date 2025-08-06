@@ -22,6 +22,7 @@ export async function runner(
         '"$PWD:/mnt"',
         `koalaman/${name}:${tag}`,
         ...options,
+        '--',
         ...paths,
     ])
 }
