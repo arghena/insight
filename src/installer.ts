@@ -31,10 +31,10 @@ export async function installer(
                       `rustup default ${version}`,
                   ],
         cargo: [
-            'sh -c "curl -fsSL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | sh"',
+            'curl -fsSL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | sh',
         ],
         pipx: [],
-        go: ['sh -c echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"', '$SHELL'],
+        go: [],
         docker: [],
     }
 
@@ -188,7 +188,7 @@ export async function installer(
     if (tools[name].setup.length !== 0) {
         info(`[installer] Setting up the ${name} environment`)
 
-        for (const cmd of tools[name].setup) await exec(cmd)
+        for (const cmd of tools[name].setup) await exec('sh', ['-c', cmd])
     }
 
     info(`[installer] Installing ${name} using ${tools[name].pm}`)
