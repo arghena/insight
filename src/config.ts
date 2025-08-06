@@ -4,7 +4,7 @@ import { parse } from 'smol-toml'
 import { defu } from 'defu'
 import ignore, { type Ignore } from 'ignore'
 import { type CommitLint } from './installer'
-import { type SchedulerKey, type FormatterKey, type LinterKey } from './map'
+import { type FormatterKey, type LinterKey } from './map'
 
 interface Config {
     match: {
@@ -19,17 +19,15 @@ interface Config {
         linters: LinterKey[]
     }
     options: {
-        schedulers: Record<SchedulerKey, boolean>
         formatters: Record<FormatterKey, string[]>
         linters: Record<LinterKey, string[]>
     }
-    schedulers: Record<SchedulerKey, string[]>
+    schedule: {
+        tasks: 'cargo_deny'[]
+    }
     formatters: Record<FormatterKey, string[]>
     linters: Record<LinterKey, string[]>
-    versions: Record<
-        CommitLint | SchedulerKey | FormatterKey | LinterKey,
-        string
-    >
+    versions: Record<CommitLint | FormatterKey | LinterKey, string>
 }
 
 async function fileExists(path: string): Promise<boolean> {
@@ -55,9 +53,6 @@ const default_config: Config = {
         linters: [],
     },
     options: {
-        schedulers: {
-            cargo_deny: false,
-        },
         formatters: {
             prettier: [],
             cargo_fmt: [],
@@ -78,10 +73,11 @@ const default_config: Config = {
             vale: [],
             shellcheck: [],
             taplo: [],
+            cargo_deny: [],
         },
     },
-    schedulers: {
-        cargo_deny: [],
+    schedule: {
+        tasks: [],
     },
     formatters: {
         prettier: [],
@@ -103,11 +99,11 @@ const default_config: Config = {
         vale: [],
         shellcheck: [],
         taplo: [],
+        cargo_deny: [],
     },
     versions: {
         commitlint_config_conventional: 'latest',
         commitlint_cli: 'latest',
-        cargo_deny: 'latest',
         prettier: 'latest',
         eslint: 'latest',
         typos: 'latest',
@@ -124,6 +120,7 @@ const default_config: Config = {
         shfmt: 'latest',
         shellcheck: 'latest',
         taplo: 'latest',
+        cargo_deny: 'latest',
     },
 }
 

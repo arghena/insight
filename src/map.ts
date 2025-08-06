@@ -1,6 +1,3 @@
-export const scheduler = {
-    cargo_deny: () => import('./schedulers/cargo-deny'),
-}
 export const formatter = {
     prettier: () => import('./formatters/prettier'),
     cargo_fmt: () => import('./formatters/cargo-fmt'),
@@ -21,8 +18,8 @@ export const linter = {
     vale: () => import('./linters/vale'),
     shellcheck: () => import('./linters/shellcheck'),
     taplo: () => import('./linters/taplo'),
+    cargo_deny: () => import('./linters/cargo-deny'),
 }
 
-export type SchedulerKey = keyof typeof scheduler
 export type FormatterKey = keyof typeof formatter
 export type LinterKey = keyof typeof linter
