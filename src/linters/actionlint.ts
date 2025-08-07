@@ -1,6 +1,7 @@
 import { installer } from '../installer'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
+import { cwd } from 'process'
 import { type LinterKey } from '../map'
 
 // NOTE:
@@ -12,20 +13,19 @@ export async function runner(
     version: string,
     options: string[],
 ): Promise<void> {
+    const docker_options = [
+        'run',
+        '--rm',
+        '-v',
+        `"${cwd()}:/mnt"`,
+        '-w',
+        '/mnt',
+        `rhysd/${name}:${version}`,
+    ]
+
     await installer(name, version)
 
     info(`[runner] Checking ${paths.length} files with ${name}`)
 
-    await exec('docker', [
-        'run',
-        '--rm',
-        '-v',
-        '"$PWD:/mnt"',
-        '-w',
-        '/mnt',
-        `rhysd/${name}:${version}`,
-        ...options,
-        '--',
-        ...paths,
-    ])
+    await exec('docker', [...docker_options, ...options, '--', ...paths])
 }

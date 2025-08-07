@@ -1,6 +1,7 @@
 import { installer } from '../installer'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
+import { cwd } from 'process'
 import { type LinterKey } from '../map'
 
 export async function runner(
@@ -14,7 +15,7 @@ export async function runner(
         'run',
         '--rm',
         '-v',
-        '"$PWD:/mnt"',
+        `"${cwd()}:/mnt"`,
         '-w',
         '/mnt',
         `jdkato/${name}:${tag}`,

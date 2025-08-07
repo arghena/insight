@@ -1,6 +1,7 @@
 import { installer } from '../installer'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
+import { cwd } from 'process'
 import { type LinterKey } from '../map'
 
 export async function runner(
@@ -10,21 +11,19 @@ export async function runner(
     options: string[],
 ): Promise<void> {
     const tag = version === 'latest' ? 'stable' : `v${version}`
+    const docker_options = [
+        'run',
+        '--rm',
+        '-v',
+        `"${cwd()}:/mnt"`,
+        '-w',
+        '/mnt',
+        `koalaman/${name}:${tag}`,
+    ]
 
     await installer(name, tag)
 
     info(`[runner] Checking ${paths.length} files with ${name}`)
 
-    await exec('docker', [
-        'run',
-        '--rm',
-        '-v',
-        '"$PWD:/mnt"',
-        '-w',
-        '/mnt',
-        `koalaman/${name}:${tag}`,
-        ...options,
-        '--',
-        ...paths,
-    ])
+    await exec('docker', [...docker_options, ...options, '--', ...paths])
 }
