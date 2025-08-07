@@ -9,11 +9,20 @@ export async function runner(
     version: string,
     options: string[],
 ): Promise<void> {
-    const cli = `$(go env GOPATH)/bin/${name}`
+    const cli = `"$(go env GOPATH)/bin/${name}"`
 
     await installer(name, version)
 
     info(`[runner] Checking ${paths.length} files with ${name}`)
 
-    await exec('sh', ['-c', cli, '--diff', ...options, '--', ...paths])
+    await exec('sh', [
+        '-c',
+        "'",
+        cli,
+        '--diff',
+        ...options,
+        '--',
+        ...paths,
+        "'",
+    ])
 }
