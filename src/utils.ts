@@ -26,5 +26,5 @@ export async function getGoCliPath(
         },
     })
 
-    return `${go_path}/bin/${name}`
+    return `${go_path.trim()}/bin/${name}`
 }
