@@ -17,12 +17,6 @@ export async function runner(
 
     await exec('sh', [
         '-c',
-        "'",
-        cli,
-        '--diff',
-        ...options,
-        '--',
-        ...paths,
-        "'",
+        `'${cli} --diff ${options.join(' ')} -- ${paths.join(' ')}'`,
     ])
 }

@@ -15,5 +15,8 @@ export async function runner(
 
     info(`[runner] Checking ${paths.length} files with ${name}`)
 
-    await exec('sh', ['-c', "'", cli, ...options, '--', ...paths, "'"])
+    await exec('sh', [
+        '-c',
+        `'${cli} ${options.join(' ')} -- ${paths.join(' ')}'`,
+    ])
 }
