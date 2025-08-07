@@ -4,7 +4,7 @@ import { type FormatterKey, type LinterKey } from './map'
 
 export type CommitLint = 'commitlint_cli' | 'commitlint_config_conventional'
 
-type PM = 'npm' | 'rustup' | 'cargo' | 'pipx' | 'go' | 'docker'
+type PM = 'npm' | 'rustup' | 'cargo' | 'pipx' | 'docker'
 
 type Setups = Record<PM, string[]>
 
@@ -36,8 +36,6 @@ export async function installer(
         ],
         // NOTE: Permission denied.
         pipx: ['sudo chown -R "$(whoami)" /opt/pipx/venvs'],
-        // TODO: Add `go env GOPATH` to the `$PATH`.
-        go: [],
         docker: [],
     }
 
@@ -102,12 +100,9 @@ export async function installer(
             ],
         },
         actionlint: {
-            pm: 'go',
-            setup: setups.go,
-            cmd: [
-                'install',
-                `github.com/rhysd/actionlint/cmd/actionlint@${version}`,
-            ],
+            pm: 'docker',
+            setup: setups.docker,
+            cmd: ['pull', `rhysd/actionlint:${version}`],
         },
         ast_grep: {
             pm: 'cargo',
@@ -159,24 +154,19 @@ export async function installer(
             cmd: ['install', '--global', `markdownlint-cli2@${version}`],
         },
         vale: {
-            pm: 'go',
-            setup: setups.go,
-            cmd: ['install', `github.com/errata-ai/vale/cmd/vale@${version}`],
+            pm: 'docker',
+            setup: setups.docker,
+            cmd: ['pull', `jdkato/vale:${version}`],
         },
         shfmt: {
-            pm: 'go',
-            setup: setups.go,
-            cmd: ['install', `github.com/mvdan/sh/cmd/shfmt@${version}`],
+            pm: 'docker',
+            setup: setups.docker,
+            cmd: ['pull', `mvdan/shfmt:${version}`],
         },
         shellcheck: {
             pm: 'docker',
             setup: setups.docker,
-            cmd: [
-                'pull',
-                version === 'latest'
-                    ? 'koalaman/shellcheck:stable'
-                    : `koalaman/shellcheck:v${version}`,
-            ],
+            cmd: ['pull', `koalaman/shellcheck:${version}`],
         },
         taplo: {
             pm: 'cargo',
