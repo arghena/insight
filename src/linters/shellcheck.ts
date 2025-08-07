@@ -9,17 +9,19 @@ export async function runner(
     version: string,
     options: string[],
 ): Promise<void> {
-    await installer(name, version)
+    const tag = version === 'latest' ? 'stable' : `v${version}`
+
+    await installer(name, tag)
 
     info(`[runner] Checking ${paths.length} files with ${name}`)
-
-    const tag = version === 'latest' ? 'stable' : `v${version}`
 
     await exec('docker', [
         'run',
         '--rm',
         '-v',
         '"$PWD:/mnt"',
+        '-w',
+        '/mnt',
         `koalaman/${name}:${tag}`,
         ...options,
         '--',

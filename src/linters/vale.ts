@@ -1,7 +1,6 @@
 import { installer } from '../installer'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
-import { getGoCliPath } from '../utils'
 import { type LinterKey } from '../map'
 
 export async function runner(
@@ -10,12 +9,21 @@ export async function runner(
     version: string,
     options: string[],
 ): Promise<void> {
-    const cli = await getGoCliPath(name)
+    const tag = version === 'latest' ? 'latest' : `v${version}`
+    const docker_options = [
+        'run',
+        '--rm',
+        '-v',
+        '"$PWD:/mnt"',
+        '-w',
+        '/mnt',
+        `jdkato/${name}:${tag}`,
+    ]
 
-    await installer(name, version)
+    await installer(name, tag)
 
     info(`[runner] Checking ${paths.length} files with ${name}`)
 
-    await exec(cli, ['sync'])
-    await exec(cli, [...options, '--', ...paths])
+    await exec('docker', [...docker_options, 'sync'])
+    await exec('docker', [...docker_options, ...options, '--', ...paths])
 }
