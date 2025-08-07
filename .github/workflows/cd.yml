@@ -43,7 +43,7 @@ jobs:
         run: |
           base_name="insight-${{ github.ref_name }}"
 
-          tar czf "$base_name.tar.gz" --transform "s,^,$base_name/," -- dist/ LICENSE
+          tar czf "$base_name.tar.gz" --transform "s,^,$base_name/," -- dist/ LICENSE README.md
       - name: Releasing assets
         uses: softprops/action-gh-release@v2
         with:
