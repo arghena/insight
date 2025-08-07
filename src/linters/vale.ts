@@ -15,7 +15,7 @@ export async function runner(
         'run',
         '--rm',
         '-v',
-        `"${cwd()}:/mnt"`,
+        `${cwd()}:/mnt`,
         '-w',
         '/mnt',
         `jdkato/${name}:${tag}`,

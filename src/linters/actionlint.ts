@@ -17,7 +17,7 @@ export async function runner(
         'run',
         '--rm',
         '-v',
-        `"${cwd()}:/mnt"`,
+        `${cwd()}:/mnt`,
         '-w',
         '/mnt',
         `rhysd/${name}:${version}`,
