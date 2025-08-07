@@ -35,7 +35,7 @@ export async function installer(
             'curl -fsSL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | sh',
         ],
         // NOTE: Permission denied.
-        pipx: ['sudo chown -R "$(whoami)" /opt/pipx/venvs'],
+        pipx: ['sudo chown -R "$(whoami)" /opt/pipx/venvs/yamllint'],
         docker: [],
     }
 
