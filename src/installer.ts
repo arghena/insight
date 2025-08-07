@@ -96,6 +96,7 @@ export async function installer(
             setup: setups.pipx,
             cmd: [
                 'install',
+                '--force',
                 version === 'latest' ? 'yamllint' : `yamllint==${version}`,
             ],
         },
