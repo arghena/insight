@@ -1,7 +1,8 @@
 import { info } from '@actions/core'
-import { access, constants, readFile } from 'fs/promises'
+import { readFile } from 'fs/promises'
 import { parse } from 'smol-toml'
 import { defu } from 'defu'
+import { fileExists } from './utils'
 import ignore, { type Ignore } from 'ignore'
 import { type CommitLint } from './installer'
 import { type FormatterKey, type LinterKey } from './map'
@@ -28,16 +29,6 @@ interface Config {
     formatters: Record<FormatterKey, string[]>
     linters: Record<LinterKey, string[]>
     versions: Record<CommitLint | FormatterKey | LinterKey, string>
-}
-
-async function fileExists(path: string): Promise<boolean> {
-    try {
-        await access(path, constants.F_OK)
-
-        return true
-    } catch {
-        return false
-    }
 }
 
 const default_config: Config = {
