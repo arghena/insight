@@ -30,11 +30,12 @@ export async function installer(
                       `rustup toolchain install ${version} --profile minimal`,
                       `rustup default ${version}`,
                   ],
+        // NOTE: `#!/bin/sh` not found.
         cargo: [
-            // NOTE: `#!/bin/sh` not found.
             'curl -fsSL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | sh',
         ],
-        pipx: [],
+        // NOTE: Permission denied.
+        pipx: ['sudo chown -R "$(whoami)" /opt/pipx/venvs'],
         // TODO: Add `go env GOPATH` to the `$PATH`.
         go: [],
         docker: [],
