@@ -2,7 +2,7 @@ import { exec } from '@actions/exec'
 import { info } from '@actions/core'
 import { type FormatterKey, type LinterKey } from './map'
 
-export type CommitLint = 'commitlint_cli' | 'commitlint_config_conventional'
+export type CommitLint = 'commitlint' | 'commitlint_config_conventional'
 
 type PM = 'npm' | 'rustup' | 'cargo' | 'pipx' | 'docker'
 
@@ -49,7 +49,7 @@ export async function installer(
                 `@commitlint/config-conventional@${version}`,
             ],
         },
-        commitlint_cli: {
+        commitlint: {
             pm: 'npm',
             setup: setups.npm,
             cmd: ['install', '--global', `@commitlint/cli@${version}`],
