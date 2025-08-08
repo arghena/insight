@@ -1,0 +1,23 @@
+name: Lock Threads
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  lock-threads:
+    permissions:
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    name: Run lock threads
+    steps:
+      - name: Lock threads
+        uses: dessant/lock-threads@v5
+        with:
+          add-issue-labels: 'locked'
+          add-pr-labels: 'locked'
+          issue-inactive-days: 14
+          issue-comment: This closed issue has been automatically locked because it had no new activity for 2 weeks.
+          pr-inactive-days: 14
+          log-output: true
