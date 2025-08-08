@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "format": "prettier -w 'src/**/*.ts'",
-    "lint": "eslint 'src/**/*.ts'",
+    "format": "prettier -w '**/*.ts'",
+    "lint": "eslint '**/*.ts'",
     "build": "ncc build -m src/index.ts --license licenses.txt"
   },
   "packageManager": "pnpm@10.14.0",
