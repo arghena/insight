@@ -12,7 +12,7 @@ linters = ['eslint', 'ast_grep']
 yamllint = ['--strict']
 
 [formatters]
-prettier = ['**/*.yml', '**/*.ts', '**/*.md']
+prettier = ['**/*.yml', '**/*.ts', '**/*.md', '**/*.json']
 taplo = ['**/*.toml']
 
 [linters]
