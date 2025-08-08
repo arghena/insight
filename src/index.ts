@@ -87,11 +87,11 @@ async function run() {
             'commitlint_config_conventional',
             versions['commitlint_config_conventional'],
         )
-        await installer('commitlint_cli', versions['commitlint_cli'])
+        await installer('commitlint', versions['commitlint'])
 
         info(`[commitlint] Checking the pull request title`)
 
-        await exec('commitlint', pull_request.commitlint, {
+        await exec('commitlint', options.linters['commitlint'], {
             input: Buffer.from(pull_request_title + '\n'),
         })
     }
