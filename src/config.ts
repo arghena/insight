@@ -3,7 +3,7 @@ import { access, constants, readFile } from 'fs/promises'
 import { parse } from 'smol-toml'
 import { defu } from 'defu'
 import ignore, { type Ignore } from 'ignore'
-import { type CommitLint } from './installer'
+import { type CommitLinter } from './installer'
 import { type FormatterKey, type LinterKey } from './map'
 
 interface Config {
@@ -26,7 +26,7 @@ interface Config {
     }
     formatters: Record<FormatterKey, string[]>
     linters: Record<LinterKey, string[]>
-    versions: Record<CommitLint | FormatterKey | LinterKey, string>
+    versions: Record<CommitLinter | FormatterKey | LinterKey, string>
 }
 
 async function fileExists(path: string): Promise<boolean> {

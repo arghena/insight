@@ -2,14 +2,14 @@ import { exec } from '@actions/exec'
 import { info } from '@actions/core'
 import { type FormatterKey, type LinterKey } from './map'
 
-export type CommitLint = 'commitlint' | 'commitlint_config_conventional'
+export type CommitLinter = 'commitlint' | 'commitlint_config_conventional'
 
 type PM = 'npm' | 'rustup' | 'cargo' | 'pipx' | 'docker'
 
 type Setups = Record<PM, string[]>
 
 type Tools = Record<
-    CommitLint | FormatterKey | LinterKey,
+    CommitLinter | FormatterKey | LinterKey,
     {
         pm: PM
         setup: string[]
@@ -18,7 +18,7 @@ type Tools = Record<
 >
 
 export async function installer(
-    name: CommitLint | FormatterKey | LinterKey,
+    name: CommitLinter | FormatterKey | LinterKey,
     version: string,
 ): Promise<void> {
     const setups: Setups = {
