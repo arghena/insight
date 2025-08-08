@@ -4,7 +4,7 @@ import { type FormatterKey, type LinterKey } from './map'
 
 export type CommitLinter = 'commitlint' | 'commitlint_config_conventional'
 
-type PM = 'npm' | 'rustup' | 'cargo' | 'pipx' | 'docker'
+type PM = 'npm' | 'rustup' | 'cargo' | 'uv' | 'docker'
 
 type Setups = Record<PM, string[]>
 
@@ -17,6 +17,9 @@ type Tools = Record<
     }
 >
 
+// NOTE:
+// The `#!/bin/sh` in the install scripts for
+// `cargo-binstall` and `uv` doesn't actually work.
 export async function installer(
     name: CommitLinter | FormatterKey | LinterKey,
     version: string,
@@ -30,12 +33,12 @@ export async function installer(
                       `rustup toolchain install ${version} --profile minimal`,
                       `rustup default ${version}`,
                   ],
-        // NOTE: `#!/bin/sh` not found.
         cargo: [
             'curl -fsSL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | sh',
         ],
-        // NOTE: Permission denied.
-        pipx: ['sudo chown -R "$(whoami)" /opt/pipx/venvs/yamllint'],
+        uv: [
+            'curl -fsSL https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh | sh',
+        ],
         docker: [],
     }
 
@@ -91,13 +94,9 @@ export async function installer(
             ],
         },
         yamllint: {
-            pm: 'pipx',
-            setup: setups.pipx,
-            cmd: [
-                'install',
-                '--force',
-                version === 'latest' ? 'yamllint' : `yamllint==${version}`,
-            ],
+            pm: 'uv',
+            setup: setups.uv,
+            cmd: ['tool', 'install', `yamllint@${version}`],
         },
         actionlint: {
             pm: 'docker',
