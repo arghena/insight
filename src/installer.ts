@@ -57,6 +57,11 @@ export async function installer(
             setup: setups.npm,
             cmd: ['install', '--global', `@commitlint/cli@${version}`],
         },
+        check_dist: {
+            pm: 'npm',
+            setup: setups.npm,
+            cmd: ['install', '--global', '@antfu/ni'],
+        },
         cargo_deny: {
             pm: 'cargo',
             setup: setups.cargo,
@@ -80,7 +85,6 @@ export async function installer(
                 `eslint@${version}`,
                 // https://eslint.org/docs/latest/use/configure/configuration-files#typescript-configuration-files
                 'jiti',
-                // https://github.com/antfu-collective/ni
                 '@antfu/ni',
             ],
         },
