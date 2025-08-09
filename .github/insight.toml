@@ -9,6 +9,7 @@ formatters = ['prettier']
 linters = ['eslint', 'ast_grep']
 
 [options.linters]
+check_dist = ['build']
 yamllint = ['--strict']
 
 [formatters]
@@ -16,6 +17,7 @@ prettier = ['**/*.yml', '**/*.ts', '**/*.md', '**/*.json']
 taplo = ['**/*.toml']
 
 [linters]
+check_dist = ['src/**/*.ts', 'package.json', 'pnpm-lock.yaml']
 typos = ['**/*', '!dist/**']
 yamllint = ['**/*.yml']
 actionlint = ['.github/workflows/*.yml']

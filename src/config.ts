@@ -59,6 +59,7 @@ const default_config: Config = {
         },
         linters: {
             commitlint: [],
+            check_dist: [],
             eslint: [],
             typos: [],
             yamllint: [],
@@ -85,6 +86,7 @@ const default_config: Config = {
         taplo: [],
     },
     linters: {
+        check_dist: [],
         eslint: [],
         typos: [],
         yamllint: [],
@@ -103,6 +105,7 @@ const default_config: Config = {
     versions: {
         commitlint_config_conventional: 'latest',
         commitlint: 'latest',
+        check_dist: 'latest',
         prettier: 'latest',
         eslint: 'latest',
         typos: 'latest',

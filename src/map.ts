@@ -5,6 +5,7 @@ export const formatter = {
     taplo: () => import('./formatters/taplo'),
 }
 export const linter = {
+    check_dist: () => import('./linters/check-dist'),
     typos: () => import('./linters/typos'),
     yamllint: () => import('./linters/yamllint'),
     eslint: () => import('./linters/eslint'),
