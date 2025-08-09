@@ -6,7 +6,7 @@ check_title = true
 
 [push_tag]
 formatters = ['prettier']
-linters = ['eslint', 'ast_grep']
+linters = ['check_dist', 'eslint', 'ast_grep']
 
 [options.linters]
 check_dist = ['build']
