@@ -2,18 +2,9 @@ name: 'Insight'
 description: 'GitHub Action for checking pull requests'
 author: 'Shigure Kurosaki'
 inputs:
-  token:
-    description: 'Personal access token (PAT) used to fetch the repository.'
-    default: ${{ github.token }}
-  repository:
-    description: 'Repository name with owner.'
-    default: ${{ github.repository }}
   config-path:
     description: 'The path to the Insight config file.'
     default: '.github/insight.toml'
-  pull-request-number:
-    description: 'The number of the pull request to check'
-    default: ${{ github.event.pull_request.number }}
   event-name:
     description: 'The name of the event that triggered the workflow run.'
     default: ${{ github.event_name }}
@@ -26,6 +17,15 @@ inputs:
   pull-request-title:
     description: 'The title of pull request event.'
     default: ${{ github.event.pull_request.title }}
+  token:
+    description: 'Personal access token (PAT) used to fetch the repository.'
+    default: ${{ github.token }}
+  repository:
+    description: 'Repository name with owner.'
+    default: ${{ github.repository }}
+  pull-request-number:
+    description: 'The number of the pull request to check'
+    default: ${{ github.event.pull_request.number }}
 runs:
   using: 'node24'
   main: 'dist/index.js'

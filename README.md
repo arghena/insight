@@ -17,8 +17,7 @@ It's designed to provide a unified config file so you can run various formatters
 
 - Use the `insight.toml` config file to customize the formatters and linters your project needs.
 - Supports using [commitlint](https://commitlint.js.org) to check pull request titles.
-- Responds to [`on.push.tags`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onpushbranchestagsbranches-ignoretags-ignore) events, respecting `.gitignore` when running linters.
-- Responds to [`on.schedule`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onschedule) events.
+- Responds to [`on.schedule`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onschedule) and [`on.push.tags`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onpushbranchestagsbranches-ignoretags-ignore) events, respecting `.gitignore` when running linters.
 - Can check build files in `dist/` using a `git diff` approach.
 - Lets you customize formatter and linter versions and options.
 - Supports [glob](<https://en.wikipedia.org/wiki/Glob_(programming)>) patterns to match exactly the files you want to check.
@@ -32,18 +31,9 @@ It's designed to provide a unified config file so you can run various formatters
 - name: Run Insight
   uses: arghena/insight@v0.1.0-canary.8
   with:
-    # Personal access token (PAT) used to fetch the repository.
-    # Default: ${{ github.token }}
-    token: ''
-    # Repository name with owner.
-    # Default: ${{ github.repository }}
-    repository: ''
     # The path to the Insight config file.
     # Default: '.github/insight.toml'
     config-path: ''
-    # The number of the pull request to check
-    # Default: ${{ github.event.pull_request.number }}
-    pull-request-number: ''
     # The name of the event that triggered the workflow run.
     # Default: ${{ github.event_name }}
     event-name: ''
@@ -56,6 +46,15 @@ It's designed to provide a unified config file so you can run various formatters
     # The title of pull request event.
     # Default: ${{ github.event.pull_request.title }}
     pull-request-title: ''
+    # Personal access token (PAT) used to fetch the repository.
+    # Default: ${{ github.token }}
+    token: ''
+    # Repository name with owner.
+    # Default: ${{ github.repository }}
+    repository: ''
+    # The number of the pull request to check
+    # Default: ${{ github.event.pull_request.number }}
+    pull-request-number: ''
 ```
 
 ## Configure Insight
@@ -73,6 +72,11 @@ dot = true
 # Check pull request title.
 # Default: false
 check_title = true
+
+[schedule]
+# Linters to run on `on.schedule` events.
+# Default: []
+tasks = ["cargo_deny"]
 
 [push_tag]
 # Formatters to run on `on.push.tags` events.
@@ -92,11 +96,6 @@ shfmt = ["-i", "4", "-ci"]
 # Default: []
 check_dist = ["build"]
 yamllint = ["--strict"]
-
-[schedule]
-# Linters to run on `on.schedule` events.
-# Default: []
-tasks = ["cargo_deny"]
 
 [formatters]
 # Glob patterns for files that trigger formatters.

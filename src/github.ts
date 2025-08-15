@@ -13,28 +13,28 @@ interface Inputs {
 }
 
 export function getInputs(): Inputs {
-    const token = getInput('token', { required: false })
-    const repository = getInput('repository', { required: false })
     const config_path = getInput('config-path', { required: false })
-    const pull_request_number = getInput('pull-request-number', {
-        required: false,
-    })
     const event_name = getInput('event-name', { required: false })
     const ref_type = getInput('ref-type', { required: false })
     const pull_request_type = getInput('pull-request-type', { required: false })
     const pull_request_title = getInput('pull-request-title', {
         required: false,
     })
+    const token = getInput('token', { required: false })
+    const repository = getInput('repository', { required: false })
+    const pull_request_number = getInput('pull-request-number', {
+        required: false,
+    })
 
     return {
-        token,
-        repository,
         config_path,
-        pull_request_number,
         event_name,
         ref_type,
         pull_request_type,
         pull_request_title,
+        token,
+        repository,
+        pull_request_number,
     }
 }
 
