@@ -10,21 +10,21 @@ import { resolveGitignore } from './config'
 
 async function run() {
     const {
-        token,
-        repository,
         config_path,
-        pull_request_number,
         event_name,
         ref_type,
         pull_request_type,
         pull_request_title,
+        token,
+        repository,
+        pull_request_number,
     } = getInputs()
     const {
         match,
         pull_request,
+        schedule,
         push_tag,
         options,
-        schedule,
         formatters,
         linters,
         versions,

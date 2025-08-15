@@ -32,18 +32,9 @@ It's designed to provide a unified config file so you can run various formatters
 - name: Run Insight
   uses: arghena/insight@v0.1.0-canary.8
   with:
-    # Personal access token (PAT) used to fetch the repository.
-    # Default: ${{ github.token }}
-    token: ''
-    # Repository name with owner.
-    # Default: ${{ github.repository }}
-    repository: ''
     # The path to the Insight config file.
     # Default: '.github/insight.toml'
     config-path: ''
-    # The number of the pull request to check
-    # Default: ${{ github.event.pull_request.number }}
-    pull-request-number: ''
     # The name of the event that triggered the workflow run.
     # Default: ${{ github.event_name }}
     event-name: ''
@@ -56,6 +47,15 @@ It's designed to provide a unified config file so you can run various formatters
     # The title of pull request event.
     # Default: ${{ github.event.pull_request.title }}
     pull-request-title: ''
+    # Personal access token (PAT) used to fetch the repository.
+    # Default: ${{ github.token }}
+    token: ''
+    # Repository name with owner.
+    # Default: ${{ github.repository }}
+    repository: ''
+    # The number of the pull request to check
+    # Default: ${{ github.event.pull_request.number }}
+    pull-request-number: ''
 ```
 
 ## Configure Insight
@@ -73,6 +73,11 @@ dot = true
 # Check pull request title.
 # Default: false
 check_title = true
+
+[schedule]
+# Linters to run on `on.schedule` events.
+# Default: []
+tasks = ["cargo_deny"]
 
 [push_tag]
 # Formatters to run on `on.push.tags` events.
@@ -92,11 +97,6 @@ shfmt = ["-i", "4", "-ci"]
 # Default: []
 check_dist = ["build"]
 yamllint = ["--strict"]
-
-[schedule]
-# Linters to run on `on.schedule` events.
-# Default: []
-tasks = ["cargo_deny"]
 
 [formatters]
 # Glob patterns for files that trigger formatters.

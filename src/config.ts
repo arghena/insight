@@ -13,6 +13,9 @@ interface Config {
     pull_request: {
         check_title: boolean
     }
+    schedule: {
+        tasks: 'cargo_deny'[]
+    }
     push_tag: {
         formatters: FormatterKey[]
         linters: LinterKey[]
@@ -20,9 +23,6 @@ interface Config {
     options: {
         formatters: Record<FormatterKey, string[]>
         linters: Record<LinterKey | 'commitlint', string[]>
-    }
-    schedule: {
-        tasks: 'cargo_deny'[]
     }
     formatters: Record<FormatterKey, string[]>
     linters: Record<LinterKey, string[]>
@@ -45,6 +45,9 @@ const default_config: Config = {
     },
     pull_request: {
         check_title: false,
+    },
+    schedule: {
+        tasks: [],
     },
     push_tag: {
         formatters: [],
@@ -75,9 +78,6 @@ const default_config: Config = {
             taplo: [],
             cargo_deny: [],
         },
-    },
-    schedule: {
-        tasks: [],
     },
     formatters: {
         prettier: [],
