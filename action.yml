@@ -1,4 +1,4 @@
-name: 'Insight'
+name: 'PR Insight'
 description: 'GitHub Action for checking pull requests'
 author: 'Shigure Kurosaki'
 inputs:
