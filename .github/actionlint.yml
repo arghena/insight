@@ -2,4 +2,4 @@ paths:
   .github/workflows/ci.yml:
     # https://github.com/actions/runner/commit/ed48ddd08c9350e49b7fdfaf42512091585af4e1
     ignore:
-      - 'invalid runner name "node24" at runs.using in "Insight" action defined at .+'
+      - 'invalid runner name "node24" at runs.using in "PR Insight" action defined at .+'
