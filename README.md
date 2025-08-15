@@ -17,8 +17,7 @@ It's designed to provide a unified config file so you can run various formatters
 
 - Use the `insight.toml` config file to customize the formatters and linters your project needs.
 - Supports using [commitlint](https://commitlint.js.org) to check pull request titles.
-- Responds to [`on.push.tags`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onpushbranchestagsbranches-ignoretags-ignore) events, respecting `.gitignore` when running linters.
-- Responds to [`on.schedule`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onschedule) events.
+- Responds to [`on.schedule`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onschedule) and [`on.push.tags`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onpushbranchestagsbranches-ignoretags-ignore) events, respecting `.gitignore` when running linters.
 - Can check build files in `dist/` using a `git diff` approach.
 - Lets you customize formatter and linter versions and options.
 - Supports [glob](<https://en.wikipedia.org/wiki/Glob_(programming)>) patterns to match exactly the files you want to check.
