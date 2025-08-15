@@ -2,14 +2,14 @@ import { getInput, info } from '@actions/core'
 import { getOctokit } from '@actions/github'
 
 interface Inputs {
-    token: string
-    repository: string
     config_path: string
-    pull_request_number: string
     event_name: string
     ref_type: string
     pull_request_type: string
     pull_request_title: string
+    token: string
+    repository: string
+    pull_request_number: string
 }
 
 export function getInputs(): Inputs {
