@@ -30,7 +30,7 @@ It's designed to provide a unified config file so you can run various formatters
 - name: Checkout repository
   uses: actions/checkout@v5
 - name: Run Insight
-  uses: arghena/insight@v0.1.0-canary.7
+  uses: arghena/insight@v0.1.0-canary.8
   with:
     # Personal access token (PAT) used to fetch the repository.
     # Default: ${{ github.token }}
