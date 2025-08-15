@@ -1,0 +1,13 @@
+config
+formatters|Formatters
+rustfmt
+shfmt
+taplo
+linters|Linters
+commitlint
+eslint
+clippy
+alex
+yamllint
+actionlint
+shellcheck
