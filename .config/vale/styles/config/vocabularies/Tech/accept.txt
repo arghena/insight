@@ -1,9 +1,8 @@
-config
 formatters|Formatters
+config
 rustfmt
 shfmt
 taplo
-linters|Linters
 commitlint
 eslint
 clippy
