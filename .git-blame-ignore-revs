@@ -2,3 +2,6 @@
 # All revisions specified in the `.git-blame-ignore-revs` file, are hidden from the blame
 # when running `git blame --ignore-revs-file .git-blame-ignore-revs`.
 # https://docs.github.com/en/repositories/working-with-files/using-files/viewing-a-file#ignore-commits-in-the-blame-view
+
+# style(toml): change single quotes to double quotes in `.github/insight.toml` (#40)
+0747e5323e81e1f86fc79b789d7dd67fd617569a
