@@ -16,7 +16,7 @@ export async function runner(
     info(`[runner] ${paths.length} files matched – running ${name}`)
 
     await exec('nci')
-    await exec('nr', options)
+    await exec('nr', options.length === 0 ? ['build'] : options)
     await exec('git', ['diff', 'dist/'], {
         listeners: {
             stdout: (data: Buffer) => (diff_result += data.toString()),

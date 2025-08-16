@@ -9,7 +9,6 @@ formatters = ["prettier"]
 linters = ["check_dist", "eslint", "ast_grep"]
 
 [options.linters]
-check_dist = ["build"]
 yamllint = ["--strict"]
 
 [formatters]

@@ -94,7 +94,7 @@ shfmt = ["-i", "4", "-ci"]
 [options.linters]
 # Options passed to linters.
 # Default: []
-check_dist = ["build"]
+check_dist = ["prepare"]
 yamllint = ["--strict"]
 
 [formatters]
@@ -131,23 +131,23 @@ eslint = "9.33.0"
 
 ## Available Linters
 
-| Tool                                                                 | Linter name         | Supports scheduling |
-| -------------------------------------------------------------------- | ------------------- | :-----------------: |
-| check-dist                                                           | `check_dist`        |                     |
-| [eslint](https://github.com/eslint/eslint)                           | `eslint`            |                     |
-| [typos](https://github.com/crate-ci/typos)                           | `typos`             |                     |
-| [yamllint](https://github.com/adrienverge/yamllint)                  | `yamllint`          |                     |
-| [actionlint](https://github.com/rhysd/actionlint)                    | `actionlint`        |                     |
-| [ast-grep](https://github.com/ast-grep/ast-grep)                     | `ast_grep`          |                     |
-| [clippy](https://github.com/rust-lang/rust-clippy)                   | `cargo_clippy`      |                     |
-| [cargo-msrv](https://github.com/foresterre/cargo-msrv)               | `cargo_msrv`        |                     |
-| [cargo-tarpaulin](https://github.com/xd009642/tarpaulin)             | `cargo_tarpaulin`   |                     |
-| [alex](https://github.com/get-alex/alex)                             | `alex`              |                     |
-| [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2) | `markdownlint_cli2` |                     |
-| [vale](https://github.com/errata-ai/vale)                            | `vale`              |                     |
-| [shellcheck](https://github.com/koalaman/shellcheck)                 | `shellcheck`        |                     |
-| [taplo](https://github.com/tamasfe/taplo)                            | `taplo`             |                     |
-| [cargo-deny](https://github.com/EmbarkStudios/cargo-deny)            | `cargo_deny`        |         ✅          |
+| Tool                                                                                   | Linter name         | Supports scheduling |
+| -------------------------------------------------------------------------------------- | ------------------- | :-----------------: |
+| [check-dist](https://github.com/arghena/insight/blob/canary/src/linters/check-dist.ts) | `check_dist`        |                     |
+| [eslint](https://github.com/eslint/eslint)                                             | `eslint`            |                     |
+| [typos](https://github.com/crate-ci/typos)                                             | `typos`             |                     |
+| [yamllint](https://github.com/adrienverge/yamllint)                                    | `yamllint`          |                     |
+| [actionlint](https://github.com/rhysd/actionlint)                                      | `actionlint`        |                     |
+| [ast-grep](https://github.com/ast-grep/ast-grep)                                       | `ast_grep`          |                     |
+| [clippy](https://github.com/rust-lang/rust-clippy)                                     | `cargo_clippy`      |                     |
+| [cargo-msrv](https://github.com/foresterre/cargo-msrv)                                 | `cargo_msrv`        |                     |
+| [cargo-tarpaulin](https://github.com/xd009642/tarpaulin)                               | `cargo_tarpaulin`   |                     |
+| [alex](https://github.com/get-alex/alex)                                               | `alex`              |                     |
+| [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2)                   | `markdownlint_cli2` |                     |
+| [vale](https://github.com/errata-ai/vale)                                              | `vale`              |                     |
+| [shellcheck](https://github.com/koalaman/shellcheck)                                   | `shellcheck`        |                     |
+| [taplo](https://github.com/tamasfe/taplo)                                              | `taplo`             |                     |
+| [cargo-deny](https://github.com/EmbarkStudios/cargo-deny)                              | `cargo_deny`        |         ✅          |
 
 ## Contributing
 
