@@ -29,7 +29,7 @@ It's designed to provide a unified config file so you can run various formatters
 - name: Checkout repository
   uses: actions/checkout@v5
 - name: Run Insight
-  uses: arghena/insight@v0.1.0-canary.10
+  uses: arghena/insight@v0.1.0-canary.11
   with:
     # The path to the Insight config file.
     # Default: '.github/insight.toml'
