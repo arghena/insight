@@ -3,7 +3,7 @@ import { resolveConfig } from './config'
 import { formatter, linter, type FormatterKey, type LinterKey } from './map'
 import { installer } from './installer'
 import micromatch from 'micromatch'
-import { info, setFailed } from '@actions/core'
+import { info, setFailed, setOutput } from '@actions/core'
 import { exec } from '@actions/exec'
 import fg from 'fast-glob'
 import { resolveGitignore } from './config'
@@ -128,6 +128,12 @@ async function run() {
 
         await runner(paths, name, versions[name], options.linters[name])
     }
+
+    const paths = micromatch(changed_files, pull_request.detect_changes, {
+        dot: match.dot,
+    })
+
+    if (paths.length !== 0) setOutput('any-changed', 'true')
 }
 
 run().catch((error) => {
