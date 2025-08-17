@@ -29,6 +29,7 @@ It's designed to provide a unified config file so you can run various formatters
 - name: Checkout repository
   uses: actions/checkout@v5
 - name: Run Insight
+  id: insight
   uses: arghena/insight@v0.1.0-canary.11
   with:
     # The path to the Insight config file.
@@ -55,6 +56,9 @@ It's designed to provide a unified config file so you can run various formatters
     # The number of the pull request to check
     # Default: ${{ github.event.pull_request.number }}
     pull-request-number: ''
+- name: Detect File Changes
+  if: steps.insight.outputs.any_changed == 'true'
+  run: echo 'File changes detected'
 ```
 
 ## Configure Insight
@@ -72,6 +76,9 @@ dot = true
 # Check pull request title.
 # Default: false
 check_title = true
+# Detect file changes.
+# Default: []
+detect_changes = ["**/*.rs"]
 
 [schedule]
 # Linters to run on `on.schedule` events.
