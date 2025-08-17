@@ -65,7 +65,7 @@ jobs:
   detect-changes:
     name: Detect Changes
     needs: insight
-    if: needs.insight.outputs.any-changed == 'true'
+    if: ${{ needs.insight.outputs.any-changed == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Detect File Changes
