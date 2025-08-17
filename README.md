@@ -21,6 +21,7 @@ It's designed to provide a unified config file so you can run various formatters
 - Can check build files in `dist/` using a `git diff` approach.
 - Lets you customize formatter and linter versions and options.
 - Supports [glob](<https://en.wikipedia.org/wiki/Glob_(programming)>) patterns to match exactly the files you want to check.
+- Supports detecting file changes and outputs the result.
 - Ships with minimal defaults to keep opinionated behavior to a minimum.
 
 ## Usage
