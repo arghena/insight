@@ -12,6 +12,7 @@ interface Config {
     }
     pull_request: {
         check_title: boolean
+        detect_changes: string[]
     }
     schedule: {
         tasks: 'cargo_deny'[]
@@ -45,6 +46,7 @@ const default_config: Config = {
     },
     pull_request: {
         check_title: false,
+        detect_changes: [],
     },
     schedule: {
         tasks: [],

@@ -21,40 +21,55 @@ It's designed to provide a unified config file so you can run various formatters
 - Can check build files in `dist/` using a `git diff` approach.
 - Lets you customize formatter and linter versions and options.
 - Supports [glob](<https://en.wikipedia.org/wiki/Glob_(programming)>) patterns to match exactly the files you want to check.
+- Supports detecting file changes and outputs the result.
 - Ships with minimal defaults to keep opinionated behavior to a minimum.
 
 ## Usage
 
 ```yaml
-- name: Checkout repository
-  uses: actions/checkout@v5
-- name: Run Insight
-  uses: arghena/insight@v0.1.0-canary.12
-  with:
-    # The path to the Insight config file.
-    # Default: '.github/insight.toml'
-    config-path: ''
-    # The name of the event that triggered the workflow run.
-    # Default: ${{ github.event_name }}
-    event-name: ''
-    # The type of ref that triggered the workflow run.
-    # Default: ${{ github.ref_type }}
-    ref-type: ''
-    # The type of pull request event.
-    # Default: ${{ github.event.action }}
-    pull-request-type: ''
-    # The title of pull request event.
-    # Default: ${{ github.event.pull_request.title }}
-    pull-request-title: ''
-    # Personal access token (PAT) used to fetch the repository.
-    # Default: ${{ github.token }}
-    token: ''
-    # Repository name with owner.
-    # Default: ${{ github.repository }}
-    repository: ''
-    # The number of the pull request to check
-    # Default: ${{ github.event.pull_request.number }}
-    pull-request-number: ''
+jobs:
+  insight:
+    name: Insight
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Run Insight
+        uses: arghena/insight@v0.1.0-canary.13
+        with:
+          # The path to the Insight config file.
+          # Default: '.github/insight.toml'
+          config-path: ''
+          # The name of the event that triggered the workflow run.
+          # Default: ${{ github.event_name }}
+          event-name: ''
+          # The type of ref that triggered the workflow run.
+          # Default: ${{ github.ref_type }}
+          ref-type: ''
+          # The type of pull request event.
+          # Default: ${{ github.event.action }}
+          pull-request-type: ''
+          # The title of pull request event.
+          # Default: ${{ github.event.pull_request.title }}
+          pull-request-title: ''
+          # Personal access token (PAT) used to fetch the repository.
+          # Default: ${{ github.token }}
+          token: ''
+          # Repository name with owner.
+          # Default: ${{ github.repository }}
+          repository: ''
+          # The number of the pull request to check
+          # Default: ${{ github.event.pull_request.number }}
+          pull-request-number: ''
+
+  detect-changes:
+    name: Detect Changes
+    needs: insight
+    if: needs.insight.outputs.any-changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Detect File Changes
+        run: echo 'File changes detected'
 ```
 
 ## Configure Insight
@@ -72,6 +87,9 @@ dot = true
 # Check pull request title.
 # Default: false
 check_title = true
+# Detect file changes.
+# Default: []
+detect_changes = ["**/*.rs"]
 
 [schedule]
 # Linters to run on `on.schedule` events.

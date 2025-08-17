@@ -24,8 +24,11 @@ inputs:
     description: 'Repository name with owner.'
     default: ${{ github.repository }}
   pull-request-number:
-    description: 'The number of the pull request to check'
+    description: 'The number of the pull request to check.'
     default: ${{ github.event.pull_request.number }}
+outputs:
+  any-changed:
+    description: 'Returns `true` if a changed file matches a glob in `pull_request.detect_changes`.'
 runs:
   using: 'node24'
   main: 'dist/index.js'
