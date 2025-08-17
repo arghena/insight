@@ -13,5 +13,5 @@ export async function runner(
 
     info(`[runner] ${paths.length} files matched – running ${name}`)
 
-    await exec(name.replace('_', '-'), options)
+    await exec(name.replace('_', '-'), ['verify', ...options])
 }
