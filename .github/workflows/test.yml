@@ -23,4 +23,4 @@ jobs:
     needs: insight
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ needs.insight.outputs.any_changed }}"
+      - run: echo "${{ needs.insight.insight.outputs.any_changed }}"
