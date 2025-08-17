@@ -3,7 +3,6 @@ dot = true
 
 [pull_request]
 check_title = true
-detect_changes = ["**/*.ts"] # test
 
 [push_tag]
 formatters = ["prettier"]

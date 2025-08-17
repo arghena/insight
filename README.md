@@ -31,10 +31,13 @@ jobs:
   insight:
     name: Insight
     runs-on: ubuntu-latest
+    outputs:
+      any-changed: ${{ steps.insight.outputs.any-changed }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
       - name: Run Insight
+        id: insight
         uses: arghena/insight@v0.1.0-canary.13
         with:
           # The path to the Insight config file.

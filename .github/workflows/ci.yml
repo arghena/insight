@@ -14,19 +14,9 @@ jobs:
   insight:
     name: Insight
     runs-on: ubuntu-latest
-    outputs:
-      any-changed: ${{ steps.insight.outputs.any-changed }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
       - name: Run Insight
         id: insight
         uses: ./
-  test:
-    name: Test
-    needs: insight
-    if: ${{ needs.insight.outputs.any-changed == 'true' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Detect File Changes
-        run: echo 'File changes detected'
