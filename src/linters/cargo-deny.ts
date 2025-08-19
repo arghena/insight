@@ -3,7 +3,6 @@ import { exec } from '@actions/exec'
 import { info } from '@actions/core'
 import { type LinterKey } from '../map'
 
-// NOTE: This linter doesn't support file path input.
 export async function runner(
     paths: string[],
     name: LinterKey,
