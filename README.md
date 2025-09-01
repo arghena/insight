@@ -61,7 +61,7 @@ jobs:
           # Repository name with owner.
           # Default: ${{ github.repository }}
           repository: ''
-          # The number of the pull request to check
+          # The number of the pull request to check.
           # Default: ${{ github.event.pull_request.number }}
           pull-request-number: ''
 
