@@ -20,6 +20,7 @@ export async function runner(
     }
 
     await exec('na', ['audit', ...options], {
-        env: { NI_AUTO_INSTALL: 'true' },
+        // https://github.com/antfu-collective/ni/blob/82611c44aeada5185d5fb5fc2c72c2ce6b921159/src/detect.ts#L39-L53
+        env: { ...process.env, NI_AUTO_INSTALL: 'true' },
     })
 }
