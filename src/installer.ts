@@ -57,11 +57,6 @@ export async function installer(
             setup: setups.npm,
             cmd: ['install', '--global', `@commitlint/cli@${version}`],
         },
-        check_dist: {
-            pm: 'npm',
-            setup: setups.npm,
-            cmd: ['install', '--global', '@antfu/ni'],
-        },
         cargo_deny: {
             pm: 'cargo',
             setup: setups.cargo,
@@ -70,6 +65,16 @@ export async function installer(
                 '--no-confirm',
                 version === 'latest' ? 'cargo-deny' : `cargo-deny@${version}`,
             ],
+        },
+        node_audit: {
+            pm: 'npm',
+            setup: setups.npm,
+            cmd: ['install', '--global', '@antfu/ni'],
+        },
+        check_dist: {
+            pm: 'npm',
+            setup: setups.npm,
+            cmd: ['install', '--global', '@antfu/ni'],
         },
         prettier: {
             pm: 'npm',
