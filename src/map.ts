@@ -20,6 +20,7 @@ export const linter = {
     shellcheck: () => import('./linters/shellcheck'),
     taplo: () => import('./linters/taplo'),
     cargo_deny: () => import('./linters/cargo-deny'),
+    node_audit: () => import('./linters/node-audit'),
 }
 
 export type FormatterKey = keyof typeof formatter

@@ -169,6 +169,7 @@ eslint = "9.33.0"
 | [shellcheck](https://github.com/koalaman/shellcheck)                                   | `shellcheck`        |                     |
 | [taplo](https://github.com/tamasfe/taplo)                                              | `taplo`             |                     |
 | [cargo-deny](https://github.com/EmbarkStudios/cargo-deny)                              | `cargo_deny`        |         ✅          |
+| [node-audit](https://github.com/arghena/insight/blob/canary/src/linters/node-audit.ts) | `node_audit`        |         ✅          |
 
 ## Contributing
 

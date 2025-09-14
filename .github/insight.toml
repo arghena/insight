@@ -4,6 +4,9 @@ dot = true
 [pull_request]
 check_title = true
 
+[schedule]
+tasks = ["node_audit"]
+
 [push_tag]
 formatters = ["prettier"]
 linters = ["check_dist", "eslint", "ast_grep"]
@@ -16,6 +19,7 @@ prettier = ["**/*.yml", "**/*.ts", "**/*.md", "**/*.json"]
 taplo = ["**/*.toml"]
 
 [linters]
+node_audit = ["package.json", "pnpm-lock.yaml"]
 check_dist = ["src/**/*.ts", "package.json", "pnpm-lock.yaml"]
 typos = ["**/*", "!dist/**"]
 yamllint = ["**/*.yml"]

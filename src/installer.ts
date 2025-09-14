@@ -71,6 +71,11 @@ export async function installer(
                 version === 'latest' ? 'cargo-deny' : `cargo-deny@${version}`,
             ],
         },
+        node_audit: {
+            pm: 'npm',
+            setup: setups.npm,
+            cmd: ['install', '--global', '@antfu/ni'],
+        },
         prettier: {
             pm: 'npm',
             setup: setups.npm,

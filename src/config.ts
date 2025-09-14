@@ -6,6 +6,8 @@ import ignore, { type Ignore } from 'ignore'
 import { type CommitLinter } from './installer'
 import { type FormatterKey, type LinterKey } from './map'
 
+type Task = 'cargo_deny' | 'node_audit'
+
 interface Config {
     match: {
         dot: boolean
@@ -15,7 +17,7 @@ interface Config {
         detect_changes: string[]
     }
     schedule: {
-        tasks: 'cargo_deny'[]
+        tasks: Task[]
     }
     push_tag: {
         formatters: FormatterKey[]
@@ -79,6 +81,7 @@ const default_config: Config = {
             shellcheck: [],
             taplo: [],
             cargo_deny: [],
+            node_audit: [],
         },
     },
     formatters: {
@@ -103,6 +106,7 @@ const default_config: Config = {
         shellcheck: [],
         taplo: [],
         cargo_deny: [],
+        node_audit: [],
     },
     versions: {
         commitlint_config_conventional: 'latest',
@@ -125,6 +129,7 @@ const default_config: Config = {
         shellcheck: 'latest',
         taplo: 'latest',
         cargo_deny: 'latest',
+        node_audit: 'latest',
     },
 }
 
