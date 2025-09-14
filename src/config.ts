@@ -66,6 +66,8 @@ const default_config: Config = {
         },
         linters: {
             commitlint: [],
+            cargo_deny: [],
+            node_audit: [],
             check_dist: [],
             eslint: [],
             typos: [],
@@ -80,8 +82,6 @@ const default_config: Config = {
             vale: [],
             shellcheck: [],
             taplo: [],
-            cargo_deny: [],
-            node_audit: [],
         },
     },
     formatters: {
@@ -91,6 +91,8 @@ const default_config: Config = {
         taplo: [],
     },
     linters: {
+        cargo_deny: [],
+        node_audit: [],
         check_dist: [],
         eslint: [],
         typos: [],
@@ -105,12 +107,12 @@ const default_config: Config = {
         vale: [],
         shellcheck: [],
         taplo: [],
-        cargo_deny: [],
-        node_audit: [],
     },
     versions: {
         commitlint_config_conventional: 'latest',
         commitlint: 'latest',
+        cargo_deny: 'latest',
+        node_audit: 'latest',
         check_dist: 'latest',
         prettier: 'latest',
         eslint: 'latest',
@@ -128,8 +130,6 @@ const default_config: Config = {
         shfmt: 'latest',
         shellcheck: 'latest',
         taplo: 'latest',
-        cargo_deny: 'latest',
-        node_audit: 'latest',
     },
 }
 

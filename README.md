@@ -154,6 +154,8 @@ eslint = "9.33.0"
 
 | Tool                                                                                   | Linter name         | Supports scheduling |
 | -------------------------------------------------------------------------------------- | ------------------- | :-----------------: |
+| [cargo-deny](https://github.com/EmbarkStudios/cargo-deny)                              | `cargo_deny`        |         ✅          |
+| [node-audit](https://github.com/arghena/insight/blob/canary/src/linters/node-audit.ts) | `node_audit`        |         ✅          |
 | [check-dist](https://github.com/arghena/insight/blob/canary/src/linters/check-dist.ts) | `check_dist`        |                     |
 | [eslint](https://github.com/eslint/eslint)                                             | `eslint`            |                     |
 | [typos](https://github.com/crate-ci/typos)                                             | `typos`             |                     |
@@ -168,8 +170,6 @@ eslint = "9.33.0"
 | [vale](https://github.com/errata-ai/vale)                                              | `vale`              |                     |
 | [shellcheck](https://github.com/koalaman/shellcheck)                                   | `shellcheck`        |                     |
 | [taplo](https://github.com/tamasfe/taplo)                                              | `taplo`             |                     |
-| [cargo-deny](https://github.com/EmbarkStudios/cargo-deny)                              | `cargo_deny`        |         ✅          |
-| [node-audit](https://github.com/arghena/insight/blob/canary/src/linters/node-audit.ts) | `node_audit`        |         ✅          |
 
 ## Contributing
 

@@ -5,6 +5,8 @@ export const formatter = {
     taplo: () => import('./formatters/taplo'),
 }
 export const linter = {
+    cargo_deny: () => import('./linters/cargo-deny'),
+    node_audit: () => import('./linters/node-audit'),
     check_dist: () => import('./linters/check-dist'),
     typos: () => import('./linters/typos'),
     yamllint: () => import('./linters/yamllint'),
@@ -19,8 +21,6 @@ export const linter = {
     vale: () => import('./linters/vale'),
     shellcheck: () => import('./linters/shellcheck'),
     taplo: () => import('./linters/taplo'),
-    cargo_deny: () => import('./linters/cargo-deny'),
-    node_audit: () => import('./linters/node-audit'),
 }
 
 export type FormatterKey = keyof typeof formatter
