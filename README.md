@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@v5
       - name: Run Insight
         id: insight
-        uses: arghena/insight@v0.1.0-canary.13
+        uses: arghena/insight@v0.1.0-canary.14
         with:
           # The path to the Insight config file.
           # Default: '.github/insight.toml'
