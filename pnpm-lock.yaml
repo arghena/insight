@@ -40,8 +40,8 @@ importers:
         specifier: ^4.0.9
         version: 4.0.9
       '@types/node':
-        specifier: ^24.6.1
-        version: 24.6.1
+        specifier: ^24.6.2
+        version: 24.6.2
       '@vercel/ncc':
         specifier: ^0.38.4
         version: 0.38.4
@@ -208,8 +208,8 @@ packages:
   '@types/micromatch@4.0.9':
     resolution: {integrity: sha512-7V+8ncr22h4UoYRLnLXSpTxjQrNUXtWHGeMPRJt1nULXI57G9bIcpyrHlmrQ7QK24EyyuXvYcSSWAM8GA9nqCg==}
 
-  '@types/node@24.6.1':
-    resolution: {integrity: sha512-ljvjjs3DNXummeIaooB4cLBKg2U6SPI6Hjra/9rRIy7CpM0HpLtG9HptkMKAb4HYWy5S7HUvJEuWgr/y0U8SHw==}
+  '@types/node@24.6.2':
+    resolution: {integrity: sha512-d2L25Y4j+W3ZlNAeMKcy7yDsK425ibcAOO2t7aPTz6gNMH0z2GThtwENCDc0d/Pw9wgyRqE5Px1wkV7naz8ang==}
 
   '@typescript-eslint/eslint-plugin@8.45.0':
     resolution: {integrity: sha512-HC3y9CVuevvWCl/oyZuI47dOeDF9ztdMEfMH8/DW/Mhwa9cCLnK1oD7JoTVGW/u7kFzNZUKUoyJEqkaJh5y3Wg==}
@@ -840,7 +840,7 @@ snapshots:
     dependencies:
       '@types/braces': 3.0.5
 
-  '@types/node@24.6.1':
+  '@types/node@24.6.2':
     dependencies:
       undici-types: 7.13.0
 
