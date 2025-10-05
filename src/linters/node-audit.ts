@@ -13,11 +13,11 @@ export async function runner(
 
     await installer(name, version)
 
-    if (count === 0) {
-        info(`[runner] Running ${name} cron job`)
-    } else {
-        info(`[runner] ${count} files matched – running ${name}`)
-    }
+    info(
+        count === 0
+            ? `[runner] Running ${name} cron job`
+            : `[runner] ${count} files matched – running ${name}`,
+    )
 
     await exec('na', ['audit', ...options], {
         // https://github.com/antfu-collective/ni/blob/82611c44aeada5185d5fb5fc2c72c2ce6b921159/src/detect.ts#L39-L53
