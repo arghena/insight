@@ -13,11 +13,11 @@ export async function runner(
 
     await installer(name, version)
 
-    if (count === 0) {
-        info(`[runner] Running ${name} cron job`)
-    } else {
-        info(`[runner] ${count} files matched – running ${name}`)
-    }
+    info(
+        count === 0
+            ? `[runner] Running ${name} cron job`
+            : `[runner] ${count} files matched – running ${name}`,
+    )
 
     await exec(name.replace('_', '-'), ['check', ...options])
 }
