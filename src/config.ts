@@ -23,7 +23,7 @@ interface Config {
         formatters: FormatterKey[]
         linters: LinterKey[]
     }
-    options: {
+    args: {
         formatters: Record<FormatterKey, string[]>
         linters: Record<LinterKey | 'commitlint', string[]>
     }
@@ -57,7 +57,7 @@ const default_config: Config = {
         formatters: [],
         linters: [],
     },
-    options: {
+    args: {
         formatters: {
             prettier: [],
             cargo_fmt: [],

@@ -24,7 +24,7 @@ async function run() {
         pull_request,
         schedule,
         push_tag,
-        options,
+        args,
         formatters,
         linters,
         versions,
@@ -39,7 +39,7 @@ async function run() {
 
             const { runner } = await linter[name]()
 
-            await runner([], name, versions[name], options.linters[name])
+            await runner([], name, versions[name], args.linters[name])
         }
 
         return
@@ -55,7 +55,7 @@ async function run() {
 
             const { runner } = await formatter[name]()
 
-            await runner(paths, name, versions[name], options.formatters[name])
+            await runner(paths, name, versions[name], args.formatters[name])
         }
 
         for (const name of push_tag.linters) {
@@ -71,7 +71,7 @@ async function run() {
 
             const { runner } = await linter[name]()
 
-            await runner(paths, name, versions[name], options.linters[name])
+            await runner(paths, name, versions[name], args.linters[name])
         }
 
         return
@@ -91,7 +91,7 @@ async function run() {
 
         info(`[commitlint] Checking the pull request title`)
 
-        await exec('commitlint', options.linters['commitlint'], {
+        await exec('commitlint', args.linters['commitlint'], {
             input: Buffer.from(pull_request_title + '\n'),
         })
     }
@@ -113,7 +113,7 @@ async function run() {
 
         const { runner } = await formatter[name]()
 
-        await runner(paths, name, versions[name], options.formatters[name])
+        await runner(paths, name, versions[name], args.formatters[name])
     }
     for (const name of linter_keys) {
         const paths = micromatch(changed_files, linters[name], {
@@ -126,7 +126,7 @@ async function run() {
 
         const { runner } = await linter[name]()
 
-        await runner(paths, name, versions[name], options.linters[name])
+        await runner(paths, name, versions[name], args.linters[name])
     }
 
     const paths = micromatch(changed_files, pull_request.detect_changes, {

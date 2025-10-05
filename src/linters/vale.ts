@@ -8,10 +8,10 @@ export async function runner(
     paths: string[],
     name: LinterKey,
     version: string,
-    options: string[],
+    args: string[],
 ): Promise<void> {
     const tag = version === 'latest' ? 'latest' : `v${version}`
-    const docker_options = [
+    const docker_args = [
         'run',
         '--rm',
         '-v',
@@ -25,6 +25,6 @@ export async function runner(
 
     info(`[runner] Checking ${paths.length} files with ${name}`)
 
-    await exec('docker', [...docker_options, 'sync'])
-    await exec('docker', [...docker_options, ...options, '--', ...paths])
+    await exec('docker', [...docker_args, 'sync'])
+    await exec('docker', [...docker_args, ...args, '--', ...paths])
 }

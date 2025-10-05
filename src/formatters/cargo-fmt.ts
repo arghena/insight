@@ -8,11 +8,11 @@ export async function runner(
     paths: string[],
     name: FormatterKey,
     version: string,
-    options: string[],
+    args: string[],
 ): Promise<void> {
     await installer(name, version)
 
     info(`[runner] ${paths.length} files matched – running ${name}`)
 
-    await exec(name.replace('_', '-'), ['--check', ...options])
+    await exec(name.replace('_', '-'), ['--check', ...args])
 }

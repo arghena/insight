@@ -19,7 +19,7 @@ It's designed to provide a unified config file so you can run various formatters
 - Supports using [commitlint](https://commitlint.js.org) to check pull request titles.
 - Responds to [`on.schedule`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onschedule) and [`on.push.tags`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onpushbranchestagsbranches-ignoretags-ignore) events, respecting `.gitignore` when running linters.
 - Can check build files in `dist/` using a `git diff` approach.
-- Lets you customize formatter and linter versions and options.
+- Lets you customize formatter and linter versions and arguments.
 - Supports [glob](<https://en.wikipedia.org/wiki/Glob_(programming)>) patterns to match exactly the files you want to check.
 - Supports detecting file changes and outputs the result.
 - Ships with minimal defaults to keep opinionated behavior to a minimum.
@@ -107,13 +107,13 @@ formatters = ["prettier"]
 # Default: []
 linters = ["check_dist", "eslint"]
 
-[options.formatters]
-# Options passed to formatters.
+[args.formatters]
+# Arguments passed to formatters.
 # Default: []
 shfmt = ["-i", "4", "-ci"]
 
-[options.linters]
-# Options passed to linters.
+[args.linters]
+# Arguments passed to linters.
 # Default: []
 check_dist = ["prepare"]
 yamllint = ["--strict"]

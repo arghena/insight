@@ -12,8 +12,7 @@ type Tools = Record<
     CommitLinter | FormatterKey | LinterKey,
     {
         pm: PM
-        setup: string[]
-        cmd: string[]
+        args: string[]
     }
 >
 
@@ -41,12 +40,10 @@ export async function installer(
         ],
         docker: [],
     }
-
     const tools: Tools = {
         commitlint_config_conventional: {
             pm: 'npm',
-            setup: setups.npm,
-            cmd: [
+            args: [
                 'install',
                 '--no-save',
                 `@commitlint/config-conventional@${version}`,
@@ -54,13 +51,11 @@ export async function installer(
         },
         commitlint: {
             pm: 'npm',
-            setup: setups.npm,
-            cmd: ['install', '--global', `@commitlint/cli@${version}`],
+            args: ['install', '--global', `@commitlint/cli@${version}`],
         },
         cargo_deny: {
             pm: 'cargo',
-            setup: setups.cargo,
-            cmd: [
+            args: [
                 'binstall',
                 '--no-confirm',
                 version === 'latest' ? 'cargo-deny' : `cargo-deny@${version}`,
@@ -68,23 +63,19 @@ export async function installer(
         },
         node_audit: {
             pm: 'npm',
-            setup: setups.npm,
-            cmd: ['install', '--global', '@antfu/ni'],
+            args: ['install', '--global', '@antfu/ni'],
         },
         check_dist: {
             pm: 'npm',
-            setup: setups.npm,
-            cmd: ['install', '--global', '@antfu/ni'],
+            args: ['install', '--global', '@antfu/ni'],
         },
         prettier: {
             pm: 'npm',
-            setup: setups.npm,
-            cmd: ['install', '--global', `prettier@${version}`],
+            args: ['install', '--global', `prettier@${version}`],
         },
         eslint: {
             pm: 'npm',
-            setup: setups.npm,
-            cmd: [
+            args: [
                 'install',
                 '--global',
                 `eslint@${version}`,
@@ -95,8 +86,7 @@ export async function installer(
         },
         typos: {
             pm: 'cargo',
-            setup: setups.cargo,
-            cmd: [
+            args: [
                 'binstall',
                 '--no-confirm',
                 version === 'latest' ? 'typos-cli' : `typos-cli@${version}`,
@@ -104,18 +94,15 @@ export async function installer(
         },
         yamllint: {
             pm: 'uv',
-            setup: setups.uv,
-            cmd: ['tool', 'install', `yamllint@${version}`],
+            args: ['tool', 'install', `yamllint@${version}`],
         },
         actionlint: {
             pm: 'docker',
-            setup: setups.docker,
-            cmd: ['pull', `rhysd/actionlint:${version}`],
+            args: ['pull', `rhysd/actionlint:${version}`],
         },
         ast_grep: {
             pm: 'cargo',
-            setup: setups.cargo,
-            cmd: [
+            args: [
                 'binstall',
                 '--no-confirm',
                 version === 'latest' ? 'ast-grep' : `ast-grep@${version}`,
@@ -123,18 +110,15 @@ export async function installer(
         },
         cargo_clippy: {
             pm: 'rustup',
-            setup: setups.rustup,
-            cmd: ['component', 'add', 'clippy'],
+            args: ['component', 'add', 'clippy'],
         },
         cargo_fmt: {
             pm: 'rustup',
-            setup: setups.rustup,
-            cmd: ['component', 'add', 'rustfmt'],
+            args: ['component', 'add', 'rustfmt'],
         },
         cargo_msrv: {
             pm: 'cargo',
-            setup: setups.cargo,
-            cmd: [
+            args: [
                 'binstall',
                 '--no-confirm',
                 version === 'latest' ? 'cargo-msrv' : `cargo-msrv@${version}`,
@@ -142,8 +126,7 @@ export async function installer(
         },
         cargo_tarpaulin: {
             pm: 'cargo',
-            setup: setups.cargo,
-            cmd: [
+            args: [
                 'binstall',
                 '--no-confirm',
                 version === 'latest'
@@ -153,47 +136,42 @@ export async function installer(
         },
         alex: {
             pm: 'npm',
-            setup: setups.npm,
-            cmd: ['install', '--global', `alex@${version}`],
+            args: ['install', '--global', `alex@${version}`],
         },
         markdownlint_cli2: {
             pm: 'npm',
-            setup: setups.npm,
-            cmd: ['install', '--global', `markdownlint-cli2@${version}`],
+            args: ['install', '--global', `markdownlint-cli2@${version}`],
         },
         vale: {
             pm: 'docker',
-            setup: setups.docker,
-            cmd: ['pull', `jdkato/vale:${version}`],
+            args: ['pull', `jdkato/vale:${version}`],
         },
         shfmt: {
             pm: 'docker',
-            setup: setups.docker,
-            cmd: ['pull', `mvdan/shfmt:${version}`],
+            args: ['pull', `mvdan/shfmt:${version}`],
         },
         shellcheck: {
             pm: 'docker',
-            setup: setups.docker,
-            cmd: ['pull', `koalaman/shellcheck:${version}`],
+            args: ['pull', `koalaman/shellcheck:${version}`],
         },
         taplo: {
             pm: 'cargo',
-            setup: setups.cargo,
-            cmd: [
+            args: [
                 'binstall',
                 '--no-confirm',
                 version === 'latest' ? 'taplo-cli' : `taplo-cli@${version}`,
             ],
         },
     }
+    const { pm, args } = tools[name]
 
-    if (tools[name].setup.length !== 0) {
-        info(`[installer] Setting up the ${tools[name].pm} environment`)
+    if (setups[pm].length !== 0) {
+        info(`[installer] Setting up the ${pm} environment`)
 
-        for (const cmd of tools[name].setup) await exec('sh', ['-c', cmd])
+        for (const cmd of setups[pm]) await exec('sh', ['-c', cmd])
     }
 
-    info(`[installer] Installing ${name} using ${tools[name].pm}`)
+    info(`[installer] Installing ${name} using ${pm}`)
 
-    await exec(tools[name].pm, tools[name].cmd)
+    await exec(pm, args)
 }
