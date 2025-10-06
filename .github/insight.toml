@@ -11,7 +11,7 @@ tasks = ["node_audit"]
 formatters = ["prettier"]
 linters = ["check_dist", "eslint", "ast_grep"]
 
-[options.linters]
+[args.linters]
 yamllint = ["--strict"]
 
 [formatters]

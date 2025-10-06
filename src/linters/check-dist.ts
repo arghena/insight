@@ -7,7 +7,7 @@ export async function runner(
     paths: string[],
     name: LinterKey,
     version: string,
-    options: string[],
+    args: string[],
 ): Promise<void> {
     let diff_result = ''
 
@@ -16,7 +16,7 @@ export async function runner(
     info(`[runner] ${paths.length} files matched – running ${name}`)
 
     await exec('nci')
-    await exec('nr', options.length === 0 ? ['build'] : options)
+    await exec('nr', args.length === 0 ? ['build'] : args)
     await exec('git', ['diff', 'dist/'], {
         listeners: {
             stdout: (data: Buffer) => (diff_result += data.toString()),

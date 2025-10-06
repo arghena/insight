@@ -7,7 +7,7 @@ export async function runner(
     paths: string[],
     name: LinterKey,
     version: string,
-    options: string[],
+    args: string[],
 ): Promise<void> {
     const count = paths.length
 
@@ -19,5 +19,5 @@ export async function runner(
             : `[runner] ${count} files matched – running ${name}`,
     )
 
-    await exec(name.replace('_', '-'), ['check', ...options])
+    await exec(name.replace('_', '-'), ['check', ...args])
 }

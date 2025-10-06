@@ -7,11 +7,11 @@ export async function runner(
     paths: string[],
     name: LinterKey,
     version: string,
-    options: string[],
+    args: string[],
 ): Promise<void> {
     await installer(name, version)
 
     info(`[runner] Checking ${paths.length} files with ${name}`)
 
-    await exec(name.replace('_', '-'), [...options, '--', ...paths])
+    await exec(name.replace('_', '-'), [...args, '--', ...paths])
 }
