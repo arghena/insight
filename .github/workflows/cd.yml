@@ -7,31 +7,8 @@ on:
     tags: ['v[0-9]+.[0-9]+.[0-9]+', 'v[0-9]+.[0-9]+.[0-9]+-canary.[0-9]+']
 
 jobs:
-  create-release-note:
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
-    name: Create release note
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-      - name: Generate release note
-        run: |
-          if ${{ contains(github.ref_name, 'canary') }}; then
-            npx changelogithub@latest --prerelease
-          else
-            npx changelogithub@latest
-          fi
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-  publish-assets:
-    permissions:
-      contents: write
-    needs: create-release-note
-    name: Publish assets
+  archive-assets:
+    name: Archive assets
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -41,7 +18,58 @@ jobs:
           base_name="insight-${{ github.ref_name }}"
 
           tar czf "$base_name.tar.gz" --transform "s,^,$base_name/," -- dist/ LICENSE README.md action.yml
-      - name: Releasing assets
-        uses: softprops/action-gh-release@v2
+      - name: Uploading assets
+        uses: actions/upload-artifact@v4
         with:
-          files: insight-${{ github.ref_name }}.tar.gz
+          name: assets
+          path: insight-${{ github.ref_name }}.tar.gz
+
+  create-attestation:
+    permissions:
+      id-token: write
+      attestations: write
+    needs: archive-assets
+    runs-on: ubuntu-latest
+    name: Create attestation
+    steps:
+      - name: Downloading assets
+        uses: actions/download-artifact@v5
+        with:
+          name: assets
+      - name: Generate attestation
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: insight-${{ github.ref_name }}.tar.gz
+
+  create-release-note:
+    permissions:
+      contents: write
+    needs: archive-assets
+    runs-on: ubuntu-latest
+    name: Create release note
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Downloading assets
+        uses: actions/download-artifact@v5
+        with:
+          name: assets
+      - name: Generate release note
+        # NOTE:
+        # The recommended workflow for publishing an immutable release
+        # will be to initially create the release as a draft,
+        # attach any associated assets, and then publish the draft.
+        # https://github.com/orgs/community/discussions/171210#discussioncomment-14237940
+        run: |
+          if ${{ contains(github.ref_name, 'canary') }}; then
+            npx changelogithub@latest --prerelease --draft
+          else
+            npx changelogithub@latest --draft
+          fi
+
+          gh release upload "${{ github.ref_name }}" "insight-${{ github.ref_name }}.tar.gz"
+          gh release edit "${{ github.ref_name }}" --draft=false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
