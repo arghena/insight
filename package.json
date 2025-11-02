@@ -1,4 +1,5 @@
 {
+  "private": true,
   "scripts": {
     "format": "prettier -w '**/*.ts'",
     "lint": "eslint '**/*.ts'",
