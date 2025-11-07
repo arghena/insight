@@ -63,6 +63,7 @@ const default_config: Config = {
             cargo_fmt: [],
             shfmt: [],
             taplo: [],
+            tombi: [],
         },
         linters: {
             commitlint: [],
@@ -82,6 +83,7 @@ const default_config: Config = {
             vale: [],
             shellcheck: [],
             taplo: [],
+            tombi: [],
         },
     },
     formatters: {
@@ -89,6 +91,7 @@ const default_config: Config = {
         cargo_fmt: [],
         shfmt: [],
         taplo: [],
+        tombi: [],
     },
     linters: {
         cargo_deny: [],
@@ -107,6 +110,7 @@ const default_config: Config = {
         vale: [],
         shellcheck: [],
         taplo: [],
+        tombi: [],
     },
     versions: {
         commitlint_config_conventional: 'latest',
@@ -130,6 +134,7 @@ const default_config: Config = {
         shfmt: 'latest',
         shellcheck: 'latest',
         taplo: 'latest',
+        tombi: 'latest',
     },
 }
 

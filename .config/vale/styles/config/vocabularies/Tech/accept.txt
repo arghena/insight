@@ -3,6 +3,7 @@ config
 rustfmt
 shfmt
 taplo
+tombi
 commitlint
 eslint
 clippy

@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@v5
       - name: Run Insight
         id: insight
-        uses: arghena/insight@v0.1.0-canary.15
+        uses: arghena/insight@v0.1.0-canary.16
         with:
           # The path to the Insight config file.
           # Default: '.github/insight.toml'
@@ -149,6 +149,7 @@ eslint = "9.33.0"
 | [rustfmt](https://github.com/rust-lang/rustfmt)  | `cargo_fmt`    |
 | [shfmt](https://github.com/mvdan/sh)             | `shfmt`        |
 | [taplo](https://github.com/tamasfe/taplo)        | `taplo`        |
+| [tombi](https://github.com/tombi-toml/tombi)     | `tombi`        |
 
 ## Available Linters
 
@@ -170,6 +171,7 @@ eslint = "9.33.0"
 | [vale](https://github.com/errata-ai/vale)                                              | `vale`              |                     |
 | [shellcheck](https://github.com/koalaman/shellcheck)                                   | `shellcheck`        |                     |
 | [taplo](https://github.com/tamasfe/taplo)                                              | `taplo`             |                     |
+| [tombi](https://github.com/tombi-toml/tombi)                                           | `tombi`             |                     |
 
 ## Contributing
 
