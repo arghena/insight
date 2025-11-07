@@ -162,6 +162,10 @@ export async function installer(
                 version === 'latest' ? 'taplo-cli' : `taplo-cli@${version}`,
             ],
         },
+        tombi: {
+            pm: 'uv',
+            args: ['tool', 'install', `tombi@${version}`],
+        },
     }
     const { pm, args } = tools[name]
 

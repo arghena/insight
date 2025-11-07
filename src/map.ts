@@ -3,6 +3,7 @@ export const formatter = {
     cargo_fmt: () => import('./formatters/cargo-fmt'),
     shfmt: () => import('./formatters/shfmt'),
     taplo: () => import('./formatters/taplo'),
+    tombi: () => import('./formatters/tombi'),
 }
 export const linter = {
     cargo_deny: () => import('./linters/cargo-deny'),
@@ -21,6 +22,7 @@ export const linter = {
     vale: () => import('./linters/vale'),
     shellcheck: () => import('./linters/shellcheck'),
     taplo: () => import('./linters/taplo'),
+    tombi: () => import('./linters/tombi'),
 }
 
 export type FormatterKey = keyof typeof formatter
