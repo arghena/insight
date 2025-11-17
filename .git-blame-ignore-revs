@@ -5,3 +5,6 @@
 
 # style(toml): change single quotes to double quotes in `.github/insight.toml` (#40)
 0747e5323e81e1f86fc79b789d7dd67fd617569a
+
+# style(ts): format `src/**/*.ts` using `prettier` (#144)
+10265c833dd495270e4bb96aeec582a1f6786d97
