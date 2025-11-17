@@ -19,16 +19,8 @@ async function run() {
         repository,
         pull_request_number,
     } = getInputs()
-    const {
-        match,
-        pull_request,
-        schedule,
-        push_tag,
-        args,
-        formatters,
-        linters,
-        versions,
-    } = await resolveConfig(config_path)
+    // prettier-ignore
+    const { match, pull_request, schedule, push_tag, args, formatters, linters, versions } = await resolveConfig(config_path)
     const ig = await resolveGitignore()
     const formatter_keys = Object.keys(formatter) as FormatterKey[]
     const linter_keys = Object.keys(linter) as LinterKey[]
@@ -96,11 +88,7 @@ async function run() {
         })
     }
 
-    const changed_files = await getChangedFiles(
-        token,
-        repository,
-        pull_request_number,
-    )
+    const changed_files = await getChangedFiles(token, repository, pull_request_number)
 
     for (const name of formatter_keys) {
         const paths = micromatch(changed_files, formatters[name], {

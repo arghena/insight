@@ -54,9 +54,7 @@ export async function getChangedFiles(
         .filter((file) => file.status === 'added' || file.status === 'modified')
         .map((file) => file.filename)
 
-    info(
-        `[github] Got these files from the #${pull_request_number}: ${changed_files}`,
-    )
+    info(`[github] Got these files from the #${pull_request_number}: ${changed_files}`)
 
     return changed_files
 }

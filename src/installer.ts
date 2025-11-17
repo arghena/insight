@@ -43,11 +43,7 @@ export async function installer(
     const tools: Tools = {
         commitlint_config_conventional: {
             pm: 'npm',
-            args: [
-                'install',
-                '--no-save',
-                `@commitlint/config-conventional@${version}`,
-            ],
+            args: ['install', '--no-save', `@commitlint/config-conventional@${version}`],
         },
         commitlint: {
             pm: 'npm',
@@ -129,9 +125,7 @@ export async function installer(
             args: [
                 'binstall',
                 '--no-confirm',
-                version === 'latest'
-                    ? 'cargo-tarpaulin'
-                    : `cargo-tarpaulin@${version}`,
+                version === 'latest' ? 'cargo-tarpaulin' : `cargo-tarpaulin@${version}`,
             ],
         },
         alex: {
