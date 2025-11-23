@@ -13,6 +13,7 @@ linters = ["check_dist", "eslint", "ast_grep"]
 
 [args.linters]
 yamllint = ["--strict"]
+tombi = ["--error-on-warnings"]
 
 [formatters]
 prettier = ["**/*.yml", "**/*.ts", "**/*.md", "**/*.json"]
