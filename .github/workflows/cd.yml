@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v6
       - name: Packaging assets
         run: |
-          base_name="insight-${{ github.ref_name }}"
+          base_name="insight-$GITHUB_REF_NAME"
 
           tar czf "$base_name.tar.gz" --transform "s,^,$base_name/," -- dist/ LICENSE README.md action.yml
       - name: Uploading assets
@@ -63,13 +63,13 @@ jobs:
         # attach any associated assets, and then publish the draft.
         # https://github.com/orgs/community/discussions/171210#discussioncomment-14237940
         run: |
-          if ${{ contains(github.ref_name, 'canary') }}; then
+          if [[ $GITHUB_REF_NAME = *canary* ]]; then
             npx changelogithub@latest --prerelease --draft
           else
             npx changelogithub@latest --draft
           fi
 
-          gh release upload "${{ github.ref_name }}" "insight-${{ github.ref_name }}.tar.gz"
-          gh release edit "${{ github.ref_name }}" --draft=false
+          gh release upload "$GITHUB_REF_NAME" "insight-$GITHUB_REF_NAME.tar.gz"
+          gh release edit "$GITHUB_REF_NAME" --draft=false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
