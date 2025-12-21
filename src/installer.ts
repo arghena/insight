@@ -33,6 +33,9 @@ export async function installer(
                       `rustup default ${version}`,
                   ],
         cargo: [
+            // TODO:
+            // `dash` v0.5.13 has implemented `set -o pipefail`.
+            // https://wiki.linuxfromscratch.org/blfs/ticket/22177
             'curl -fsSL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash',
         ],
         uv: [
