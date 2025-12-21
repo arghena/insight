@@ -33,7 +33,7 @@ export async function installer(
                       `rustup default ${version}`,
                   ],
         cargo: [
-            'curl -fsSL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | sh',
+            'curl -fsSL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash',
         ],
         uv: [
             'curl -fsSL https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh | sh',
