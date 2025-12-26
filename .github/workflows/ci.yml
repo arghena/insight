@@ -16,8 +16,32 @@ jobs:
   insight:
     name: Insight
     runs-on: ubuntu-latest
+    outputs:
+      any-changed: ${{ steps.insight.outputs.any-changed }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
       - name: Run Insight
+        id: insight
         uses: ./
+
+  codeql:
+    name: CodeQL
+    needs: insight
+    if: ${{ github.event_name == 'schedule' || github.ref_type == 'tag' || needs.insight.outputs.any-changed == 'true' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['typescript', 'actions']
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v2
