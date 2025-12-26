@@ -27,8 +27,10 @@ async function run() {
 
     if (event_name === 'schedule') {
         for (const name of schedule.tasks) {
-            await group(`[schedule] Starting ${name} cron job`, async () => {
+            await group(`[linter] ${name}`, async () => {
                 const { runner } = await linter[name]()
+
+                info(`[schedule] Starting ${name} cron job`)
 
                 await runner([], name, versions[name], args.linters[name])
             })
@@ -43,8 +45,10 @@ async function run() {
 
             if (paths.length === 0) continue
 
-            await group(`[formatter] ${name} glob matched these file paths: ${paths}`, async () => {
+            await group(`[formatter] ${name}`, async () => {
                 const { runner } = await formatter[name]()
+
+                info(`[glob] Matched file paths: ${paths}`)
 
                 await runner(paths, name, versions[name], args.formatters[name])
             })
@@ -59,8 +63,10 @@ async function run() {
 
             if (paths.length === 0) continue
 
-            await group(`[linter] ${name} glob matched these file paths: ${paths}`, async () => {
+            await group(`[linter] ${name}`, async () => {
                 const { runner } = await linter[name]()
+
+                info(`[glob] Matched file paths: ${paths}`)
 
                 await runner(paths, name, versions[name], args.linters[name])
             })
@@ -73,14 +79,16 @@ async function run() {
         pull_request.check_title &&
         (pull_request_type === 'opened' || pull_request_type === 'edited')
     ) {
-        await group(`[pull request] Found pull request title: ${pull_request_title}`, async () => {
+        await group(`[linter] commitlint`, async () => {
+            info(`[pull request] Found title: ${pull_request_title}`)
+
             await installer(
                 'commitlint_config_conventional',
                 versions['commitlint_config_conventional'],
             )
             await installer('commitlint', versions['commitlint'])
 
-            info(`[commitlint] Checking the pull request title`)
+            info(`[runner] Checking the pull request title`)
 
             await exec('commitlint', args.linters['commitlint'], {
                 input: Buffer.from(pull_request_title + '\n'),
@@ -97,8 +105,10 @@ async function run() {
 
         if (paths.length === 0) continue
 
-        await group(`[formatter] ${name} glob matched these file paths: ${paths}`, async () => {
+        await group(`[formatter] ${name}`, async () => {
             const { runner } = await formatter[name]()
+
+            info(`[glob] Matched file paths: ${paths}`)
 
             await runner(paths, name, versions[name], args.formatters[name])
         })
@@ -110,8 +120,10 @@ async function run() {
 
         if (paths.length === 0) continue
 
-        await group(`[linter] ${name} glob matched these file paths: ${paths}`, async () => {
+        await group(`[linter] ${name}`, async () => {
             const { runner } = await linter[name]()
+
+            info(`[glob] Matched file paths: ${paths}`)
 
             await runner(paths, name, versions[name], args.linters[name])
         })
