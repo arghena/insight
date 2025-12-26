@@ -1,5 +1,6 @@
 import { getInput, info, group } from '@actions/core'
 import { getOctokit } from '@actions/github'
+import { toBulletedList } from './utils'
 
 interface Inputs {
     config_path: string
@@ -55,7 +56,7 @@ export async function getChangedFiles(
             .filter((file) => file.status === 'added' || file.status === 'modified')
             .map((file) => file.filename)
 
-        info(changed_files.toString())
+        info(toBulletedList(changed_files))
 
         return changed_files
     })

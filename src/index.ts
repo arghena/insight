@@ -7,6 +7,7 @@ import { info, setFailed, setOutput, group } from '@actions/core'
 import { exec } from '@actions/exec'
 import fg from 'fast-glob'
 import { resolveGitignore } from './config'
+import { toBulletedList } from './utils'
 
 async function run() {
     const {
@@ -48,7 +49,7 @@ async function run() {
             await group(`[FORMATTER] ${name}`, async () => {
                 const { runner } = await formatter[name]()
 
-                info(`[GLOB] Matched file paths: ${paths}`)
+                info(`[GLOB] Matched file paths:\n${toBulletedList(paths)}`)
 
                 await runner(paths, name, versions[name], args.formatters[name])
             })
@@ -66,7 +67,7 @@ async function run() {
             await group(`[LINTER] ${name}`, async () => {
                 const { runner } = await linter[name]()
 
-                info(`[GLOB] Matched file paths: ${paths}`)
+                info(`[GLOB] Matched file paths:\n${toBulletedList(paths)}`)
 
                 await runner(paths, name, versions[name], args.linters[name])
             })
@@ -80,7 +81,7 @@ async function run() {
         (pull_request_type === 'opened' || pull_request_type === 'edited')
     ) {
         await group(`[LINTER] commitlint`, async () => {
-            info(`[PR] Found title: ${pull_request_title}`)
+            info(`[PR] Found title:\n${pull_request_title}`)
 
             await installer(
                 'commitlint_config_conventional',
@@ -108,7 +109,7 @@ async function run() {
         await group(`[FORMATTER] ${name}`, async () => {
             const { runner } = await formatter[name]()
 
-            info(`[GLOB] Matched file paths: ${paths}`)
+            info(`[GLOB] Matched file paths:\n${toBulletedList(paths)}`)
 
             await runner(paths, name, versions[name], args.formatters[name])
         })
@@ -123,7 +124,7 @@ async function run() {
         await group(`[LINTER] ${name}`, async () => {
             const { runner } = await linter[name]()
 
-            info(`[GLOB] Matched file paths: ${paths}`)
+            info(`[GLOB] Matched file paths:\n${toBulletedList(paths)}`)
 
             await runner(paths, name, versions[name], args.linters[name])
         })
