@@ -3,7 +3,7 @@ import { resolveConfig } from './config'
 import { formatter, linter, type FormatterKey, type LinterKey } from './map'
 import { installer } from './installer'
 import micromatch from 'micromatch'
-import { info, setFailed, setOutput } from '@actions/core'
+import { info, setFailed, setOutput, group } from '@actions/core'
 import { exec } from '@actions/exec'
 import fg from 'fast-glob'
 import { resolveGitignore } from './config'
@@ -27,11 +27,11 @@ async function run() {
 
     if (event_name === 'schedule') {
         for (const name of schedule.tasks) {
-            info(`[schedule] Starting ${name} cron job`)
+            await group(`[schedule] Starting ${name} cron job`, async () => {
+                const { runner } = await linter[name]()
 
-            const { runner } = await linter[name]()
-
-            await runner([], name, versions[name], args.linters[name])
+                await runner([], name, versions[name], args.linters[name])
+            })
         }
 
         return
@@ -43,11 +43,11 @@ async function run() {
 
             if (paths.length === 0) continue
 
-            info(`[formatter] ${name} glob matched these file paths: ${paths}`)
+            await group(`[formatter] ${name} glob matched these file paths: ${paths}`, async () => {
+                const { runner } = await formatter[name]()
 
-            const { runner } = await formatter[name]()
-
-            await runner(paths, name, versions[name], args.formatters[name])
+                await runner(paths, name, versions[name], args.formatters[name])
+            })
         }
 
         for (const name of push_tag.linters) {
@@ -59,11 +59,11 @@ async function run() {
 
             if (paths.length === 0) continue
 
-            info(`[linter] ${name} glob matched these file paths: ${paths}`)
+            await group(`[linter] ${name} glob matched these file paths: ${paths}`, async () => {
+                const { runner } = await linter[name]()
 
-            const { runner } = await linter[name]()
-
-            await runner(paths, name, versions[name], args.linters[name])
+                await runner(paths, name, versions[name], args.linters[name])
+            })
         }
 
         return
@@ -73,18 +73,18 @@ async function run() {
         pull_request.check_title &&
         (pull_request_type === 'opened' || pull_request_type === 'edited')
     ) {
-        info(`[pull request] Found pull request title: ${pull_request_title}`)
+        await group(`[pull request] Found pull request title: ${pull_request_title}`, async () => {
+            await installer(
+                'commitlint_config_conventional',
+                versions['commitlint_config_conventional'],
+            )
+            await installer('commitlint', versions['commitlint'])
 
-        await installer(
-            'commitlint_config_conventional',
-            versions['commitlint_config_conventional'],
-        )
-        await installer('commitlint', versions['commitlint'])
+            info(`[commitlint] Checking the pull request title`)
 
-        info(`[commitlint] Checking the pull request title`)
-
-        await exec('commitlint', args.linters['commitlint'], {
-            input: Buffer.from(pull_request_title + '\n'),
+            await exec('commitlint', args.linters['commitlint'], {
+                input: Buffer.from(pull_request_title + '\n'),
+            })
         })
     }
 
@@ -97,11 +97,11 @@ async function run() {
 
         if (paths.length === 0) continue
 
-        info(`[formatter] ${name} glob matched these file paths: ${paths}`)
+        await group(`[formatter] ${name} glob matched these file paths: ${paths}`, async () => {
+            const { runner } = await formatter[name]()
 
-        const { runner } = await formatter[name]()
-
-        await runner(paths, name, versions[name], args.formatters[name])
+            await runner(paths, name, versions[name], args.formatters[name])
+        })
     }
     for (const name of linter_keys) {
         const paths = micromatch(changed_files, linters[name], {
@@ -110,11 +110,11 @@ async function run() {
 
         if (paths.length === 0) continue
 
-        info(`[linter] ${name} glob matched these file paths: ${paths}`)
+        await group(`[linter] ${name} glob matched these file paths: ${paths}`, async () => {
+            const { runner } = await linter[name]()
 
-        const { runner } = await linter[name]()
-
-        await runner(paths, name, versions[name], args.linters[name])
+            await runner(paths, name, versions[name], args.linters[name])
+        })
     }
 
     const paths = micromatch(changed_files, pull_request.detect_changes, {
