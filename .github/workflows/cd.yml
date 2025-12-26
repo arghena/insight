@@ -31,7 +31,6 @@ jobs:
     permissions:
       id-token: write
       attestations: write
-      artifact-metadata: write
     needs: archive-assets
     runs-on: ubuntu-latest
     name: Create attestation
