@@ -13,7 +13,7 @@ export async function runner(
 
     await installer(name, version)
 
-    info(`[runner] ${paths.length} files matched – running ${name}`)
+    info(`[RUNNER] Running ${name} on ${paths.length} files`)
 
     await exec('nci')
     await exec('nr', args.length === 0 ? ['build'] : args)
@@ -24,5 +24,5 @@ export async function runner(
     })
 
     // prettier-ignore
-    if (diff_result.trim().length !== 0) throw new Error('[runner] Detected uncommitted changes after build.')
+    if (diff_result.trim().length !== 0) throw new Error('[RUNNER] Detected uncommitted changes after build')
 }

@@ -1,4 +1,4 @@
-import { getInput, info } from '@actions/core'
+import { getInput, info, group } from '@actions/core'
 import { getOctokit } from '@actions/github'
 
 interface Inputs {
@@ -43,18 +43,20 @@ export async function getChangedFiles(
     repository: string,
     pull_request_number: string,
 ): Promise<string[]> {
-    const octokit = getOctokit(token)
-    const repository_parts = repository.split('/', 2)
-    const { data: pullRequest } = await octokit.rest.pulls.listFiles({
-        owner: repository_parts[0],
-        repo: repository_parts[1],
-        pull_number: parseInt(pull_request_number),
+    return await group(`[PR] Changed files`, async () => {
+        const octokit = getOctokit(token)
+        const repository_parts = repository.split('/', 2)
+        const { data: pullRequest } = await octokit.rest.pulls.listFiles({
+            owner: repository_parts[0],
+            repo: repository_parts[1],
+            pull_number: parseInt(pull_request_number),
+        })
+        const changed_files = pullRequest
+            .filter((file) => file.status === 'added' || file.status === 'modified')
+            .map((file) => file.filename)
+
+        info(changed_files.toString())
+
+        return changed_files
     })
-    const changed_files = pullRequest
-        .filter((file) => file.status === 'added' || file.status === 'modified')
-        .map((file) => file.filename)
-
-    info(`[github] Got these files from the #${pull_request_number}: ${changed_files}`)
-
-    return changed_files
 }

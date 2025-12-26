@@ -15,8 +15,8 @@ export async function runner(
 
     info(
         count === 0
-            ? `[runner] Running ${name} cron job`
-            : `[runner] ${count} files matched – running ${name}`,
+            ? `[RUNNER] Running ${name} cron job`
+            : `[RUNNER] Running ${name} on ${count} files`,
     )
 
     await exec('na', ['audit', ...args], {

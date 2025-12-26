@@ -11,7 +11,7 @@ export async function runner(
 ): Promise<void> {
     await installer(name, version)
 
-    info(`[runner] Checking ${paths.length} files with ${name}`)
+    info(`[RUNNER] Running ${name} on ${paths.length} files`)
 
     await exec(name, ['fmt', '--check', ...args, '--', ...paths])
 }
