@@ -27,7 +27,7 @@ export async function runner(
 
     await installer(name, tag)
 
-    info(`[runner] Checking ${paths.length} files with ${name}`)
+    info(`[RUNNER] Running ${name} on ${paths.length} files`)
 
     await exec('docker', [...docker_args, ...args, '--', ...paths])
 }

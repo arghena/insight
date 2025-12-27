@@ -1,12 +1,13 @@
-import { getInputs, getChangedFiles } from './github'
+import { getInputs, getChangedFilePaths } from './github'
 import { resolveConfig } from './config'
 import { formatter, linter, type FormatterKey, type LinterKey } from './map'
 import { installer } from './installer'
 import micromatch from 'micromatch'
-import { info, setFailed, setOutput } from '@actions/core'
+import { info, setFailed, setOutput, group } from '@actions/core'
 import { exec } from '@actions/exec'
 import fg from 'fast-glob'
 import { resolveGitignore } from './config'
+import { toBulletedList } from './utils'
 
 async function run() {
     const {
@@ -27,11 +28,13 @@ async function run() {
 
     if (event_name === 'schedule') {
         for (const name of schedule.tasks) {
-            info(`[schedule] Starting ${name} cron job`)
+            await group(`[LINTER] ${name}`, async () => {
+                const { runner } = await linter[name]()
 
-            const { runner } = await linter[name]()
+                info(`[SCHEDULE] Starting ${name} cron job`)
 
-            await runner([], name, versions[name], args.linters[name])
+                await runner([], name, versions[name], args.linters[name])
+            })
         }
 
         return
@@ -43,11 +46,13 @@ async function run() {
 
             if (paths.length === 0) continue
 
-            info(`[formatter] ${name} glob matched these file paths: ${paths}`)
+            await group(`[FORMATTER] ${name}`, async () => {
+                const { runner } = await formatter[name]()
 
-            const { runner } = await formatter[name]()
+                info(`[GLOB] Matched file paths:\n${toBulletedList(paths)}`)
 
-            await runner(paths, name, versions[name], args.formatters[name])
+                await runner(paths, name, versions[name], args.formatters[name])
+            })
         }
 
         for (const name of push_tag.linters) {
@@ -59,11 +64,13 @@ async function run() {
 
             if (paths.length === 0) continue
 
-            info(`[linter] ${name} glob matched these file paths: ${paths}`)
+            await group(`[LINTER] ${name}`, async () => {
+                const { runner } = await linter[name]()
 
-            const { runner } = await linter[name]()
+                info(`[GLOB] Matched file paths:\n${toBulletedList(paths)}`)
 
-            await runner(paths, name, versions[name], args.linters[name])
+                await runner(paths, name, versions[name], args.linters[name])
+            })
         }
 
         return
@@ -73,51 +80,57 @@ async function run() {
         pull_request.check_title &&
         (pull_request_type === 'opened' || pull_request_type === 'edited')
     ) {
-        info(`[pull request] Found pull request title: ${pull_request_title}`)
+        await group(`[LINTER] commitlint`, async () => {
+            info(`[PR] Found title:\n${pull_request_title}`)
 
-        await installer(
-            'commitlint_config_conventional',
-            versions['commitlint_config_conventional'],
-        )
-        await installer('commitlint', versions['commitlint'])
+            await installer(
+                'commitlint_config_conventional',
+                versions['commitlint_config_conventional'],
+            )
+            await installer('commitlint', versions['commitlint'])
 
-        info(`[commitlint] Checking the pull request title`)
+            info(`[RUNNER] Checking the pull request title`)
 
-        await exec('commitlint', args.linters['commitlint'], {
-            input: Buffer.from(pull_request_title + '\n'),
+            await exec('commitlint', args.linters['commitlint'], {
+                input: Buffer.from(pull_request_title + '\n'),
+            })
         })
     }
 
-    const changed_files = await getChangedFiles(token, repository, pull_request_number)
+    const changed_file_paths = await getChangedFilePaths(token, repository, pull_request_number)
 
     for (const name of formatter_keys) {
-        const paths = micromatch(changed_files, formatters[name], {
+        const paths = micromatch(changed_file_paths, formatters[name], {
             dot: match.dot,
         })
 
         if (paths.length === 0) continue
 
-        info(`[formatter] ${name} glob matched these file paths: ${paths}`)
+        await group(`[FORMATTER] ${name}`, async () => {
+            const { runner } = await formatter[name]()
 
-        const { runner } = await formatter[name]()
+            info(`[GLOB] Matched file paths:\n${toBulletedList(paths)}`)
 
-        await runner(paths, name, versions[name], args.formatters[name])
+            await runner(paths, name, versions[name], args.formatters[name])
+        })
     }
     for (const name of linter_keys) {
-        const paths = micromatch(changed_files, linters[name], {
+        const paths = micromatch(changed_file_paths, linters[name], {
             dot: match.dot,
         })
 
         if (paths.length === 0) continue
 
-        info(`[linter] ${name} glob matched these file paths: ${paths}`)
+        await group(`[LINTER] ${name}`, async () => {
+            const { runner } = await linter[name]()
 
-        const { runner } = await linter[name]()
+            info(`[GLOB] Matched file paths:\n${toBulletedList(paths)}`)
 
-        await runner(paths, name, versions[name], args.linters[name])
+            await runner(paths, name, versions[name], args.linters[name])
+        })
     }
 
-    const paths = micromatch(changed_files, pull_request.detect_changes, {
+    const paths = micromatch(changed_file_paths, pull_request.detect_changes, {
         dot: match.dot,
     })
 
@@ -130,6 +143,6 @@ run().catch((error) => {
     } else if (typeof error === 'string') {
         setFailed(error)
     } else {
-        setFailed('unknown error')
+        setFailed('Unknown error')
     }
 })

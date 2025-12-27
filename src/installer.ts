@@ -167,12 +167,12 @@ export async function installer(
     const { pm, args } = tools[name]
 
     if (setups[pm].length !== 0) {
-        info(`[installer] Setting up the ${pm} environment`)
+        info(`[INSTALLER] Setting up the ${pm} environment`)
 
         for (const cmd of setups[pm]) await exec('sh', ['-c', cmd])
     }
 
-    info(`[installer] Installing ${name} using ${pm}`)
+    info(`[INSTALLER] Installing ${name} using ${pm}`)
 
     await exec(pm, args)
 }
