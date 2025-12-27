@@ -64,7 +64,9 @@ export async function getChangedFilePaths(
             .filter((file) => file.status === 'added' || file.status === 'modified')
             .map((file) => file.filename)
 
-        info(toBulletedList(changed_file_paths))
+        info(
+            `[TOTAL] Found ${changed_file_paths.length} changed files:\n${toBulletedList(changed_file_paths)}`,
+        )
 
         return changed_file_paths
     })
