@@ -6,6 +6,9 @@ on:
   push:
     tags: ['v[0-9]+.[0-9]+.[0-9]+', 'v[0-9]+.[0-9]+.[0-9]+-canary.[0-9]+']
 
+permissions:
+  contents: read
+
 jobs:
   archive-assets:
     name: Archive assets

@@ -12,12 +12,40 @@ on:
   pull_request:
     types: [opened, synchronize, edited]
 
+permissions:
+  contents: read
+
 jobs:
   insight:
     name: Insight
     runs-on: ubuntu-latest
+    outputs:
+      any-changed: ${{ steps.insight.outputs.any-changed }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
       - name: Run Insight
+        id: insight
         uses: ./
+
+  codeql:
+    permissions:
+      contents: read
+      security-events: write
+    name: CodeQL
+    needs: insight
+    if: ${{ github.event_name == 'schedule' || github.ref_type == 'tag' || needs.insight.outputs.any-changed == 'true' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['typescript', 'actions']
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v4
