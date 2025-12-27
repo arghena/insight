@@ -3,6 +3,7 @@ dot = true
 
 [pull_request]
 check_title = true
+# https://codeql.github.com/docs/codeql-overview/supported-languages-and-frameworks/#languages-and-compilers
 detect_changes = ["**/*.ts", ".github/workflows/*.yml", "action.yml"]
 
 [schedule]
