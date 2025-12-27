@@ -1,4 +1,4 @@
-import { getInputs, getChangedFiles } from './github'
+import { getInputs, getChangedFilePaths } from './github'
 import { resolveConfig } from './config'
 import { formatter, linter, type FormatterKey, type LinterKey } from './map'
 import { installer } from './installer'
@@ -97,10 +97,10 @@ async function run() {
         })
     }
 
-    const changed_files = await getChangedFiles(token, repository, pull_request_number)
+    const changed_file_paths = await getChangedFilePaths(token, repository, pull_request_number)
 
     for (const name of formatter_keys) {
-        const paths = micromatch(changed_files, formatters[name], {
+        const paths = micromatch(changed_file_paths, formatters[name], {
             dot: match.dot,
         })
 
@@ -115,7 +115,7 @@ async function run() {
         })
     }
     for (const name of linter_keys) {
-        const paths = micromatch(changed_files, linters[name], {
+        const paths = micromatch(changed_file_paths, linters[name], {
             dot: match.dot,
         })
 
@@ -130,7 +130,7 @@ async function run() {
         })
     }
 
-    const paths = micromatch(changed_files, pull_request.detect_changes, {
+    const paths = micromatch(changed_file_paths, pull_request.detect_changes, {
         dot: match.dot,
     })
 

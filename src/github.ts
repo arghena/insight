@@ -39,25 +39,33 @@ export function getInputs(): Inputs {
     }
 }
 
-export async function getChangedFiles(
+export async function getChangedFilePaths(
     token: string,
     repository: string,
     pull_request_number: string,
 ): Promise<string[]> {
-    return await group(`[PR] Changed files`, async () => {
+    return await group(`[PR] Changed file paths`, async () => {
         const octokit = getOctokit(token)
-        const repository_parts = repository.split('/', 2)
-        const { data: pullRequest } = await octokit.rest.pulls.listFiles({
-            owner: repository_parts[0],
-            repo: repository_parts[1],
-            pull_number: parseInt(pull_request_number),
-        })
-        const changed_files = pullRequest
+        const [owner, repo] = repository.split('/', 2)
+        const changed_files = await octokit.paginate(
+            // NOTE:
+            // Responses include a maximum of 3000 files.
+            // The paginated response returns 30 files per page by default.
+            // https://github.com/octokit/plugin-rest-endpoint-methods.js/blob/main/docs/pulls/listFiles.md
+            octokit.rest.pulls.listFiles,
+            {
+                owner,
+                repo,
+                pull_number: parseInt(pull_request_number),
+                per_page: 100, // max
+            },
+        )
+        const changed_file_paths = changed_files
             .filter((file) => file.status === 'added' || file.status === 'modified')
             .map((file) => file.filename)
 
-        info(toBulletedList(changed_files))
+        info(toBulletedList(changed_file_paths))
 
-        return changed_files
+        return changed_file_paths
     })
 }
