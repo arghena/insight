@@ -1,4 +1,4 @@
-import { info } from '@actions/core'
+import { warning } from '@actions/core'
 import { access, constants, readFile } from 'fs/promises'
 import { parse } from 'smol-toml'
 import { defu } from 'defu'
@@ -150,8 +150,8 @@ export async function resolveGitignore(): Promise<Ignore> {
 
         return ig
     } else {
-        info(
-            `[gitignore] No config file found at ${gitignore_path}, so only ignoring the .git directory.`,
+        warning(
+            `[GITIGNORE] No config file found at ${gitignore_path}, so only ignoring the .git directory.`,
         )
 
         ig.add(['.git'])
@@ -167,8 +167,8 @@ export async function resolveConfig(config_path: string): Promise<Config> {
 
         return config as Config
     } else {
-        info(
-            `[config] The config file was not found at ${config_path}, using default settings instead.`,
+        warning(
+            `[CONFIG] The config file was not found at ${config_path}, using default settings instead.`,
         )
 
         return default_config

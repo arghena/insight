@@ -12,7 +12,7 @@ export async function runner(
 ): Promise<void> {
     await installer(name, version)
 
-    info(`[runner] ${paths.length} files matched – running ${name}`)
+    info(`[RUNNER] Running ${name} on ${paths.length} files`)
 
     await exec(name.replace('_', '-'), ['--check', ...args])
 }
