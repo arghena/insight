@@ -6,20 +6,20 @@ import ignore, { type Ignore } from 'ignore'
 import { type CommitLinter } from './installer'
 import { type FormatterKey, type LinterKey } from './map'
 
-type Task = 'cargo_deny' | 'node_audit'
+type Task = 'cargo-deny' | 'node-audit'
 
 interface Config {
     match: {
         dot: boolean
     }
-    pull_request: {
-        check_title: boolean
-        detect_changes: string[]
+    pr: {
+        'check-title': boolean
+        'detect-changes': Record<string, string[]>[]
     }
     schedule: {
         tasks: Task[]
     }
-    push_tag: {
+    push: {
         formatters: FormatterKey[]
         linters: LinterKey[]
     }
@@ -42,44 +42,44 @@ async function fileExists(path: string): Promise<boolean> {
     }
 }
 
-const default_config: Config = {
+const defaultConfig: Config = {
     match: {
         dot: false,
     },
-    pull_request: {
-        check_title: false,
-        detect_changes: [],
+    pr: {
+        'check-title': false,
+        'detect-changes': [],
     },
     schedule: {
         tasks: [],
     },
-    push_tag: {
+    push: {
         formatters: [],
         linters: [],
     },
     args: {
         formatters: {
             prettier: [],
-            cargo_fmt: [],
+            'cargo-fmt': [],
             shfmt: [],
             taplo: [],
             tombi: [],
         },
         linters: {
             commitlint: [],
-            cargo_deny: [],
-            node_audit: [],
-            check_dist: [],
+            'cargo-deny': [],
+            'node-audit': [],
+            'check-dist': [],
             eslint: [],
             typos: [],
             yamllint: [],
             actionlint: [],
-            ast_grep: [],
-            cargo_clippy: [],
-            cargo_msrv: [],
-            cargo_tarpaulin: [],
+            'ast-grep': [],
+            'cargo-clippy': [],
+            'cargo-msrv': [],
+            'cargo-tarpaulin': [],
             alex: [],
-            markdownlint_cli2: [],
+            'markdownlint-cli2': [],
             vale: [],
             shellcheck: [],
             taplo: [],
@@ -88,48 +88,48 @@ const default_config: Config = {
     },
     formatters: {
         prettier: [],
-        cargo_fmt: [],
+        'cargo-fmt': [],
         shfmt: [],
         taplo: [],
         tombi: [],
     },
     linters: {
-        cargo_deny: [],
-        node_audit: [],
-        check_dist: [],
+        'cargo-deny': [],
+        'node-audit': [],
+        'check-dist': [],
         eslint: [],
         typos: [],
         yamllint: [],
         actionlint: [],
-        ast_grep: [],
-        cargo_clippy: [],
-        cargo_msrv: [],
-        cargo_tarpaulin: [],
+        'ast-grep': [],
+        'cargo-clippy': [],
+        'cargo-msrv': [],
+        'cargo-tarpaulin': [],
         alex: [],
-        markdownlint_cli2: [],
+        'markdownlint-cli2': [],
         vale: [],
         shellcheck: [],
         taplo: [],
         tombi: [],
     },
     versions: {
-        commitlint_config_conventional: 'latest',
+        'commitlint-config-conventional': 'latest',
         commitlint: 'latest',
-        cargo_deny: 'latest',
-        node_audit: 'latest',
-        check_dist: 'latest',
+        'cargo-deny': 'latest',
+        'node-audit': 'latest',
+        'check-dist': 'latest',
         prettier: 'latest',
         eslint: 'latest',
         typos: 'latest',
         yamllint: 'latest',
         actionlint: 'latest',
-        ast_grep: 'latest',
-        cargo_clippy: 'latest',
-        cargo_fmt: 'latest',
-        cargo_msrv: 'latest',
-        cargo_tarpaulin: 'latest',
+        'ast-grep': 'latest',
+        'cargo-clippy': 'latest',
+        'cargo-fmt': 'latest',
+        'cargo-msrv': 'latest',
+        'cargo-tarpaulin': 'latest',
         alex: 'latest',
-        markdownlint_cli2: 'latest',
+        'markdownlint-cli2': 'latest',
         vale: 'latest',
         shfmt: 'latest',
         shellcheck: 'latest',
@@ -139,11 +139,11 @@ const default_config: Config = {
 }
 
 export async function resolveGitignore(): Promise<Ignore> {
-    const gitignore_path = '.gitignore'
+    const gitignorePath = '.gitignore'
     const ig = ignore()
 
-    if (await fileExists(gitignore_path)) {
-        const contents = await readFile(gitignore_path, { encoding: 'utf8' })
+    if (await fileExists(gitignorePath)) {
+        const contents = await readFile(gitignorePath, { encoding: 'utf8' })
 
         ig.add('.git')
         ig.add(contents)
@@ -151,7 +151,7 @@ export async function resolveGitignore(): Promise<Ignore> {
         return ig
     } else {
         warning(
-            `[GITIGNORE] No config file found at ${gitignore_path}, so only ignoring the .git directory.`,
+            `[GITIGNORE] No config file found at ${gitignorePath}, so only ignoring the .git directory.`,
         )
 
         ig.add(['.git'])
@@ -160,17 +160,17 @@ export async function resolveGitignore(): Promise<Ignore> {
     }
 }
 
-export async function resolveConfig(config_path: string): Promise<Config> {
-    if (await fileExists(config_path)) {
-        const contents = await readFile(config_path, { encoding: 'utf8' })
-        const config = defu(parse(contents), default_config)
+export async function resolveConfig(configPath: string): Promise<Config> {
+    if (await fileExists(configPath)) {
+        const contents = await readFile(configPath, { encoding: 'utf8' })
+        const config = defu(parse(contents), defaultConfig)
 
         return config as Config
     } else {
         warning(
-            `[CONFIG] The config file was not found at ${config_path}, using default settings instead.`,
+            `[CONFIG] The config file was not found at ${configPath}, using default settings instead.`,
         )
 
-        return default_config
+        return defaultConfig
     }
 }

@@ -11,7 +11,7 @@ export async function runner(
 ): Promise<void> {
     await installer(name, version)
 
-    info(`[RUNNER] Running ${name} on ${paths.length} files`)
+    info(`[RUNNER] Running ${name} on ${paths.length.toString()} files`)
 
-    await exec(name.replace('_', '-'), ['verify', ...args])
+    await exec(name, ['verify', ...args])
 }

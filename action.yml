@@ -28,7 +28,7 @@ inputs:
     default: ${{ github.event.pull_request.number }}
 outputs:
   any-changed:
-    description: 'Returns `true` if a changed file matches a glob in `pull_request.detect_changes`.'
+    description: 'Returns `true` if any of the configured patterns matched.'
 runs:
   using: 'node24'
   main: 'dist/index.js'

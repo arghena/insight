@@ -16,8 +16,8 @@ export async function runner(
     info(
         count === 0
             ? `[RUNNER] Running ${name} cron job`
-            : `[RUNNER] Running ${name} on ${count} files`,
+            : `[RUNNER] Running ${name} on ${count.toString()} files`,
     )
 
-    await exec(name.replace('_', '-'), ['check', ...args])
+    await exec(name, ['check', ...args])
 }
