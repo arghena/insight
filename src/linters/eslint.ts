@@ -13,6 +13,9 @@ export async function runner(
 
     info(`[RUNNER] Running ${name} on ${paths.length.toString()} files`)
 
-    await exec('nci', ['--dev'])
+    // NOTE:
+    // `nci --dev` isn't always correct because `tseslint.configs.*TypeChecked` requires a complete environment.
+    // https://typescript-eslint.io/getting-started/typed-linting
+    await exec('nci')
     await exec(name, [...args, '--', ...paths])
 }
