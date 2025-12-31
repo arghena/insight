@@ -34,7 +34,13 @@ jobs:
       security-events: write
     name: CodeQL
     needs: insight
-    if: ${{ github.event_name == 'schedule' || github.ref_type == 'tag' || needs.insight.outputs.any-changed == 'true' }}
+    # NOTE:
+    # Default setup will not run on PRs from Dependabot.
+    # https://github.com/orgs/community/discussions/121836#discussioncomment-9341155
+    if: |
+      github.event_name == 'schedule' ||
+      github.ref_type == 'tag' ||
+      (github.triggering_actor != 'dependabot[bot]' && needs.insight.outputs.any-changed == 'true')
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
