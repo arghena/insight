@@ -18,6 +18,7 @@ export default defineConfig(
     {
         files: ['**/*.ts'],
         rules: {
+            eqeqeq: 'error',
             '@typescript-eslint/naming-convention': [
                 'error',
                 {
