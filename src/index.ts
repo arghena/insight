@@ -20,6 +20,8 @@ async function run() {
         repository,
         pullRequestNumber,
     } = getInputs()
+    // prettier-ignore
+    const { match, pr, schedule, push, args, formatters, linters, versions } = await resolveConfig(configPath)
 
     if (checkPullRequestTitle === 'true') {
         await group(`[LINTER] commitlint`, async () => {
@@ -41,12 +43,6 @@ async function run() {
         return
     }
 
-    // prettier-ignore
-    const { match, pr, schedule, push, args, formatters, linters, versions } = await resolveConfig(configPath)
-    const ig = await resolveGitignore()
-    const formatterKeys = Object.keys(formatter) as FormatterKey[]
-    const linterKeys = Object.keys(linter) as LinterKey[]
-
     if (eventName === 'schedule') {
         for (const name of schedule.tasks) {
             await group(`[LINTER] ${name}`, async () => {
@@ -62,6 +58,8 @@ async function run() {
     }
 
     if (refType === 'tag') {
+        const ig = await resolveGitignore()
+
         for (const name of push.formatters) {
             const paths = await fg(formatters[name], { dot: match.dot })
 
@@ -97,6 +95,8 @@ async function run() {
         return
     }
 
+    const formatterKeys = Object.keys(formatter) as FormatterKey[]
+    const linterKeys = Object.keys(linter) as LinterKey[]
     const changedFilePaths = await getChangedFilePaths(token, repository, pullRequestNumber)
 
     for (const name of formatterKeys) {
