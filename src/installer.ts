@@ -25,13 +25,10 @@ export async function installer(
 ): Promise<void> {
     const setups: Setups = {
         npm: [],
-        rustup:
-            version === 'latest'
-                ? ['rustup update', 'rustup default stable']
-                : [
-                      `rustup toolchain install ${version} --profile minimal`,
-                      `rustup default ${version}`,
-                  ],
+        rustup: [
+            `rustup toolchain install ${version === 'latest' ? 'stable' : version} --profile minimal`,
+            `rustup override set ${version === 'latest' ? 'stable' : version}`,
+        ],
         cargo: [
             // TODO:
             // `dash` v0.5.13 has implemented `set -o pipefail`.
