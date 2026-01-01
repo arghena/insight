@@ -38,7 +38,6 @@ jobs:
       !cancelled() &&
       (
         github.event_name == 'schedule' ||
-        github.ref_type == 'tag' ||
         needs.insight.outputs.any-changed == 'true'
       )
     runs-on: ubuntu-latest
