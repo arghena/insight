@@ -15,14 +15,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: Packaging assets
         run: |
           base_name="insight-$GITHUB_REF_NAME"
 
           tar czf "$base_name.tar.gz" --transform "s,^,$base_name/," -- dist/ LICENSE README.md action.yml
       - name: Uploading assets
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: assets
           path: insight-${{ github.ref_name }}.tar.gz
@@ -36,11 +36,11 @@ jobs:
     name: Create attestation
     steps:
       - name: Downloading assets
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: assets
       - name: Generate attestation
-        uses: actions/attest-build-provenance@v3
+        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3.0.0
         with:
           subject-path: insight-${{ github.ref_name }}.tar.gz
 
@@ -52,11 +52,11 @@ jobs:
     name: Create release note
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
       - name: Downloading assets
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: assets
       - name: Generate release note
