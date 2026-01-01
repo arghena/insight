@@ -14,7 +14,7 @@ export async function runner(
     args: string[],
 ): Promise<void> {
     const tag = version === 'latest' ? 'v3' : `v${version}`
-    const docker_args = [
+    const dockerArgs = [
         'run',
         '--rm',
         '-v',
@@ -27,7 +27,7 @@ export async function runner(
 
     await installer(name, tag)
 
-    info(`[RUNNER] Running ${name} on ${paths.length} files`)
+    info(`[RUNNER] Running ${name} on ${paths.length.toString()} files`)
 
-    await exec('docker', [...docker_args, ...args, '--', ...paths])
+    await exec('docker', [...dockerArgs, ...args, '--', ...paths])
 }

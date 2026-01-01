@@ -33,12 +33,14 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       any-changed: ${{ steps.insight.outputs.any-changed }}
+      rust-any-changed: ${{ steps.insight.outputs.rust-any-changed }}
+      actions-any-changed: ${{ steps.insight.outputs.actions-any-changed }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Run Insight
         id: insight
-        uses: arghena/insight@v0.1.0-canary.18
+        uses: arghena/insight@v0.1.0-canary.19
         with:
           # The path to the Insight config file.
           # Default: '.github/insight.toml'
@@ -65,14 +67,14 @@ jobs:
           # Default: ${{ github.event.pull_request.number }}
           pull-request-number: ''
 
-  detect-changes:
-    name: Detect Changes
+  test:
+    name: Test
     needs: insight
     if: ${{ needs.insight.outputs.any-changed == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Detect File Changes
-        run: echo 'File changes detected'
+      - name: Run test
+        run: echo test
 ```
 
 ## Configure Insight
@@ -86,26 +88,29 @@ jobs:
 # Default: false
 dot = true
 
-[pull_request]
+[pr]
 # Check pull request title.
 # Default: false
-check_title = true
+check-title = true
 # Detect file changes.
 # Default: []
-detect_changes = ["**/*.rs"]
+detect-changes = [
+  { rust = ["**/*.rs"] },
+  { actions = [".github/workflows/*.yml"] }
+]
 
 [schedule]
 # Linters to run on `on.schedule` events.
 # Default: []
-tasks = ["cargo_deny"]
+tasks = ["cargo-deny"]
 
-[push_tag]
+[push]
 # Formatters to run on `on.push.tags` events.
 # Default: []
 formatters = ["prettier"]
 # Linters to run on `on.push.tags` events.
 # Default: []
-linters = ["check_dist", "eslint"]
+linters = ["check-dist", "eslint"]
 
 [args.formatters]
 # Arguments passed to formatters.
@@ -115,7 +120,7 @@ shfmt = ["-i", "4", "-ci"]
 [args.linters]
 # Arguments passed to linters.
 # Default: []
-check_dist = ["prepare"]
+check-dist = ["prepare"]
 yamllint = ["--strict"]
 
 [formatters]
@@ -127,8 +132,8 @@ shfmt = ["etc/ci/*.sh"]
 [linters]
 # Glob patterns for files that trigger linters.
 # Default: []
-check_dist = ["src/**/*.ts", "package.json", "pnpm-lock.yaml"]
-cargo_deny = ["Cargo.toml", "Cargo.lock"]
+check-dist = ["src/**/*.ts", "package.json", "pnpm-lock.yaml"]
+cargo-deny = ["Cargo.toml", "Cargo.lock"]
 typos = ["**/*", "!dist/**"]
 yamllint = ["**/*.yml"]
 eslint = ["**/*.ts"]
@@ -146,7 +151,7 @@ eslint = "9.33.0"
 | Tool                                             | Formatter name |
 | ------------------------------------------------ | -------------- |
 | [prettier](https://github.com/prettier/prettier) | `prettier`     |
-| [rustfmt](https://github.com/rust-lang/rustfmt)  | `cargo_fmt`    |
+| [rustfmt](https://github.com/rust-lang/rustfmt)  | `cargo-fmt`    |
 | [shfmt](https://github.com/mvdan/sh)             | `shfmt`        |
 | [taplo](https://github.com/tamasfe/taplo)        | `taplo`        |
 | [tombi](https://github.com/tombi-toml/tombi)     | `tombi`        |
@@ -155,19 +160,19 @@ eslint = "9.33.0"
 
 | Tool                                                                                   | Linter name         | Supports scheduling |
 | -------------------------------------------------------------------------------------- | ------------------- | :-----------------: |
-| [cargo-deny](https://github.com/EmbarkStudios/cargo-deny)                              | `cargo_deny`        |         ✅          |
-| [node-audit](https://github.com/arghena/insight/blob/canary/src/linters/node-audit.ts) | `node_audit`        |         ✅          |
-| [check-dist](https://github.com/arghena/insight/blob/canary/src/linters/check-dist.ts) | `check_dist`        |                     |
+| [cargo-deny](https://github.com/EmbarkStudios/cargo-deny)                              | `cargo-deny`        |         ✅          |
+| [node-audit](https://github.com/arghena/insight/blob/canary/src/linters/node-audit.ts) | `node-audit`        |         ✅          |
+| [check-dist](https://github.com/arghena/insight/blob/canary/src/linters/check-dist.ts) | `check-dist`        |                     |
 | [eslint](https://github.com/eslint/eslint)                                             | `eslint`            |                     |
 | [typos](https://github.com/crate-ci/typos)                                             | `typos`             |                     |
 | [yamllint](https://github.com/adrienverge/yamllint)                                    | `yamllint`          |                     |
 | [actionlint](https://github.com/rhysd/actionlint)                                      | `actionlint`        |                     |
-| [ast-grep](https://github.com/ast-grep/ast-grep)                                       | `ast_grep`          |                     |
-| [clippy](https://github.com/rust-lang/rust-clippy)                                     | `cargo_clippy`      |                     |
-| [cargo-msrv](https://github.com/foresterre/cargo-msrv)                                 | `cargo_msrv`        |                     |
-| [cargo-tarpaulin](https://github.com/xd009642/tarpaulin)                               | `cargo_tarpaulin`   |                     |
+| [ast-grep](https://github.com/ast-grep/ast-grep)                                       | `ast-grep`          |                     |
+| [clippy](https://github.com/rust-lang/rust-clippy)                                     | `cargo-clippy`      |                     |
+| [cargo-msrv](https://github.com/foresterre/cargo-msrv)                                 | `cargo-msrv`        |                     |
+| [cargo-tarpaulin](https://github.com/xd009642/tarpaulin)                               | `cargo-tarpaulin`   |                     |
 | [alex](https://github.com/get-alex/alex)                                               | `alex`              |                     |
-| [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2)                   | `markdownlint_cli2` |                     |
+| [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2)                   | `markdownlint-cli2` |                     |
 | [vale](https://github.com/errata-ai/vale)                                              | `vale`              |                     |
 | [shellcheck](https://github.com/koalaman/shellcheck)                                   | `shellcheck`        |                     |
 | [taplo](https://github.com/tamasfe/taplo)                                              | `taplo`             |                     |

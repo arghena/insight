@@ -2,7 +2,7 @@ import { exec } from '@actions/exec'
 import { info } from '@actions/core'
 import { type FormatterKey, type LinterKey } from './map'
 
-export type CommitLinter = 'commitlint' | 'commitlint_config_conventional'
+export type CommitLinter = 'commitlint' | 'commitlint-config-conventional'
 
 type PM = 'npm' | 'rustup' | 'cargo' | 'uv' | 'docker'
 
@@ -41,7 +41,7 @@ export async function installer(
         docker: [],
     }
     const tools: Tools = {
-        commitlint_config_conventional: {
+        'commitlint-config-conventional': {
             pm: 'npm',
             args: ['install', '--no-save', `@commitlint/config-conventional@${version}`],
         },
@@ -49,7 +49,7 @@ export async function installer(
             pm: 'npm',
             args: ['install', '--global', `@commitlint/cli@${version}`],
         },
-        cargo_deny: {
+        'cargo-deny': {
             pm: 'cargo',
             args: [
                 'binstall',
@@ -57,11 +57,11 @@ export async function installer(
                 version === 'latest' ? 'cargo-deny' : `cargo-deny@${version}`,
             ],
         },
-        node_audit: {
+        'node-audit': {
             pm: 'npm',
             args: ['install', '--global', '@antfu/ni'],
         },
-        check_dist: {
+        'check-dist': {
             pm: 'npm',
             args: ['install', '--global', '@antfu/ni'],
         },
@@ -96,7 +96,7 @@ export async function installer(
             pm: 'docker',
             args: ['pull', `rhysd/actionlint:${version}`],
         },
-        ast_grep: {
+        'ast-grep': {
             pm: 'cargo',
             args: [
                 'binstall',
@@ -104,15 +104,15 @@ export async function installer(
                 version === 'latest' ? 'ast-grep' : `ast-grep@${version}`,
             ],
         },
-        cargo_clippy: {
+        'cargo-clippy': {
             pm: 'rustup',
             args: ['component', 'add', 'clippy'],
         },
-        cargo_fmt: {
+        'cargo-fmt': {
             pm: 'rustup',
             args: ['component', 'add', 'rustfmt'],
         },
-        cargo_msrv: {
+        'cargo-msrv': {
             pm: 'cargo',
             args: [
                 'binstall',
@@ -120,7 +120,7 @@ export async function installer(
                 version === 'latest' ? 'cargo-msrv' : `cargo-msrv@${version}`,
             ],
         },
-        cargo_tarpaulin: {
+        'cargo-tarpaulin': {
             pm: 'cargo',
             args: [
                 'binstall',
@@ -132,7 +132,7 @@ export async function installer(
             pm: 'npm',
             args: ['install', '--global', `alex@${version}`],
         },
-        markdownlint_cli2: {
+        'markdownlint-cli2': {
             pm: 'npm',
             args: ['install', '--global', `markdownlint-cli2@${version}`],
         },

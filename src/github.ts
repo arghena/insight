@@ -3,51 +3,51 @@ import { getOctokit } from '@actions/github'
 import { toBulletedList } from './utils'
 
 interface Inputs {
-    config_path: string
-    event_name: string
-    ref_type: string
-    pull_request_type: string
-    pull_request_title: string
+    configPath: string
+    eventName: string
+    refType: string
+    pullRequestType: string
+    pullRequestTitle: string
     token: string
     repository: string
-    pull_request_number: string
+    pullRequestNumber: string
 }
 
 export function getInputs(): Inputs {
-    const config_path = getInput('config-path', { required: false })
-    const event_name = getInput('event-name', { required: false })
-    const ref_type = getInput('ref-type', { required: false })
-    const pull_request_type = getInput('pull-request-type', { required: false })
-    const pull_request_title = getInput('pull-request-title', {
+    const configPath = getInput('config-path', { required: false })
+    const eventName = getInput('event-name', { required: false })
+    const refType = getInput('ref-type', { required: false })
+    const pullRequestType = getInput('pull-request-type', { required: false })
+    const pullRequestTitle = getInput('pull-request-title', {
         required: false,
     })
     const token = getInput('token', { required: false })
     const repository = getInput('repository', { required: false })
-    const pull_request_number = getInput('pull-request-number', {
+    const pullRequestNumber = getInput('pull-request-number', {
         required: false,
     })
 
     return {
-        config_path,
-        event_name,
-        ref_type,
-        pull_request_type,
-        pull_request_title,
+        configPath,
+        eventName,
+        refType,
+        pullRequestType,
+        pullRequestTitle,
         token,
         repository,
-        pull_request_number,
+        pullRequestNumber,
     }
 }
 
 export async function getChangedFilePaths(
     token: string,
     repository: string,
-    pull_request_number: string,
+    pullRequestNumber: string,
 ): Promise<string[]> {
     return await group(`[PR] Changed file paths`, async () => {
         const octokit = getOctokit(token)
         const [owner, repo] = repository.split('/', 2)
-        const changed_files = await octokit.paginate(
+        const changedFiles = await octokit.paginate(
             // NOTE:
             // Responses include a maximum of 3000 files.
             // The paginated response returns 30 files per page by default.
@@ -56,18 +56,21 @@ export async function getChangedFilePaths(
             {
                 owner,
                 repo,
-                pull_number: parseInt(pull_request_number),
+                /* eslint-disable @typescript-eslint/naming-convention */
+                pull_number: parseInt(pullRequestNumber),
                 per_page: 100, // max
+                /* eslint-enable @typescript-eslint/naming-convention */
             },
         )
-        const changed_file_paths = changed_files
+        // TODO: The filtering logic isn't perfect.
+        const changedFilePaths = changedFiles
             .filter((file) => file.status === 'added' || file.status === 'modified')
             .map((file) => file.filename)
 
         info(
-            `[TOTAL] Found ${changed_file_paths.length} changed files:\n${toBulletedList(changed_file_paths)}`,
+            `[TOTAL] Found ${changedFilePaths.length.toString()} changed files:\n${toBulletedList(changedFilePaths)}`,
         )
 
-        return changed_file_paths
+        return changedFilePaths
     })
 }

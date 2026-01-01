@@ -11,22 +11,22 @@ import { toBulletedList } from './utils'
 
 async function run() {
     const {
-        config_path,
-        event_name,
-        ref_type,
-        pull_request_type,
-        pull_request_title,
+        configPath,
+        eventName,
+        refType,
+        pullRequestType,
+        pullRequestTitle,
         token,
         repository,
-        pull_request_number,
+        pullRequestNumber,
     } = getInputs()
     // prettier-ignore
-    const { match, pull_request, schedule, push_tag, args, formatters, linters, versions } = await resolveConfig(config_path)
+    const { match, pr, schedule, push, args, formatters, linters, versions } = await resolveConfig(configPath)
     const ig = await resolveGitignore()
-    const formatter_keys = Object.keys(formatter) as FormatterKey[]
-    const linter_keys = Object.keys(linter) as LinterKey[]
+    const formatterKeys = Object.keys(formatter) as FormatterKey[]
+    const linterKeys = Object.keys(linter) as LinterKey[]
 
-    if (event_name === 'schedule') {
+    if (eventName === 'schedule') {
         for (const name of schedule.tasks) {
             await group(`[LINTER] ${name}`, async () => {
                 const { runner } = await linter[name]()
@@ -40,8 +40,8 @@ async function run() {
         return
     }
 
-    if (ref_type === 'tag') {
-        for (const name of push_tag.formatters) {
+    if (refType === 'tag') {
+        for (const name of push.formatters) {
             const paths = await fg(formatters[name], { dot: match.dot })
 
             if (paths.length === 0) continue
@@ -55,12 +55,12 @@ async function run() {
             })
         }
 
-        for (const name of push_tag.linters) {
+        for (const name of push.linters) {
             // NOTE:
             // May match unexpected files.
             // ex: Clippy creates a `target` folder before it runs.
-            const matched_paths = await fg(linters[name], { dot: match.dot })
-            const paths = ig.filter(matched_paths)
+            const matchedPaths = await fg(linters[name], { dot: match.dot })
+            const paths = ig.filter(matchedPaths)
 
             if (paths.length === 0) continue
 
@@ -76,31 +76,28 @@ async function run() {
         return
     }
 
-    if (
-        pull_request.check_title &&
-        (pull_request_type === 'opened' || pull_request_type === 'edited')
-    ) {
+    if (pr['check-title'] && (pullRequestType === 'opened' || pullRequestType === 'edited')) {
         await group(`[LINTER] commitlint`, async () => {
-            info(`[PR] Found title:\n${pull_request_title}`)
+            info(`[PR] Found title:\n${pullRequestTitle}`)
 
             await installer(
-                'commitlint_config_conventional',
-                versions['commitlint_config_conventional'],
+                'commitlint-config-conventional',
+                versions['commitlint-config-conventional'],
             )
-            await installer('commitlint', versions['commitlint'])
+            await installer('commitlint', versions.commitlint)
 
             info(`[RUNNER] Checking the pull request title`)
 
-            await exec('commitlint', args.linters['commitlint'], {
-                input: Buffer.from(pull_request_title + '\n'),
+            await exec('commitlint', args.linters.commitlint, {
+                input: Buffer.from(pullRequestTitle + '\n'),
             })
         })
     }
 
-    const changed_file_paths = await getChangedFilePaths(token, repository, pull_request_number)
+    const changedFilePaths = await getChangedFilePaths(token, repository, pullRequestNumber)
 
-    for (const name of formatter_keys) {
-        const paths = micromatch(changed_file_paths, formatters[name], {
+    for (const name of formatterKeys) {
+        const paths = micromatch(changedFilePaths, formatters[name], {
             dot: match.dot,
         })
 
@@ -114,8 +111,8 @@ async function run() {
             await runner(paths, name, versions[name], args.formatters[name])
         })
     }
-    for (const name of linter_keys) {
-        const paths = micromatch(changed_file_paths, linters[name], {
+    for (const name of linterKeys) {
+        const paths = micromatch(changedFilePaths, linters[name], {
             dot: match.dot,
         })
 
@@ -130,14 +127,22 @@ async function run() {
         })
     }
 
-    const paths = micromatch(changed_file_paths, pull_request.detect_changes, {
-        dot: match.dot,
-    })
+    const hasAnyChanged = pr['detect-changes'].reduce((acc, changeGroup) => {
+        const [category, patterns] = Object.entries(changeGroup)[0]
+        const matchedPaths = micromatch(changedFilePaths, patterns, {
+            dot: match.dot,
+        })
+        const hasChanged = matchedPaths.length > 0
 
-    if (paths.length !== 0) setOutput('any-changed', 'true')
+        setOutput(`${category}-any-changed`, hasChanged)
+
+        return acc || hasChanged
+    }, false)
+
+    setOutput('any-changed', hasAnyChanged)
 }
 
-run().catch((error) => {
+run().catch((error: unknown) => {
     if (error instanceof Error) {
         setFailed(error.message)
     } else if (typeof error === 'string') {
