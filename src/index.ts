@@ -14,12 +14,33 @@ async function run() {
         configPath,
         eventName,
         refType,
-        pullRequestType,
+        checkPullRequestTitle,
         pullRequestTitle,
         token,
         repository,
         pullRequestNumber,
     } = getInputs()
+
+    if (checkPullRequestTitle === 'true') {
+        await group(`[LINTER] commitlint`, async () => {
+            info(`[PR] Found title:\n${pullRequestTitle}`)
+
+            await installer(
+                'commitlint-config-conventional',
+                versions['commitlint-config-conventional'],
+            )
+            await installer('commitlint', versions.commitlint)
+
+            info(`[RUNNER] Checking the pull request title`)
+
+            await exec('commitlint', args.linters.commitlint, {
+                input: Buffer.from(pullRequestTitle + '\n'),
+            })
+        })
+
+        return
+    }
+
     // prettier-ignore
     const { match, pr, schedule, push, args, formatters, linters, versions } = await resolveConfig(configPath)
     const ig = await resolveGitignore()
@@ -74,24 +95,6 @@ async function run() {
         }
 
         return
-    }
-
-    if (pr['check-title'] && (pullRequestType === 'opened' || pullRequestType === 'edited')) {
-        await group(`[LINTER] commitlint`, async () => {
-            info(`[PR] Found title:\n${pullRequestTitle}`)
-
-            await installer(
-                'commitlint-config-conventional',
-                versions['commitlint-config-conventional'],
-            )
-            await installer('commitlint', versions.commitlint)
-
-            info(`[RUNNER] Checking the pull request title`)
-
-            await exec('commitlint', args.linters.commitlint, {
-                input: Buffer.from(pullRequestTitle + '\n'),
-            })
-        })
     }
 
     const changedFilePaths = await getChangedFilePaths(token, repository, pullRequestNumber)

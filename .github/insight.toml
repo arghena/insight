@@ -2,7 +2,6 @@
 dot = true
 
 [pr]
-check-title = true
 # https://codeql.github.com/docs/codeql-overview/supported-languages-and-frameworks/#languages-and-compilers
 detect-changes = [
   { typescript = ["**/*.ts", "package.json", "pnpm-lock.yaml"] },
