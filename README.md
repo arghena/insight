@@ -16,7 +16,7 @@ It's designed to provide a unified config file so you can run various formatters
 ## Features
 
 - Use the `insight.toml` config file to customize the formatters and linters your project needs.
-- Supports using [commitlint](https://commitlint.js.org) to check pull request titles.
+- Supports using [commitlint](https://commitlint.js.org) to check pull request title.
 - Responds to [`on.schedule`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onschedule) and [`on.push.tags`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onpushbranchestagsbranches-ignoretags-ignore) events, respecting `.gitignore` when running linters.
 - Can check build files in `dist/` using a `git diff` approach.
 - Lets you customize formatter and linter versions and arguments.
@@ -25,6 +25,10 @@ It's designed to provide a unified config file so you can run various formatters
 - Ships with minimal defaults to keep opinionated behavior to a minimum.
 
 ## Usage
+
+> [!IMPORTANT]
+>
+> If you set `check-pull-request-title` to `true`, then Insight will only check the pull request title.
 
 ```yaml
 jobs:
@@ -40,7 +44,7 @@ jobs:
         uses: actions/checkout@v6
       - name: Run Insight
         id: insight
-        uses: arghena/insight@v0.1.0-canary.19
+        uses: arghena/insight@v0.1.0-canary.20
         with:
           # The path to the Insight config file.
           # Default: '.github/insight.toml'
@@ -51,9 +55,9 @@ jobs:
           # The type of ref that triggered the workflow run.
           # Default: ${{ github.ref_type }}
           ref-type: ''
-          # The type of pull request event.
-          # Default: ${{ github.event.action }}
-          pull-request-type: ''
+          # Use `commitlint` to check the pull request title.
+          # Default: 'false'
+          check-pull-request-title: ''
           # The title of pull request event.
           # Default: ${{ github.event.pull_request.title }}
           pull-request-title: ''
@@ -89,9 +93,6 @@ jobs:
 dot = true
 
 [pr]
-# Check pull request title.
-# Default: false
-check-title = true
 # Detect file changes.
 # Default: []
 detect-changes = [

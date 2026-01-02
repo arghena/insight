@@ -14,7 +14,7 @@ async function run() {
         configPath,
         eventName,
         refType,
-        pullRequestType,
+        checkPullRequestTitle,
         pullRequestTitle,
         token,
         repository,
@@ -22,9 +22,26 @@ async function run() {
     } = getInputs()
     // prettier-ignore
     const { match, pr, schedule, push, args, formatters, linters, versions } = await resolveConfig(configPath)
-    const ig = await resolveGitignore()
-    const formatterKeys = Object.keys(formatter) as FormatterKey[]
-    const linterKeys = Object.keys(linter) as LinterKey[]
+
+    if (checkPullRequestTitle === 'true') {
+        await group(`[LINTER] commitlint`, async () => {
+            info(`[PR] Found title:\n${pullRequestTitle}`)
+
+            await installer(
+                'commitlint-config-conventional',
+                versions['commitlint-config-conventional'],
+            )
+            await installer('commitlint', versions.commitlint)
+
+            info(`[RUNNER] Checking the pull request title`)
+
+            await exec('commitlint', args.linters.commitlint, {
+                input: Buffer.from(pullRequestTitle + '\n'),
+            })
+        })
+
+        return
+    }
 
     if (eventName === 'schedule') {
         for (const name of schedule.tasks) {
@@ -41,6 +58,8 @@ async function run() {
     }
 
     if (refType === 'tag') {
+        const ig = await resolveGitignore()
+
         for (const name of push.formatters) {
             const paths = await fg(formatters[name], { dot: match.dot })
 
@@ -76,24 +95,8 @@ async function run() {
         return
     }
 
-    if (pr['check-title'] && (pullRequestType === 'opened' || pullRequestType === 'edited')) {
-        await group(`[LINTER] commitlint`, async () => {
-            info(`[PR] Found title:\n${pullRequestTitle}`)
-
-            await installer(
-                'commitlint-config-conventional',
-                versions['commitlint-config-conventional'],
-            )
-            await installer('commitlint', versions.commitlint)
-
-            info(`[RUNNER] Checking the pull request title`)
-
-            await exec('commitlint', args.linters.commitlint, {
-                input: Buffer.from(pullRequestTitle + '\n'),
-            })
-        })
-    }
-
+    const formatterKeys = Object.keys(formatter) as FormatterKey[]
+    const linterKeys = Object.keys(linter) as LinterKey[]
     const changedFilePaths = await getChangedFilePaths(token, repository, pullRequestNumber)
 
     for (const name of formatterKeys) {

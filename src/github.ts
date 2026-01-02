@@ -6,7 +6,7 @@ interface Inputs {
     configPath: string
     eventName: string
     refType: string
-    pullRequestType: string
+    checkPullRequestTitle: string
     pullRequestTitle: string
     token: string
     repository: string
@@ -17,7 +17,7 @@ export function getInputs(): Inputs {
     const configPath = getInput('config-path', { required: false })
     const eventName = getInput('event-name', { required: false })
     const refType = getInput('ref-type', { required: false })
-    const pullRequestType = getInput('pull-request-type', { required: false })
+    const checkPullRequestTitle = getInput('check-pull-request-title', { required: false })
     const pullRequestTitle = getInput('pull-request-title', {
         required: false,
     })
@@ -31,7 +31,7 @@ export function getInputs(): Inputs {
         configPath,
         eventName,
         refType,
-        pullRequestType,
+        checkPullRequestTitle,
         pullRequestTitle,
         token,
         repository,
