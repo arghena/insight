@@ -130,17 +130,19 @@ async function run() {
         })
     }
 
-    const hasAnyChanged = pr['detect-changes'].reduce((acc, changeGroup) => {
-        const [category, patterns] = Object.entries(changeGroup)[0]
-        const matchedPaths = micromatch(changedFilePaths, patterns, {
-            dot: match.dot,
-        })
-        const hasChanged = matchedPaths.length > 0
+    const hasAnyChanged = Object.entries(pr['detect-changes']).reduce(
+        (acc, [category, patterns]) => {
+            const matchedPaths = micromatch(changedFilePaths, patterns, {
+                dot: match.dot,
+            })
+            const hasChanged = matchedPaths.length > 0
 
-        setOutput(`${category}-any-changed`, hasChanged)
+            setOutput(`${category}-any-changed`, hasChanged)
 
-        return acc || hasChanged
-    }, false)
+            return acc || hasChanged
+        },
+        false,
+    )
 
     setOutput('any-changed', hasAnyChanged)
 }

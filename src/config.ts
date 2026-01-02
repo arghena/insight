@@ -13,8 +13,7 @@ interface Config {
         dot: boolean
     }
     pr: {
-        'check-title': boolean
-        'detect-changes': Record<string, string[]>[]
+        'detect-changes': Record<string, string[]>
     }
     schedule: {
         tasks: Task[]
@@ -47,8 +46,7 @@ const defaultConfig: Config = {
         dot: false,
     },
     pr: {
-        'check-title': false,
-        'detect-changes': [],
+        'detect-changes': {},
     },
     schedule: {
         tasks: [],
