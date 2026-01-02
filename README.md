@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v6
       - name: Run Insight
         id: insight
-        uses: arghena/insight@v0.1.0-canary.20
+        uses: arghena/insight@v0.1.0-canary.21
         with:
           # The path to the Insight config file.
           # Default: '.github/insight.toml'
@@ -92,13 +92,11 @@ jobs:
 # Default: false
 dot = true
 
-[pr]
+[pr.detect-changes]
 # Detect file changes.
 # Default: []
-detect-changes = [
-  { rust = ["**/*.rs"] },
-  { actions = [".github/workflows/*.yml"] }
-]
+rust = ["**/*.rs"]
+actions = [".github/workflows/*.yml"]
 
 [schedule]
 # Linters to run on `on.schedule` events.
