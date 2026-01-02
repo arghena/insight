@@ -161,8 +161,6 @@ export async function resolveGitignore(): Promise<Ignore> {
 }
 
 export async function resolveConfig(configPath: string): Promise<Config> {
-    if (configPath === '') return defaultConfig
-
     if (await fileExists(configPath)) {
         const contents = await readFile(configPath, { encoding: 'utf8' })
         const config = defu(parse(contents), defaultConfig)
