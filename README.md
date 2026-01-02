@@ -94,7 +94,7 @@ dot = true
 
 [pr.detect-changes]
 # Detect file changes.
-# Default: []
+# Default: {}
 rust = ["**/*.rs"]
 actions = [".github/workflows/*.yml"]
 
