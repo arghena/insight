@@ -1,13 +1,6 @@
 [match]
 dot = true
 
-[pr]
-# https://codeql.github.com/docs/codeql-overview/supported-languages-and-frameworks/#languages-and-compilers
-detect-changes = [
-  { typescript = ["**/*.ts", "package.json", "pnpm-lock.yaml"] },
-  { actions = [".github/workflows/*.yml", "action.yml"] }
-]
-
 [schedule]
 tasks = ["node-audit"]
 
