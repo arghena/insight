@@ -12,9 +12,7 @@ interface Config {
     match: {
         dot: boolean
     }
-    pr: {
-        'detect-changes': Record<string, string[]>
-    }
+    changes: Record<string, string[]>
     schedule: {
         tasks: Task[]
     }
@@ -45,9 +43,7 @@ const defaultConfig: Config = {
     match: {
         dot: false,
     },
-    pr: {
-        'detect-changes': {},
-    },
+    changes: {},
     schedule: {
         tasks: [],
     },

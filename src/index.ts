@@ -21,7 +21,16 @@ async function run() {
         pullRequestNumber,
     } = getInputs()
     // prettier-ignore
-    const { match, pr, schedule, push, args, formatters, linters, versions } = await resolveConfig(configPath)
+    const {
+        match,
+        changes,
+        schedule,
+        push,
+        args,
+        formatters,
+        linters,
+        versions,
+    } = await resolveConfig(configPath)
 
     if (checkPullRequestTitle === 'true') {
         await group(`[LINTER] commitlint`, async () => {
@@ -130,19 +139,16 @@ async function run() {
         })
     }
 
-    const hasAnyChanged = Object.entries(pr['detect-changes']).reduce(
-        (acc, [category, patterns]) => {
-            const matchedPaths = micromatch(changedFilePaths, patterns, {
-                dot: match.dot,
-            })
-            const hasChanged = matchedPaths.length > 0
+    const hasAnyChanged = Object.entries(changes).reduce((acc, [category, patterns]) => {
+        const matchedPaths = micromatch(changedFilePaths, patterns, {
+            dot: match.dot,
+        })
+        const hasChanged = matchedPaths.length > 0
 
-            setOutput(`${category}-any-changed`, hasChanged)
+        setOutput(`${category}-any-changed`, hasChanged)
 
-            return acc || hasChanged
-        },
-        false,
-    )
+        return acc || hasChanged
+    }, false)
 
     setOutput('any-changed', hasAnyChanged)
 }
