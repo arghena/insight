@@ -9,20 +9,16 @@ export async function runner(
     version: string,
     args: string[],
 ): Promise<void> {
-    let diffResult = ''
-
     await installer(name, version)
 
     info(`[RUNNER] Running ${name} on ${paths.length.toString()} files`)
 
     await exec('nci')
     await exec('nr', args.length === 0 ? ['build'] : args)
-    await exec('git', ['diff', 'dist/'], {
-        listeners: {
-            stdout: (data: Buffer) => (diffResult += data.toString()),
-        },
+
+    const exitCode = await exec('git', ['diff', '--quiet', 'dist/'], {
+        ignoreReturnCode: true,
     })
 
-    // prettier-ignore
-    if (diffResult.trim().length !== 0) throw new Error('[RUNNER] Detected uncommitted changes after build')
+    if (exitCode !== 0) throw new Error('[DIFF] Detected uncommitted changes after build')
 }
