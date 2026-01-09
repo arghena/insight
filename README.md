@@ -28,7 +28,8 @@ It's designed to provide a unified config file so you can run various formatters
 
 > [!IMPORTANT]
 >
-> If you set `check-pull-request-title` to `true`, then Insight will only check the pull request title.
+> - If you set `check-pull-request-title` to `true`, then Insight will only check the pull request title.
+> - Insight only checks `added` and `modified` files.
 
 ```yaml
 jobs:
