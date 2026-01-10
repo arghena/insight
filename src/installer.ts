@@ -16,6 +16,8 @@ type Tools = Record<
     }
 >
 
+const installedTools = new Set<string>()
+
 // NOTE:
 // The `#!/bin/sh` in the install scripts for
 // `cargo-binstall` and `uv` doesn't actually work.
@@ -163,13 +165,19 @@ export async function installer(
     }
     const { pm, args } = tools[name]
 
-    if (setups[pm].length !== 0) {
+    if (setups[pm].length !== 0 && !installedTools.has(pm)) {
         info(`[INSTALLER] Setting up the ${pm} environment`)
 
         for (const cmd of setups[pm]) await exec('sh', ['-c', cmd])
+
+        installedTools.add(pm)
     }
 
-    info(`[INSTALLER] Installing ${name} using ${pm}`)
+    if (!installedTools.has(name)) {
+        info(`[INSTALLER] Installing ${name} using ${pm}`)
 
-    await exec(pm, args)
+        await exec(pm, args)
+
+        installedTools.add(name)
+    }
 }
