@@ -2,7 +2,7 @@
 dot = true
 
 [schedule]
-tasks = ["node-audit"]
+linters = ["node-audit"]
 
 [push]
 formatters = ["prettier"]

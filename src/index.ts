@@ -53,7 +53,7 @@ async function run() {
     }
 
     if (eventName === 'schedule') {
-        for (const name of schedule.tasks) {
+        for (const name of schedule.linters) {
             await group(`[LINTER] ${name}`, async () => {
                 const { runner } = await linter[name]()
 

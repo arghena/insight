@@ -6,15 +6,13 @@ import ignore, { type Ignore } from 'ignore'
 import { type CommitLinter } from './installer'
 import { type FormatterKey, type LinterKey } from './map'
 
-type Task = 'cargo-deny' | 'node-audit'
-
 interface Config {
     match: {
         dot: boolean
     }
     changes: Record<string, string[]>
     schedule: {
-        tasks: Task[]
+        linters: ('cargo-deny' | 'node-audit')[]
     }
     push: {
         formatters: FormatterKey[]
@@ -45,7 +43,7 @@ const defaultConfig: Config = {
     },
     changes: {},
     schedule: {
-        tasks: [],
+        linters: [],
     },
     push: {
         formatters: [],
