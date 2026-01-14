@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD033 MD041 -->
 <!--
 
 NOTE:
@@ -7,7 +8,15 @@ This is because users won't have access to those files locally when browsing the
 
 -->
 
-# Insight
+<div align="center">
+  <h1>Insight</h1>
+
+<a href="https://github.com/arghena/insight/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/arghena/insight/ci.yml?branch=v0.1.0-canary.25&style=for-the-badge&label=CI&labelColor=1a1b26&color=black&logo=github" alt="CI" /></a>
+<a href="https://github.com/arghena/insight/actions/workflows/cd.yml"><img src="https://img.shields.io/github/actions/workflow/status/arghena/insight/cd.yml?branch=v0.1.0-canary.25&style=for-the-badge&label=CD&labelColor=1a1b26&color=black&logo=github" alt="CD" /></a>
+
+</div>
+
+<!-- markdownlint-enable MD033 -->
 
 Insight is a GitHub Action for checking pull requests.
 
@@ -45,7 +54,7 @@ jobs:
         uses: actions/checkout@v6
       - name: Run Insight
         id: insight
-        uses: arghena/insight@v0.1.0-canary.24
+        uses: arghena/insight@v0.1.0-canary.25
         with:
           # The path to the Insight config file.
           # Default: '.github/insight.toml'
