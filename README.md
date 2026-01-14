@@ -102,7 +102,7 @@ actions = [".github/workflows/*.yml"]
 [schedule]
 # Linters to run on `on.schedule` events.
 # Default: []
-tasks = ["cargo-deny"]
+linters = ["cargo-deny"]
 
 [push]
 # Formatters to run on `on.push.tags` events.
