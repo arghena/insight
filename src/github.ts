@@ -48,8 +48,7 @@ export async function getChangedFilePaths(
         const octokit = getOctokit(token)
         const [owner, repo] = repository.split('/', 2)
         const changedFiles = await octokit.paginate(
-            // NOTE:
-            // Responses include a maximum of 3000 files.
+            // NOTE: Responses include a maximum of 3000 files.
             // The paginated response returns 30 files per page by default.
             // https://github.com/octokit/plugin-rest-endpoint-methods.js/blob/main/docs/pulls/listFiles.md
             octokit.rest.pulls.listFiles,

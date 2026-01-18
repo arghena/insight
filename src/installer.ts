@@ -10,8 +10,7 @@ type Tools = Record<ToolName, { pm: PM; args: string[] }>
 
 const installedTools = new Set<PM | ToolName>()
 
-// NOTE:
-// The `#!/bin/sh` in the install scripts for
+// NOTE: The `#!/bin/sh` in the install scripts for
 // `cargo-binstall` and `uv` doesn't actually work.
 export async function installer(toolName: ToolName, version: string): Promise<void> {
     const setups: Setups = {
@@ -21,8 +20,7 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
             `rustup override set ${version === 'latest' ? 'stable' : version}`,
         ],
         'cargo-binstall': [
-            // TODO:
-            // `dash` v0.5.13 has implemented `set -o pipefail`.
+            // TODO: `dash` v0.5.13 has implemented `set -o pipefail`.
             // https://wiki.linuxfromscratch.org/blfs/ticket/22177
             'curl -fsSL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash',
         ],

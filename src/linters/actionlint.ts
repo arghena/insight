@@ -4,8 +4,7 @@ import { info } from '@actions/core'
 import { cwd } from 'process'
 import { type LinterKey } from '../map'
 
-// NOTE:
-// This linter's tag on Docker Hub doesn't have the `v` prefix.
+// NOTE: This linter's tag on Docker Hub doesn't have the `v` prefix.
 // https://github.com/rhysd/actionlint/blob/main/docs/usage.md#docker-image
 export async function runner(
     paths: string[],
