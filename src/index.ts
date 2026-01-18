@@ -53,13 +53,13 @@ async function run() {
     }
 
     if (eventName === 'schedule') {
-        for (const name of schedule.linters) {
-            await group(`[LINTER] ${name}`, async () => {
-                const { runner } = await linter[name]()
+        for (const toolName of schedule.linters) {
+            await group(`[LINTER] ${toolName}`, async () => {
+                const { runner } = await linter[toolName]()
 
-                info(`[SCHEDULE] Starting ${name} cron job`)
+                info(`[SCHEDULE] Starting ${toolName} cron job`)
 
-                await runner([], name, versions[name], args.linters[name])
+                await runner([], toolName, versions[toolName], args.linters[toolName])
             })
         }
 
@@ -69,35 +69,35 @@ async function run() {
     if (refType === 'tag') {
         const ig = await resolveGitignore()
 
-        for (const name of push.formatters) {
-            const paths = await fg(formatters[name], { dot: match.dot })
+        for (const toolName of push.formatters) {
+            const paths = await fg(formatters[toolName], { dot: match.dot })
 
             if (paths.length === 0) continue
 
-            await group(`[FORMATTER] ${name}`, async () => {
-                const { runner } = await formatter[name]()
+            await group(`[FORMATTER] ${toolName}`, async () => {
+                const { runner } = await formatter[toolName]()
 
                 info(`[GLOB] Matched file paths:\n${toBulletedList(paths)}`)
 
-                await runner(paths, name, versions[name], args.formatters[name])
+                await runner(paths, toolName, versions[toolName], args.formatters[toolName])
             })
         }
 
-        for (const name of push.linters) {
+        for (const toolName of push.linters) {
             // NOTE:
             // May match unexpected files.
             // ex: Clippy creates a `target` folder before it runs.
-            const matchedPaths = await fg(linters[name], { dot: match.dot })
+            const matchedPaths = await fg(linters[toolName], { dot: match.dot })
             const paths = ig.filter(matchedPaths)
 
             if (paths.length === 0) continue
 
-            await group(`[LINTER] ${name}`, async () => {
-                const { runner } = await linter[name]()
+            await group(`[LINTER] ${toolName}`, async () => {
+                const { runner } = await linter[toolName]()
 
                 info(`[GLOB] Matched file paths:\n${toBulletedList(paths)}`)
 
-                await runner(paths, name, versions[name], args.linters[name])
+                await runner(paths, toolName, versions[toolName], args.linters[toolName])
             })
         }
 
@@ -108,34 +108,35 @@ async function run() {
     const linterKeys = Object.keys(linter) as LinterKey[]
     const changedFilePaths = await getChangedFilePaths(token, repository, pullRequestNumber)
 
-    for (const name of formatterKeys) {
-        const paths = micromatch(changedFilePaths, formatters[name], {
+    for (const toolName of formatterKeys) {
+        const paths = micromatch(changedFilePaths, formatters[toolName], {
             dot: match.dot,
         })
 
         if (paths.length === 0) continue
 
-        await group(`[FORMATTER] ${name}`, async () => {
-            const { runner } = await formatter[name]()
+        await group(`[FORMATTER] ${toolName}`, async () => {
+            const { runner } = await formatter[toolName]()
 
             info(`[GLOB] Matched file paths:\n${toBulletedList(paths)}`)
 
-            await runner(paths, name, versions[name], args.formatters[name])
+            await runner(paths, toolName, versions[toolName], args.formatters[toolName])
         })
     }
-    for (const name of linterKeys) {
-        const paths = micromatch(changedFilePaths, linters[name], {
+
+    for (const toolName of linterKeys) {
+        const paths = micromatch(changedFilePaths, linters[toolName], {
             dot: match.dot,
         })
 
         if (paths.length === 0) continue
 
-        await group(`[LINTER] ${name}`, async () => {
-            const { runner } = await linter[name]()
+        await group(`[LINTER] ${toolName}`, async () => {
+            const { runner } = await linter[toolName]()
 
             info(`[GLOB] Matched file paths:\n${toBulletedList(paths)}`)
 
-            await runner(paths, name, versions[name], args.linters[name])
+            await runner(paths, toolName, versions[toolName], args.linters[toolName])
         })
     }
 

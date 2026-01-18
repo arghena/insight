@@ -9,7 +9,7 @@ import { type LinterKey } from '../map'
 // https://github.com/rhysd/actionlint/blob/main/docs/usage.md#docker-image
 export async function runner(
     paths: string[],
-    name: LinterKey,
+    toolName: LinterKey,
     version: string,
     args: string[],
 ): Promise<void> {
@@ -20,12 +20,12 @@ export async function runner(
         `${cwd()}:/mnt`,
         '-w',
         '/mnt',
-        `rhysd/${name}:${version}`,
+        `rhysd/${toolName}:${version}`,
     ]
 
-    await installer(name, version)
+    await installer(toolName, version)
 
-    info(`[RUNNER] Running ${name} on ${paths.length.toString()} files`)
+    info(`[RUNNER] Running ${toolName} on ${paths.length.toString()} files`)
 
     await exec('docker', [...dockerArgs, ...args, '--', ...paths])
 }

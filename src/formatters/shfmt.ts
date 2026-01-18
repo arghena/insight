@@ -9,7 +9,7 @@ import { type FormatterKey } from '../map'
 // https://github.com/mvdan/sh?tab=readme-ov-file#docker
 export async function runner(
     paths: string[],
-    name: FormatterKey,
+    toolName: FormatterKey,
     version: string,
     args: string[],
 ): Promise<void> {
@@ -21,13 +21,13 @@ export async function runner(
         `${cwd()}:/mnt`,
         '-w',
         '/mnt',
-        `mvdan/${name}:${tag}`,
+        `mvdan/${toolName}:${tag}`,
         '--diff',
     ]
 
-    await installer(name, tag)
+    await installer(toolName, tag)
 
-    info(`[RUNNER] Running ${name} on ${paths.length.toString()} files`)
+    info(`[RUNNER] Running ${toolName} on ${paths.length.toString()} files`)
 
     await exec('docker', [...dockerArgs, ...args, '--', ...paths])
 }
