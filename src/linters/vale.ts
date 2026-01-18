@@ -6,16 +6,24 @@ import { type LinterKey } from '../map'
 
 export async function runner(
     paths: string[],
-    name: LinterKey,
+    toolName: LinterKey,
     version: string,
     args: string[],
 ): Promise<void> {
     const tag = version === 'latest' ? 'latest' : `v${version}`
-    const dockerArgs = ['run', '--rm', '-v', `${cwd()}:/mnt`, '-w', '/mnt', `jdkato/${name}:${tag}`]
+    const dockerArgs = [
+        'run',
+        '--rm',
+        '-v',
+        `${cwd()}:/mnt`,
+        '-w',
+        '/mnt',
+        `jdkato/${toolName}:${tag}`,
+    ]
 
-    await installer(name, tag)
+    await installer(toolName, tag)
 
-    info(`[RUNNER] Running ${name} on ${paths.length.toString()} files`)
+    info(`[RUNNER] Running ${toolName} on ${paths.length.toString()} files`)
 
     await exec('docker', [...dockerArgs, 'sync'])
     await exec('docker', [...dockerArgs, ...args, '--', ...paths])

@@ -5,18 +5,18 @@ import { type LinterKey } from '../map'
 
 export async function runner(
     paths: string[],
-    name: LinterKey,
+    toolName: LinterKey,
     version: string,
     args: string[],
 ): Promise<void> {
     const count = paths.length
 
-    await installer(name, version)
+    await installer(toolName, version)
 
     info(
         count === 0
-            ? `[RUNNER] Running ${name} cron job`
-            : `[RUNNER] Running ${name} on ${count.toString()} files`,
+            ? `[RUNNER] Running ${toolName} cron job`
+            : `[RUNNER] Running ${toolName} on ${count.toString()} files`,
     )
 
     await exec('na', ['audit', ...args], {

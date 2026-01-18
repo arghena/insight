@@ -5,13 +5,13 @@ import { type FormatterKey } from '../map'
 
 export async function runner(
     paths: string[],
-    name: FormatterKey,
+    toolName: FormatterKey,
     version: string,
     args: string[],
 ): Promise<void> {
-    await installer(name, version)
+    await installer(toolName, version)
 
-    info(`[RUNNER] Running ${name} on ${paths.length.toString()} files`)
+    info(`[RUNNER] Running ${toolName} on ${paths.length.toString()} files`)
 
-    await exec(name, ['--check', ...args, '--', ...paths])
+    await exec(toolName, ['--check', ...args, '--', ...paths])
 }

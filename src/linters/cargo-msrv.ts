@@ -5,13 +5,13 @@ import { type LinterKey } from '../map'
 
 export async function runner(
     paths: string[],
-    name: LinterKey,
+    toolName: LinterKey,
     version: string,
     args: string[],
 ): Promise<void> {
-    await installer(name, version)
+    await installer(toolName, version)
 
-    info(`[RUNNER] Running ${name} on ${paths.length.toString()} files`)
+    info(`[RUNNER] Running ${toolName} on ${paths.length.toString()} files`)
 
-    await exec(name, ['verify', ...args])
+    await exec(toolName, ['verify', ...args])
 }

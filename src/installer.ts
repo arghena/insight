@@ -2,36 +2,25 @@ import { exec } from '@actions/exec'
 import { info } from '@actions/core'
 import { type FormatterKey, type LinterKey } from './map'
 
-export type CommitLinter = 'commitlint' | 'commitlint-config-conventional'
+export type ToolName = FormatterKey | LinterKey | 'commitlint' | 'commitlint-config-conventional'
 
-type PM = 'npm' | 'rustup' | 'cargo' | 'uv' | 'docker'
-
+type PM = 'npm' | 'rustup' | 'cargo-binstall' | 'uv' | 'docker'
 type Setups = Record<PM, string[]>
+type Tools = Record<ToolName, { pm: PM; args: string[] }>
 
-type Tools = Record<
-    CommitLinter | FormatterKey | LinterKey,
-    {
-        pm: PM
-        args: string[]
-    }
->
-
-const installedTools = new Set<string>()
+const installedTools = new Set<PM | ToolName>()
 
 // NOTE:
 // The `#!/bin/sh` in the install scripts for
 // `cargo-binstall` and `uv` doesn't actually work.
-export async function installer(
-    name: CommitLinter | FormatterKey | LinterKey,
-    version: string,
-): Promise<void> {
+export async function installer(toolName: ToolName, version: string): Promise<void> {
     const setups: Setups = {
         npm: [],
         rustup: [
             `rustup toolchain install ${version === 'latest' ? 'stable' : version} --profile minimal`,
             `rustup override set ${version === 'latest' ? 'stable' : version}`,
         ],
-        cargo: [
+        'cargo-binstall': [
             // TODO:
             // `dash` v0.5.13 has implemented `set -o pipefail`.
             // https://wiki.linuxfromscratch.org/blfs/ticket/22177
@@ -52,12 +41,8 @@ export async function installer(
             args: ['install', '--global', `@commitlint/cli@${version}`],
         },
         'cargo-deny': {
-            pm: 'cargo',
-            args: [
-                'binstall',
-                '--no-confirm',
-                version === 'latest' ? 'cargo-deny' : `cargo-deny@${version}`,
-            ],
+            pm: 'cargo-binstall',
+            args: ['--no-confirm', version === 'latest' ? 'cargo-deny' : `cargo-deny@${version}`],
         },
         'node-audit': {
             pm: 'npm',
@@ -83,12 +68,8 @@ export async function installer(
             ],
         },
         typos: {
-            pm: 'cargo',
-            args: [
-                'binstall',
-                '--no-confirm',
-                version === 'latest' ? 'typos-cli' : `typos-cli@${version}`,
-            ],
+            pm: 'cargo-binstall',
+            args: ['--no-confirm', version === 'latest' ? 'typos-cli' : `typos-cli@${version}`],
         },
         yamllint: {
             pm: 'uv',
@@ -99,12 +80,8 @@ export async function installer(
             args: ['pull', `rhysd/actionlint:${version}`],
         },
         'ast-grep': {
-            pm: 'cargo',
-            args: [
-                'binstall',
-                '--no-confirm',
-                version === 'latest' ? 'ast-grep' : `ast-grep@${version}`,
-            ],
+            pm: 'cargo-binstall',
+            args: ['--no-confirm', version === 'latest' ? 'ast-grep' : `ast-grep@${version}`],
         },
         'cargo-clippy': {
             pm: 'rustup',
@@ -115,17 +92,12 @@ export async function installer(
             args: ['component', 'add', 'rustfmt'],
         },
         'cargo-msrv': {
-            pm: 'cargo',
-            args: [
-                'binstall',
-                '--no-confirm',
-                version === 'latest' ? 'cargo-msrv' : `cargo-msrv@${version}`,
-            ],
+            pm: 'cargo-binstall',
+            args: ['--no-confirm', version === 'latest' ? 'cargo-msrv' : `cargo-msrv@${version}`],
         },
         'cargo-tarpaulin': {
-            pm: 'cargo',
+            pm: 'cargo-binstall',
             args: [
-                'binstall',
                 '--no-confirm',
                 version === 'latest' ? 'cargo-tarpaulin' : `cargo-tarpaulin@${version}`,
             ],
@@ -151,19 +123,15 @@ export async function installer(
             args: ['pull', `koalaman/shellcheck:${version}`],
         },
         taplo: {
-            pm: 'cargo',
-            args: [
-                'binstall',
-                '--no-confirm',
-                version === 'latest' ? 'taplo-cli' : `taplo-cli@${version}`,
-            ],
+            pm: 'cargo-binstall',
+            args: ['--no-confirm', version === 'latest' ? 'taplo-cli' : `taplo-cli@${version}`],
         },
         tombi: {
             pm: 'uv',
             args: ['tool', 'install', `tombi@${version}`],
         },
     }
-    const { pm, args } = tools[name]
+    const { pm, args } = tools[toolName]
 
     if (setups[pm].length !== 0 && !installedTools.has(pm)) {
         info(`[INSTALLER] Setting up the ${pm} environment`)
@@ -173,11 +141,11 @@ export async function installer(
         installedTools.add(pm)
     }
 
-    if (!installedTools.has(name)) {
-        info(`[INSTALLER] Installing ${name} using ${pm}`)
+    if (!installedTools.has(toolName)) {
+        info(`[INSTALLER] Installing ${toolName} using ${pm}`)
 
         await exec(pm, args)
 
-        installedTools.add(name)
+        installedTools.add(toolName)
     }
 }
