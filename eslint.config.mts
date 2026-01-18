@@ -32,8 +32,8 @@ export default defineConfig(
                 {
                     selector: 'variable',
                     types: ['boolean'],
-                    // NOTE:
-                    // The prefix is trimmed before format is validated, thus PascalCase must be used to allow variables such as `isEnabled`.
+                    // NOTE: The prefix is trimmed before format is validated,
+                    // thus PascalCase must be used to allow variables such as `isEnabled`.
                     // https://typescript-eslint.io/rules/naming-convention/#enforce-that-boolean-variables-are-prefixed-with-an-allowed-verb
                     format: ['PascalCase'],
                     prefix: ['has'],

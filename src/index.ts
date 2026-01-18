@@ -84,9 +84,8 @@ async function run() {
         }
 
         for (const toolName of push.linters) {
-            // NOTE:
-            // May match unexpected files.
-            // ex: Clippy creates a `target` folder before it runs.
+            // NOTE: May match unexpected files.
+            // For example, Clippy creates a `target` folder before it runs.
             const matchedPaths = await fg(linters[toolName], { dot: match.dot })
             const paths = ig.filter(matchedPaths)
 

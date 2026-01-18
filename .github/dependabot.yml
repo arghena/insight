@@ -1,11 +1,9 @@
-# NOTE:
-# Dependabot won't follow `labels: []`.
+# NOTE: Dependabot won't follow `labels: []`.
 # https://github.com/dependabot/dependabot-core/issues/11783
 
 version: 2
 
-# TODO:
-# Add support for bumping version of `packageManager` specified inside `package.json`.
+# TODO: Add support for bumping version of `packageManager` specified inside `package.json`.
 # https://github.com/dependabot/dependabot-core/issues/4830
 updates:
   - package-ecosystem: 'npm'
