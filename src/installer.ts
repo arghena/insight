@@ -17,7 +17,7 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
     const setups: Setups = {
         npm: [],
         rustup: [
-            `rustup toolchain install ${version === 'latest' ? 'stable' : version} --profile minimal`,
+            `rustup toolchain install ${version === 'latest' ? 'stable' : version} --profile minimal --no-self-update`,
             `rustup override set ${version === 'latest' ? 'stable' : version}`,
         ],
         'cargo-binstall': [
