@@ -5,6 +5,9 @@ version: 2
 
 # TODO: Add support for bumping version of `packageManager` specified inside `package.json`.
 # https://github.com/dependabot/dependabot-core/issues/4830
+#
+# TODO: Allow lower case commit message.
+# https://github.com/dependabot/dependabot-core/issues/10586
 updates:
   - package-ecosystem: 'npm'
     directory: '/'
