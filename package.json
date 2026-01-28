@@ -20,7 +20,7 @@
   "dependencies": {
     "@actions/core": "^2.0.3",
     "@actions/exec": "^2.0.0",
-    "@actions/github": "^7.0.0",
+    "@actions/github": "^9.0.0",
     "defu": "^6.1.4",
     "fast-glob": "^3.3.3",
     "ignore": "^7.0.5",
