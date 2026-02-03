@@ -31,7 +31,7 @@ outputs:
     description: 'Returns `true` if any of the configured patterns matched.'
 runs:
   using: 'node24'
-  main: 'dist/index.js'
+  main: 'dist/index.mjs'
 branding:
   color: 'black'
   icon: 'check-square'
