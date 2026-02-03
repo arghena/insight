@@ -39,11 +39,7 @@ export default defineConfig(
                     prefix: ['has'],
                 },
                 {
-                    selector: [
-                        'objectLiteralProperty',
-                        'typeProperty',
-                        'objectLiteralMethod',
-                    ],
+                    selector: ['objectLiteralProperty', 'typeProperty', 'objectLiteralMethod'],
                     format: null,
                     modifiers: ['requiresQuotes'],
                 },

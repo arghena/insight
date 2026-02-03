@@ -59,10 +59,10 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
             args: [
                 'install',
                 '--global',
+                '@antfu/ni',
                 `eslint@${version}`,
                 // https://eslint.org/docs/latest/use/configure/configuration-files#typescript-configuration-files
                 'jiti',
-                '@antfu/ni',
             ],
         },
         typos: {
@@ -127,6 +127,10 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
         tombi: {
             pm: 'uv',
             args: ['tool', 'install', `tombi@${version}`],
+        },
+        tsc: {
+            pm: 'npm',
+            args: ['install', '--global', '@antfu/ni', `typescript@${version}`],
         },
     }
     const { pm, args } = tools[toolName]

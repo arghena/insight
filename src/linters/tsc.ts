@@ -14,5 +14,5 @@ export async function runner(
     info(`[RUNNER] Running ${toolName} on ${paths.length.toString()} files`)
 
     await exec('nci')
-    await exec(toolName, [...args, '--', ...paths])
+    await exec(toolName, ['--noEmit', ...args])
 }

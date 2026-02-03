@@ -76,6 +76,7 @@ const defaultConfig: Config = {
             shellcheck: [],
             taplo: [],
             tombi: [],
+            tsc: [],
         },
     },
     formatters: {
@@ -103,6 +104,7 @@ const defaultConfig: Config = {
         shellcheck: [],
         taplo: [],
         tombi: [],
+        tsc: [],
     },
     versions: {
         'commitlint-config-conventional': 'latest',
@@ -127,6 +129,7 @@ const defaultConfig: Config = {
         shellcheck: 'latest',
         taplo: 'latest',
         tombi: 'latest',
+        tsc: 'latest',
     },
 }
 

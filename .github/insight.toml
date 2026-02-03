@@ -6,7 +6,7 @@ linters = ["node-audit"]
 
 [push]
 formatters = ["prettier"]
-linters = ["check-dist", "eslint", "ast-grep"]
+linters = ["tsc", "check-dist", "eslint", "ast-grep"]
 
 [args.linters]
 yamllint = ["--strict"]
@@ -18,6 +18,7 @@ tombi = ["**/*.toml"]
 
 [linters]
 node-audit = ["package.json", "pnpm-lock.yaml"]
+tsc = ["**/*.ts", "package.json", "pnpm-lock.yaml"]
 check-dist = ["src/**/*.ts", "package.json", "pnpm-lock.yaml"]
 typos = ["**/*", "!dist/**"]
 yamllint = ["**/*.yml"]

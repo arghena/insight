@@ -23,6 +23,7 @@ export const linter = {
     shellcheck: () => import('@/linters/shellcheck'),
     taplo: () => import('@/linters/taplo'),
     tombi: () => import('@/linters/tombi'),
+    tsc: () => import('@/linters/tsc'),
 }
 
 export type FormatterKey = keyof typeof formatter
