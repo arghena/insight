@@ -1,7 +1,7 @@
-import { installer } from '../installer'
+import { installer } from '@/installer'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
-import { type LinterKey } from '../map'
+import { type LinterKey } from '@/map'
 
 export async function runner(
     paths: string[],
