@@ -4,6 +4,7 @@ rustfmt
 shfmt
 taplo
 tombi
+tsc
 commitlint
 eslint
 clippy

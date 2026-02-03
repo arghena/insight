@@ -182,6 +182,7 @@ eslint = "9.33.0"
 | [shellcheck](https://github.com/koalaman/shellcheck)                                   | `shellcheck`        |                     |
 | [taplo](https://github.com/tamasfe/taplo)                                              | `taplo`             |                     |
 | [tombi](https://github.com/tombi-toml/tombi)                                           | `tombi`             |                     |
+| [tsc](https://github.com/microsoft/TypeScript)                                         | `tsc`               |                     |
 
 ## Contributing
 

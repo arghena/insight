@@ -1,4 +1,4 @@
 ignoredBuiltDependencies:
-    # This doesn't affect the build.
-    # https://github.com/evanw/esbuild/blob/cd832972927f1f67b6d2cc895c06a8759c1cf309/npm/esbuild/package.json#L20-L47
-    - esbuild
+  # This doesn't affect the build.
+  # https://github.com/evanw/esbuild/blob/cd832972927f1f67b6d2cc895c06a8759c1cf309/npm/esbuild/package.json#L20-L47
+  - esbuild
