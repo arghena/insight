@@ -1,9 +1,19 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "commonjs",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+    "skipLibCheck": true,
     "esModuleInterop": true,
-    "strict": true
+    "isolatedModules": true,
+    "strict": true,
+    "incremental": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules"]

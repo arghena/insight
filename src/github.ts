@@ -1,6 +1,6 @@
 import { getInput, info, group } from '@actions/core'
 import { getOctokit } from '@actions/github'
-import { toBulletedList } from './utils'
+import { toBulletedList } from '@/utils'
 
 interface Inputs {
     configPath: string

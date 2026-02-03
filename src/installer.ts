@@ -1,6 +1,6 @@
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
-import { type FormatterKey, type LinterKey } from './map'
+import { type FormatterKey, type LinterKey } from '@/map'
 
 export type ToolName = FormatterKey | LinterKey | 'commitlint' | 'commitlint-config-conventional'
 

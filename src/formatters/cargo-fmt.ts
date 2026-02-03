@@ -1,7 +1,7 @@
-import { installer } from '../installer'
+import { installer } from '@/installer'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
-import { type FormatterKey } from '../map'
+import { type FormatterKey } from '@/map'
 
 // NOTE: This formatter doesn't support file path input.
 export async function runner(

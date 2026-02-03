@@ -3,8 +3,8 @@ import { access, constants, readFile } from 'fs/promises'
 import { parse } from 'smol-toml'
 import { defu } from 'defu'
 import ignore, { type Ignore } from 'ignore'
-import { type ToolName } from './installer'
-import { type FormatterKey, type LinterKey } from './map'
+import { type ToolName } from '@/installer'
+import { type FormatterKey, type LinterKey } from '@/map'
 
 interface Config {
     match: {
