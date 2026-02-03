@@ -14,5 +14,7 @@ export async function runner(
     info(`[RUNNER] Running ${toolName} on ${paths.length.toString()} files`)
 
     await exec('nci')
+    // NOTE: Passing explicit file paths can lead to unexpected behavior.
+    // https://github.com/microsoft/TypeScript/issues/27379
     await exec(toolName, ['--noEmit', ...args])
 }
