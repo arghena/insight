@@ -3,6 +3,8 @@ import { exec } from '@actions/exec'
 import { info } from '@actions/core'
 import { type LinterKey } from '@/map'
 
+// TODO: Waiting for nextest integration.
+// https://github.com/xd009642/tarpaulin/issues/992
 export async function runner(
     paths: string[],
     toolName: LinterKey,
