@@ -2,6 +2,8 @@ import eslint from '@eslint/js'
 import { defineConfig } from 'eslint/config'
 import tseslint from 'typescript-eslint'
 
+// TODO: Waiting for native TypeScript support.
+// https://eslint.org/docs/latest/use/configure/configuration-files#typescript-configuration-files
 export default defineConfig(
     eslint.configs.recommended,
     tseslint.configs.strictTypeChecked,
