@@ -1,5 +1,5 @@
-import micromatch from 'micromatch'
 import fg from 'fast-glob'
+import micromatch from 'micromatch'
 import { exec } from '@actions/exec'
 import { info, setFailed, setOutput, group } from '@actions/core'
 import { installer } from '@/installer'
