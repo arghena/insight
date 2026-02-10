@@ -6,7 +6,7 @@
     "tsBuildInfoFile": "dist/.tsbuildinfo",
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
     "strict": true,
     "incremental": true,
     "noEmit": true,
