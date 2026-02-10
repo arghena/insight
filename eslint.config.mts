@@ -21,6 +21,8 @@ export default defineConfig(
         files: ['**/*.ts'],
         rules: {
             eqeqeq: 'error',
+            // TODO: Migrate to `eslint-plugin-import-x`.
+            // https://github.com/un-ts/eslint-plugin-import-x/issues/421
             'no-duplicate-imports': ['error', { includeExports: true }],
             '@typescript-eslint/naming-convention': [
                 'error',
