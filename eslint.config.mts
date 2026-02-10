@@ -1,6 +1,6 @@
 import eslint from '@eslint/js'
-import { defineConfig } from 'eslint/config'
 import tseslint from 'typescript-eslint'
+import { defineConfig } from 'eslint/config'
 
 // TODO: Waiting for native TypeScript support.
 // https://eslint.org/docs/latest/use/configure/configuration-files#typescript-configuration-files
@@ -21,6 +21,7 @@ export default defineConfig(
         files: ['**/*.ts'],
         rules: {
             eqeqeq: 'error',
+            'no-duplicate-imports': ['error', { includeExports: true }],
             '@typescript-eslint/naming-convention': [
                 'error',
                 {
@@ -44,6 +45,12 @@ export default defineConfig(
                     selector: ['objectLiteralProperty', 'typeProperty', 'objectLiteralMethod'],
                     format: null,
                     modifiers: ['requiresQuotes'],
+                },
+            ],
+            '@typescript-eslint/consistent-type-imports': [
+                'error',
+                {
+                    fixStyle: 'inline-type-imports',
                 },
             ],
         },

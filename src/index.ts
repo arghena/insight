@@ -1,13 +1,12 @@
-import { getInputs, getChangedFilePaths } from '@/github'
-import { resolveConfig } from '@/config'
-import { formatter, linter, type FormatterKey, type LinterKey } from '@/map'
-import { installer } from '@/installer'
 import micromatch from 'micromatch'
-import { info, setFailed, setOutput, group } from '@actions/core'
-import { exec } from '@actions/exec'
 import fg from 'fast-glob'
-import { resolveGitignore } from '@/config'
+import { exec } from '@actions/exec'
+import { info, setFailed, setOutput, group } from '@actions/core'
+import { installer } from '@/installer'
 import { toBulletedList } from '@/utils'
+import { getInputs, getChangedFilePaths } from '@/github'
+import { resolveConfig, resolveGitignore } from '@/config'
+import { formatter, linter, type FormatterKey, type LinterKey } from '@/map'
 
 async function run() {
     const {
