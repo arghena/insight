@@ -10,7 +10,6 @@ interface Config {
     match: {
         dot: boolean
     }
-    changes: Record<string, string[]>
     schedule: {
         linters: ('cargo-deny' | 'node-audit')[]
     }
@@ -41,7 +40,6 @@ const defaultConfig: Config = {
     match: {
         dot: false,
     },
-    changes: {},
     schedule: {
         linters: [],
     },
