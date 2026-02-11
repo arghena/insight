@@ -11,8 +11,8 @@ This is because users won't have access to those files locally when browsing the
   <h1>Insight</h1>
   <p>A GitHub Action for checking pull requests.</p>
 
-<a href="https://github.com/arghena/insight/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/arghena/insight/ci.yml?branch=v0.1.0-canary.29&style=for-the-badge&label=CI&labelColor=1a1b26&color=black&logo=github" alt="CI" /></a>
-<a href="https://github.com/arghena/insight/actions/workflows/cd.yml"><img src="https://img.shields.io/github/actions/workflow/status/arghena/insight/cd.yml?branch=v0.1.0-canary.29&style=for-the-badge&label=CD&labelColor=1a1b26&color=black&logo=github" alt="CD" /></a>
+<a href="https://github.com/arghena/insight/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/arghena/insight/ci.yml?branch=v0.1.0-canary.30&style=for-the-badge&label=CI&labelColor=1a1b26&color=black&logo=github" alt="CI" /></a>
+<a href="https://github.com/arghena/insight/actions/workflows/cd.yml"><img src="https://img.shields.io/github/actions/workflow/status/arghena/insight/cd.yml?branch=v0.1.0-canary.30&style=for-the-badge&label=CD&labelColor=1a1b26&color=black&logo=github" alt="CD" /></a>
 
 </div>
 
@@ -26,7 +26,6 @@ This is because users won't have access to those files locally when browsing the
 - Can check build files in `dist/` using a `git diff` approach.
 - Lets you customize formatter and linter versions and arguments.
 - Supports [glob](<https://en.wikipedia.org/wiki/Glob_(programming)>) patterns to match exactly the files you want to check.
-- Supports detecting file changes and outputs the result.
 - Ships with minimal defaults to keep opinionated behavior to a minimum.
 
 ## Usage
@@ -41,16 +40,11 @@ jobs:
   insight:
     name: Insight
     runs-on: ubuntu-latest
-    outputs:
-      any-changed: ${{ steps.insight.outputs.any-changed }}
-      rust-any-changed: ${{ steps.insight.outputs.rust-any-changed }}
-      actions-any-changed: ${{ steps.insight.outputs.actions-any-changed }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
       - name: Run Insight
-        id: insight
-        uses: arghena/insight@v0.1.0-canary.29
+        uses: arghena/insight@v0.1.0-canary.30
         with:
           # The path to the Insight config file.
           # Default: '.github/insight.toml'
@@ -76,15 +70,6 @@ jobs:
           # The number of the pull request to check.
           # Default: ${{ github.event.pull_request.number }}
           pull-request-number: ''
-
-  test:
-    name: Test
-    needs: insight
-    if: ${{ needs.insight.outputs.any-changed == 'true' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run test
-        run: echo test
 ```
 
 ## Configure Insight
@@ -97,12 +82,6 @@ jobs:
 # Match dotfiles.
 # Default: false
 dot = true
-
-[changes]
-# Detect file changes.
-# Default: []
-rust = ["**/*.rs"]
-actions = [".github/workflows/*.yml"]
 
 [schedule]
 # Linters to run on `on.schedule` events.

@@ -1,7 +1,7 @@
 import fg from 'fast-glob'
 import micromatch from 'micromatch'
 import { exec } from '@actions/exec'
-import { info, setFailed, setOutput, group } from '@actions/core'
+import { info, setFailed, group } from '@actions/core'
 import { installer } from '@/installer'
 import { toBulletedList } from '@/utils'
 import { getInputs, getChangedFilePaths } from '@/github'
@@ -22,7 +22,6 @@ async function run() {
     // prettier-ignore
     const {
         match,
-        changes,
         schedule,
         push,
         args,
@@ -137,19 +136,6 @@ async function run() {
             await runner(paths, toolName, versions[toolName], args.linters[toolName])
         })
     }
-
-    const hasAnyChanged = Object.entries(changes).reduce((acc, [category, patterns]) => {
-        const matchedPaths = micromatch(changedFilePaths, patterns, {
-            dot: match.dot,
-        })
-        const hasChanged = matchedPaths.length > 0
-
-        setOutput(`${category}-any-changed`, hasChanged)
-
-        return acc || hasChanged
-    }, false)
-
-    setOutput('any-changed', hasAnyChanged)
 }
 
 run().catch((error: unknown) => {
