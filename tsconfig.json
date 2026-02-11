@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "target": "esnext",
+    "lib": ["esnext"],
     "module": "esnext",
     "moduleResolution": "bundler",
     "tsBuildInfoFile": "dist/.tsbuildinfo",
     "skipLibCheck": true,
-    "esModuleInterop": true,
     "verbatimModuleSyntax": true,
     "strict": true,
     "incremental": true,
