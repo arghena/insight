@@ -13,5 +13,11 @@ export async function runner(
 
     info(`[RUNNER] Running ${toolName} on ${paths.length.toString()} files`)
 
-    await exec(toolName, ['verify', ...args])
+    await exec(toolName, ['verify', ...args], {
+        env: {
+            ...process.env,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            CARGO_INCREMENTAL: '0',
+        },
+    })
 }
