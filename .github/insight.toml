@@ -11,6 +11,7 @@ linters = ["tsc", "check-dist", "eslint", "ast-grep"]
 [args.linters]
 yamllint = ["--strict"]
 tombi = ["--error-on-warnings"]
+eslint = ["--max-warnings", "0"]
 
 [formatters]
 prettier = ["**/*.yml", "**/*.ts", "**/*.md", "**/*.json"]
