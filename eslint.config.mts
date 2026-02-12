@@ -24,15 +24,24 @@ export default defineConfig(
             // TODO: Migrate to `eslint-plugin-import-x`.
             // https://github.com/un-ts/eslint-plugin-import-x/issues/421
             'no-duplicate-imports': ['error', { includeExports: true }],
+            '@typescript-eslint/strict-void-return': 'error',
+            '@typescript-eslint/strict-boolean-expressions': [
+                'error',
+                {
+                    allowString: false,
+                    allowNumber: false,
+                    allowNullableObject: false,
+                },
+            ],
             '@typescript-eslint/naming-convention': [
                 'error',
                 {
                     selector: 'default',
-                    format: ['camelCase'],
+                    format: ['strictCamelCase'],
                 },
                 {
                     selector: ['interface', 'typeAlias'],
-                    format: ['PascalCase'],
+                    format: ['StrictPascalCase'],
                 },
                 {
                     selector: 'variable',
@@ -40,8 +49,8 @@ export default defineConfig(
                     // NOTE: The prefix is trimmed before format is validated,
                     // thus PascalCase must be used to allow variables such as `isEnabled`.
                     // https://typescript-eslint.io/rules/naming-convention/#enforce-that-boolean-variables-are-prefixed-with-an-allowed-verb
-                    format: ['PascalCase'],
-                    prefix: ['has'],
+                    format: ['StrictPascalCase'],
+                    prefix: ['is', 'has', 'can'],
                 },
                 {
                     selector: ['objectLiteralProperty', 'typeProperty', 'objectLiteralMethod'],

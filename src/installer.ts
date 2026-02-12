@@ -4,11 +4,11 @@ import { type FormatterKey, type LinterKey } from '@/map'
 
 export type ToolName = FormatterKey | LinterKey | 'commitlint' | 'commitlint-config-conventional'
 
-type PM = 'npm' | 'rustup' | 'cargo-binstall' | 'uv' | 'docker'
-type Setups = Record<PM, string[]>
-type Tools = Record<ToolName, { pm: PM; args: string[] }>
+type PackageManager = 'npm' | 'rustup' | 'cargo-binstall' | 'uv' | 'docker'
+type Setups = Record<PackageManager, string[]>
+type Tools = Record<ToolName, { packageManager: PackageManager; args: string[] }>
 
-const installedTools = new Set<PM | ToolName>()
+const installedTools = new Set<PackageManager | ToolName>()
 
 // NOTE: The `#!/bin/sh` in the install scripts for
 // `cargo-binstall` and `uv` doesn't actually work.
@@ -31,31 +31,31 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
     }
     const tools: Tools = {
         'commitlint-config-conventional': {
-            pm: 'npm',
+            packageManager: 'npm',
             args: ['install', '--no-save', `@commitlint/config-conventional@${version}`],
         },
         commitlint: {
-            pm: 'npm',
+            packageManager: 'npm',
             args: ['install', '--global', `@commitlint/cli@${version}`],
         },
         'cargo-deny': {
-            pm: 'cargo-binstall',
+            packageManager: 'cargo-binstall',
             args: ['--no-confirm', version === 'latest' ? 'cargo-deny' : `cargo-deny@${version}`],
         },
         'node-audit': {
-            pm: 'npm',
+            packageManager: 'npm',
             args: ['install', '--global', '@antfu/ni'],
         },
         'check-dist': {
-            pm: 'npm',
+            packageManager: 'npm',
             args: ['install', '--global', '@antfu/ni'],
         },
         prettier: {
-            pm: 'npm',
+            packageManager: 'npm',
             args: ['install', '--global', `prettier@${version}`],
         },
         eslint: {
-            pm: 'npm',
+            packageManager: 'npm',
             args: [
                 'install',
                 '--global',
@@ -66,87 +66,87 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
             ],
         },
         typos: {
-            pm: 'cargo-binstall',
+            packageManager: 'cargo-binstall',
             args: ['--no-confirm', version === 'latest' ? 'typos-cli' : `typos-cli@${version}`],
         },
         yamllint: {
-            pm: 'uv',
+            packageManager: 'uv',
             args: ['tool', 'install', `yamllint@${version}`],
         },
         actionlint: {
-            pm: 'docker',
+            packageManager: 'docker',
             args: ['pull', `rhysd/actionlint:${version}`],
         },
         'ast-grep': {
-            pm: 'cargo-binstall',
+            packageManager: 'cargo-binstall',
             args: ['--no-confirm', version === 'latest' ? 'ast-grep' : `ast-grep@${version}`],
         },
         'cargo-clippy': {
-            pm: 'rustup',
+            packageManager: 'rustup',
             args: ['component', 'add', 'clippy'],
         },
         'cargo-fmt': {
-            pm: 'rustup',
+            packageManager: 'rustup',
             args: ['component', 'add', 'rustfmt'],
         },
         'cargo-msrv': {
-            pm: 'cargo-binstall',
+            packageManager: 'cargo-binstall',
             args: ['--no-confirm', version === 'latest' ? 'cargo-msrv' : `cargo-msrv@${version}`],
         },
         'cargo-tarpaulin': {
-            pm: 'cargo-binstall',
+            packageManager: 'cargo-binstall',
             args: [
                 '--no-confirm',
                 version === 'latest' ? 'cargo-tarpaulin' : `cargo-tarpaulin@${version}`,
             ],
         },
         alex: {
-            pm: 'npm',
+            packageManager: 'npm',
             args: ['install', '--global', `alex@${version}`],
         },
         'markdownlint-cli2': {
-            pm: 'npm',
+            packageManager: 'npm',
             args: ['install', '--global', `markdownlint-cli2@${version}`],
         },
         vale: {
-            pm: 'docker',
+            packageManager: 'docker',
             args: ['pull', `jdkato/vale:${version}`],
         },
         shfmt: {
-            pm: 'docker',
+            packageManager: 'docker',
             args: ['pull', `mvdan/shfmt:${version}`],
         },
         shellcheck: {
-            pm: 'docker',
+            packageManager: 'docker',
             args: ['pull', `koalaman/shellcheck:${version}`],
         },
         taplo: {
-            pm: 'cargo-binstall',
+            packageManager: 'cargo-binstall',
             args: ['--no-confirm', version === 'latest' ? 'taplo-cli' : `taplo-cli@${version}`],
         },
         tombi: {
-            pm: 'uv',
+            packageManager: 'uv',
             args: ['tool', 'install', `tombi@${version}`],
         },
         tsc: {
-            pm: 'npm',
+            packageManager: 'npm',
             args: ['install', '--global', '@antfu/ni', `typescript@${version}`],
         },
     }
-    const { pm, args } = tools[toolName]
+    const { packageManager, args } = tools[toolName]
 
-    if (setups[pm].length !== 0 && !installedTools.has(pm)) {
-        info(`[INSTALLER] Setting up the ${pm} environment`)
+    if (setups[packageManager].length !== 0 && !installedTools.has(packageManager)) {
+        info(`[INSTALLER] Setting up the ${packageManager} environment`)
 
-        for (const cmd of setups[pm]) await exec('sh', ['-c', cmd])
+        for (const cmd of setups[packageManager]) await exec('sh', ['-c', cmd])
 
-        installedTools.add(pm)
+        installedTools.add(packageManager)
     }
 
     if (!installedTools.has(toolName)) {
-        info(`[INSTALLER] Installing ${toolName} using ${pm}`)
+        info(`[INSTALLER] Installing ${toolName} using ${packageManager}`)
 
-        await exec(pm, args)
+        await exec(packageManager, args)
 
         installedTools.add(toolName)
     }
