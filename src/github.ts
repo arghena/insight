@@ -1,6 +1,6 @@
 import { getInput, info, group } from '@actions/core'
 import { getOctokit } from '@actions/github'
-import { toBulletedList } from '@/utils'
+import { unorderedList } from '@/utils'
 
 interface Inputs {
     configPath: string
@@ -67,7 +67,7 @@ export async function getChangedFilePaths(
             .map((file) => file.filename)
 
         info(
-            `[TOTAL] Found ${changedFilePaths.length.toString()} changed files:\n${toBulletedList(changedFilePaths)}`,
+            `[TOTAL] Found ${changedFilePaths.length.toString()} changed files:\n${unorderedList(changedFilePaths)}`,
         )
 
         return changedFilePaths

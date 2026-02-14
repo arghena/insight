@@ -178,7 +178,7 @@ Please refer to our [SECURITY.md](https://github.com/arghena/insight/blob/canary
 
 The version naming of Insight follows [Semantic Versioning 2.0.0](https://semver.org/#semantic-versioning-200).
 
-### Long-term Support
+### Long-Term Support
 
 > [!NOTE]
 > When Insight releases a new major version, the previous stable version will be designated as an LTS version.
