@@ -3,7 +3,7 @@ import micromatch from 'micromatch'
 import { exec } from '@actions/exec'
 import { info, setFailed, group } from '@actions/core'
 import { installer } from '@/installer'
-import { toBulletedList } from '@/utils'
+import { unorderedList } from '@/utils'
 import { getInputs, getChangedFilePaths } from '@/github'
 import { resolveConfig, resolveGitignore } from '@/config'
 import { formatter, linter, type FormatterKey, type LinterKey } from '@/map'
@@ -75,7 +75,7 @@ async function run() {
             await group(`[FORMATTER] ${toolName}`, async () => {
                 const { runner } = await formatter[toolName]()
 
-                info(`[GLOB] Matched file paths:\n${toBulletedList(paths)}`)
+                info(`[GLOB] Matched file paths:\n${unorderedList(paths)}`)
 
                 await runner(paths, toolName, versions[toolName], args.formatters[toolName])
             })
@@ -92,7 +92,7 @@ async function run() {
             await group(`[LINTER] ${toolName}`, async () => {
                 const { runner } = await linter[toolName]()
 
-                info(`[GLOB] Matched file paths:\n${toBulletedList(paths)}`)
+                info(`[GLOB] Matched file paths:\n${unorderedList(paths)}`)
 
                 await runner(paths, toolName, versions[toolName], args.linters[toolName])
             })
@@ -115,7 +115,7 @@ async function run() {
         await group(`[FORMATTER] ${toolName}`, async () => {
             const { runner } = await formatter[toolName]()
 
-            info(`[GLOB] Matched file paths:\n${toBulletedList(paths)}`)
+            info(`[GLOB] Matched file paths:\n${unorderedList(paths)}`)
 
             await runner(paths, toolName, versions[toolName], args.formatters[toolName])
         })
@@ -131,7 +131,7 @@ async function run() {
         await group(`[LINTER] ${toolName}`, async () => {
             const { runner } = await linter[toolName]()
 
-            info(`[GLOB] Matched file paths:\n${toBulletedList(paths)}`)
+            info(`[GLOB] Matched file paths:\n${unorderedList(paths)}`)
 
             await runner(paths, toolName, versions[toolName], args.linters[toolName])
         })
