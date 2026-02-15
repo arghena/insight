@@ -55,15 +55,15 @@ jobs:
           # Use `commitlint` to check the pull request title.
           # Default: 'false'
           check-pull-request-title: ''
+          # The commit SHA that triggered the workflow.
+          # Default: ${{ github.sha }}
+          sha: ''
           # The title of pull request event.
           # Default: ${{ github.event.pull_request.title }}
           pull-request-title: ''
           # The name of the event that triggered the workflow run.
           # Default: ${{ github.event_name }}
           event-name: ''
-          # The name of ref that triggered the workflow run.
-          # Default: ${{ github.ref_name }}
-          ref-name: ''
           # The type of ref that triggered the workflow run.
           # Default: ${{ github.ref_type }}
           ref-type: ''

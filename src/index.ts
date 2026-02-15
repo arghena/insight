@@ -23,9 +23,9 @@ async function run(): Promise<void> {
     const {
         configPath,
         checkPullRequestTitle,
+        sha,
         pullRequestTitle,
         eventName,
-        refName,
         refType,
         token,
         repository,
@@ -33,7 +33,9 @@ async function run(): Promise<void> {
     } = getInputs()
     const { match, schedule, push, formatters, linters, args, versions } = await resolveConfig(
         configPath,
-        { repository, refName },
+        token,
+        repository,
+        sha,
     )
 
     if (checkPullRequestTitle === 'true') {

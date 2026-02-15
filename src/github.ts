@@ -5,9 +5,9 @@ import { unorderedList } from '@/utils'
 interface Inputs {
     configPath: string
     checkPullRequestTitle: string
+    sha: string
     pullRequestTitle: string
     eventName: string
-    refName: string
     refType: string
     token: string
     repository: string
@@ -17,11 +17,11 @@ interface Inputs {
 export function getInputs(): Inputs {
     const configPath = getInput('config-path', { required: false })
     const checkPullRequestTitle = getInput('check-pull-request-title', { required: false })
+    const sha = getInput('sha', { required: false })
     const pullRequestTitle = getInput('pull-request-title', {
         required: false,
     })
     const eventName = getInput('event-name', { required: false })
-    const refName = getInput('ref-name', { required: false })
     const refType = getInput('ref-type', { required: false })
     const token = getInput('token', { required: false })
     const repository = getInput('repository', { required: false })
@@ -32,9 +32,9 @@ export function getInputs(): Inputs {
     return {
         configPath,
         checkPullRequestTitle,
+        sha,
         pullRequestTitle,
         eventName,
-        refName,
         refType,
         token,
         repository,
@@ -75,4 +75,27 @@ export async function getChangedFilePaths(
 
         return changedFilePaths
     })
+}
+
+export async function getFileContent(
+    path: string,
+    token: string,
+    repository: string,
+    sha?: string,
+): Promise<string> {
+    const octokit = getOctokit(token)
+    const [owner, repo] = repository.split('/', 2)
+    const { data } = await octokit.rest.repos.getContent({
+        mediaType: {
+            format: 'raw',
+        },
+        owner,
+        repo,
+        path,
+        ref: sha,
+    })
+
+    if (typeof data !== 'string') throw new Error(`[API] Error fetching remote file at ${path}`)
+
+    return data
 }

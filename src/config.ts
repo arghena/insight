@@ -1,8 +1,8 @@
 import { access, constants, readFile } from 'node:fs/promises'
 import { parse } from 'smol-toml'
 import { defu } from 'defu'
-import { HttpClient } from '@actions/http-client'
 import ignore, { type Ignore } from 'ignore'
+import { getFileContent } from '@/github'
 import { type ToolName } from '@/installer'
 import { type FormatterKey, type LinterKey } from '@/map'
 
@@ -24,11 +24,6 @@ interface Config {
         linters: Record<LinterKey | 'commitlint', string[]>
     }
     versions: Record<ToolName, string>
-}
-
-interface Context {
-    repository: string
-    refName: string
 }
 
 const defaultConfig: Config = {
@@ -126,17 +121,18 @@ const defaultConfig: Config = {
     },
 }
 
-export async function resolveConfig(configPath: string, context: Context): Promise<Config> {
+export async function resolveConfig(
+    configPath: string,
+    token: string,
+    repository: string,
+    sha: string,
+): Promise<Config> {
     let rawConfig: string
 
     if (await fileExists(configPath)) {
         rawConfig = await readFile(configPath, { encoding: 'utf8' })
     } else {
-        const { repository, refName } = context
-
-        rawConfig = await fetchText(
-            `https://raw.githubusercontent.com/${repository}/refs/heads/${refName}/${configPath}`,
-        )
+        rawConfig = await getFileContent(configPath, token, repository, sha)
     }
 
     return defu(parse(rawConfig), defaultConfig) as Config
@@ -161,18 +157,4 @@ async function fileExists(path: string): Promise<boolean> {
     } catch {
         return false
     }
-}
-
-async function fetchText(url: string): Promise<string> {
-    const client = new HttpClient('arghena/insight')
-    const res = await client.get(url)
-    const { statusCode } = res.message
-
-    if (statusCode !== 200) {
-        throw new Error(
-            `[REQUEST] Unexpected ${String(statusCode ?? 'unknown')} when accessing ${url}`,
-        )
-    }
-
-    return await res.readBody()
 }
