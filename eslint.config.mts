@@ -21,16 +21,30 @@ export default defineConfig(
         files: ['**/*.ts'],
         rules: {
             eqeqeq: 'error',
+            'prefer-template': 'error',
+            'prefer-spread': 'error',
+            'no-eval': 'error',
+            'no-console': 'error',
+            'object-shorthand': 'error',
+            'no-useless-concat': 'error',
+            'no-return-assign': ['error', 'always'],
+            'one-var': ['error', 'never'],
+            'no-sequences': ['error', { allowInParentheses: false }],
             // TODO: Migrate to `eslint-plugin-import-x`.
             // https://github.com/un-ts/eslint-plugin-import-x/issues/421
             'no-duplicate-imports': ['error', { includeExports: true }],
+            '@typescript-eslint/require-array-sort-compare': 'error',
+            '@typescript-eslint/explicit-function-return-type': 'error',
+            '@typescript-eslint/prefer-destructuring': 'error',
+            '@typescript-eslint/no-shadow': 'error',
+            '@typescript-eslint/return-await': ['error', 'always'],
+            '@typescript-eslint/promise-function-async': 'error',
             '@typescript-eslint/strict-void-return': 'error',
             '@typescript-eslint/strict-boolean-expressions': [
                 'error',
                 {
                     allowString: false,
                     allowNumber: false,
-                    allowNullableObject: false,
                 },
             ],
             '@typescript-eslint/naming-convention': [
@@ -40,7 +54,7 @@ export default defineConfig(
                     format: ['strictCamelCase'],
                 },
                 {
-                    selector: ['interface', 'typeAlias'],
+                    selector: ['interface', 'typeAlias', 'enum', 'enumMember'],
                     format: ['StrictPascalCase'],
                 },
                 {
@@ -53,7 +67,7 @@ export default defineConfig(
                     prefix: ['is', 'has', 'can'],
                 },
                 {
-                    selector: ['objectLiteralProperty', 'typeProperty', 'objectLiteralMethod'],
+                    selector: ['objectLiteralProperty'],
                     format: null,
                     modifiers: ['requiresQuotes'],
                 },

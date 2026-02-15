@@ -1,7 +1,7 @@
-import { installer } from '@/installer'
+import { cwd } from 'node:process'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
-import { cwd } from 'process'
+import { installer } from '@/installer'
 import { type FormatterKey } from '@/map'
 
 // NOTE: The `v3` tag of this formatter on Docker Hub is the latest stable version.

@@ -1,6 +1,7 @@
-import { installer } from '@/installer'
+import { env } from 'node:process'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
+import { installer } from '@/installer'
 import { type LinterKey } from '@/map'
 
 // TODO: Waiting for nextest integration.
@@ -17,7 +18,7 @@ export async function runner(
 
     await exec(toolName, ['--skip-clean', ...args], {
         env: {
-            ...process.env,
+            ...env,
             // eslint-disable-next-line @typescript-eslint/naming-convention
             CARGO_INCREMENTAL: '0',
         },

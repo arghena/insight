@@ -1,6 +1,6 @@
-import { installer } from '@/installer'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
+import { installer } from '@/installer'
 import { type FormatterKey } from '@/map'
 
 export async function runner(

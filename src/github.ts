@@ -1,13 +1,14 @@
-import { getInput, info, group } from '@actions/core'
 import { getOctokit } from '@actions/github'
+import { getInput, info, group } from '@actions/core'
 import { unorderedList } from '@/utils'
 
 interface Inputs {
     configPath: string
-    eventName: string
-    refType: string
     checkPullRequestTitle: string
     pullRequestTitle: string
+    eventName: string
+    refName: string
+    refType: string
     token: string
     repository: string
     pullRequestNumber: string
@@ -15,12 +16,13 @@ interface Inputs {
 
 export function getInputs(): Inputs {
     const configPath = getInput('config-path', { required: false })
-    const eventName = getInput('event-name', { required: false })
-    const refType = getInput('ref-type', { required: false })
     const checkPullRequestTitle = getInput('check-pull-request-title', { required: false })
     const pullRequestTitle = getInput('pull-request-title', {
         required: false,
     })
+    const eventName = getInput('event-name', { required: false })
+    const refName = getInput('ref-name', { required: false })
+    const refType = getInput('ref-type', { required: false })
     const token = getInput('token', { required: false })
     const repository = getInput('repository', { required: false })
     const pullRequestNumber = getInput('pull-request-number', {
@@ -29,10 +31,11 @@ export function getInputs(): Inputs {
 
     return {
         configPath,
-        eventName,
-        refType,
         checkPullRequestTitle,
         pullRequestTitle,
+        eventName,
+        refName,
+        refType,
         token,
         repository,
         pullRequestNumber,

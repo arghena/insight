@@ -1,7 +1,7 @@
-import { warning } from '@actions/core'
-import { access, constants, readFile } from 'fs/promises'
+import { access, constants, readFile } from 'node:fs/promises'
 import { parse } from 'smol-toml'
 import { defu } from 'defu'
+import { HttpClient } from '@actions/http-client'
 import ignore, { type Ignore } from 'ignore'
 import { type ToolName } from '@/installer'
 import { type FormatterKey, type LinterKey } from '@/map'
@@ -17,23 +17,18 @@ interface Config {
         formatters: FormatterKey[]
         linters: LinterKey[]
     }
+    formatters: Record<FormatterKey, string[]>
+    linters: Record<LinterKey, string[]>
     args: {
         formatters: Record<FormatterKey, string[]>
         linters: Record<LinterKey | 'commitlint', string[]>
     }
-    formatters: Record<FormatterKey, string[]>
-    linters: Record<LinterKey, string[]>
     versions: Record<ToolName, string>
 }
 
-async function fileExists(path: string): Promise<boolean> {
-    try {
-        await access(path, constants.F_OK)
-
-        return true
-    } catch {
-        return false
-    }
+interface Context {
+    repository: string
+    refName: string
 }
 
 const defaultConfig: Config = {
@@ -46,6 +41,33 @@ const defaultConfig: Config = {
     push: {
         formatters: [],
         linters: [],
+    },
+    formatters: {
+        prettier: [],
+        'cargo-fmt': [],
+        shfmt: [],
+        taplo: [],
+        tombi: [],
+    },
+    linters: {
+        'cargo-deny': [],
+        'node-audit': [],
+        'check-dist': [],
+        eslint: [],
+        typos: [],
+        yamllint: [],
+        actionlint: [],
+        'ast-grep': [],
+        'cargo-clippy': [],
+        'cargo-msrv': [],
+        'cargo-tarpaulin': [],
+        alex: [],
+        'markdownlint-cli2': [],
+        vale: [],
+        shellcheck: [],
+        taplo: [],
+        tombi: [],
+        tsc: [],
     },
     args: {
         formatters: {
@@ -77,33 +99,6 @@ const defaultConfig: Config = {
             tsc: [],
         },
     },
-    formatters: {
-        prettier: [],
-        'cargo-fmt': [],
-        shfmt: [],
-        taplo: [],
-        tombi: [],
-    },
-    linters: {
-        'cargo-deny': [],
-        'node-audit': [],
-        'check-dist': [],
-        eslint: [],
-        typos: [],
-        yamllint: [],
-        actionlint: [],
-        'ast-grep': [],
-        'cargo-clippy': [],
-        'cargo-msrv': [],
-        'cargo-tarpaulin': [],
-        alex: [],
-        'markdownlint-cli2': [],
-        vale: [],
-        shellcheck: [],
-        taplo: [],
-        tombi: [],
-        tsc: [],
-    },
     versions: {
         'commitlint-config-conventional': 'latest',
         commitlint: 'latest',
@@ -131,39 +126,53 @@ const defaultConfig: Config = {
     },
 }
 
+export async function resolveConfig(configPath: string, context: Context): Promise<Config> {
+    let rawConfig: string
+
+    if (await fileExists(configPath)) {
+        rawConfig = await readFile(configPath, { encoding: 'utf8' })
+    } else {
+        const { repository, refName } = context
+
+        rawConfig = await fetchText(
+            `https://raw.githubusercontent.com/${repository}/refs/heads/${refName}/${configPath}`,
+        )
+    }
+
+    return defu(parse(rawConfig), defaultConfig) as Config
+}
+
 export async function resolveGitignore(): Promise<Ignore> {
     const gitignorePath = '.gitignore'
-    const ig = ignore()
+    const ig = ignore().add('.git')
 
     if (await fileExists(gitignorePath)) {
-        const contents = await readFile(gitignorePath, { encoding: 'utf8' })
+        ig.add(await readFile(gitignorePath, { encoding: 'utf8' }))
+    }
 
-        ig.add('.git')
-        ig.add(contents)
+    return ig
+}
 
-        return ig
-    } else {
-        warning(
-            `[GITIGNORE] No config file found at ${gitignorePath}, so only ignoring the .git directory.`,
-        )
+async function fileExists(path: string): Promise<boolean> {
+    try {
+        await access(path, constants.F_OK)
 
-        ig.add(['.git'])
-
-        return ig
+        return true
+    } catch {
+        return false
     }
 }
 
-export async function resolveConfig(configPath: string): Promise<Config> {
-    if (await fileExists(configPath)) {
-        const contents = await readFile(configPath, { encoding: 'utf8' })
-        const config = defu(parse(contents), defaultConfig)
+async function fetchText(url: string): Promise<string> {
+    const client = new HttpClient('arghena/insight')
+    const res = await client.get(url)
+    const { statusCode } = res.message
 
-        return config as Config
-    } else {
-        warning(
-            `[CONFIG] The config file was not found at ${configPath}, using default settings instead.`,
+    if (statusCode !== 200) {
+        throw new Error(
+            `[REQUEST] Unexpected ${String(statusCode ?? 'unknown')} when accessing ${url}`,
         )
-
-        return defaultConfig
     }
+
+    return await res.readBody()
 }

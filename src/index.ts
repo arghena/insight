@@ -1,3 +1,4 @@
+import { Buffer } from 'node:buffer'
 import fg from 'fast-glob'
 import micromatch from 'micromatch'
 import { exec } from '@actions/exec'
@@ -8,27 +9,32 @@ import { getInputs, getChangedFilePaths } from '@/github'
 import { resolveConfig, resolveGitignore } from '@/config'
 import { formatter, linter, type FormatterKey, type LinterKey } from '@/map'
 
-async function run() {
+run().catch((error: unknown) => {
+    if (error instanceof Error) {
+        setFailed(error.message)
+    } else if (typeof error === 'string') {
+        setFailed(error)
+    } else {
+        setFailed('Unknown error')
+    }
+})
+
+async function run(): Promise<void> {
     const {
         configPath,
-        eventName,
-        refType,
         checkPullRequestTitle,
         pullRequestTitle,
+        eventName,
+        refName,
+        refType,
         token,
         repository,
         pullRequestNumber,
     } = getInputs()
-    // prettier-ignore
-    const {
-        match,
-        schedule,
-        push,
-        args,
-        formatters,
-        linters,
-        versions,
-    } = await resolveConfig(configPath)
+    const { match, schedule, push, formatters, linters, args, versions } = await resolveConfig(
+        configPath,
+        { repository, refName },
+    )
 
     if (checkPullRequestTitle === 'true') {
         await group(`[LINTER] commitlint`, async () => {
@@ -43,7 +49,7 @@ async function run() {
             info(`[RUNNER] Checking the pull request title`)
 
             await exec('commitlint', args.linters.commitlint, {
-                input: Buffer.from(pullRequestTitle + '\n'),
+                input: Buffer.from(`${pullRequestTitle}\n`),
             })
         })
 
@@ -137,13 +143,3 @@ async function run() {
         })
     }
 }
-
-run().catch((error: unknown) => {
-    if (error instanceof Error) {
-        setFailed(error.message)
-    } else if (typeof error === 'string') {
-        setFailed(error)
-    } else {
-        setFailed('Unknown error')
-    }
-})

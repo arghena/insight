@@ -1,7 +1,7 @@
-import { installer } from '@/installer'
+import { cwd } from 'node:process'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
-import { cwd } from 'process'
+import { installer } from '@/installer'
 import { type LinterKey } from '@/map'
 
 // NOTE: This linter's tag on Docker Hub doesn't have the `v` prefix.

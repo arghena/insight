@@ -8,11 +8,6 @@ linters = ["node-audit"]
 formatters = ["prettier"]
 linters = ["tsc", "check-dist", "eslint", "ast-grep"]
 
-[args.linters]
-yamllint = ["--strict"]
-tombi = ["--error-on-warnings"]
-eslint = ["--max-warnings", "0"]
-
 [formatters]
 prettier = ["**/*.yml", "**/*.ts", "**/*.md", "**/*.json"]
 tombi = ["**/*.toml"]
@@ -30,6 +25,11 @@ alex = ["**/*.md"]
 markdownlint-cli2 = ["**/*.md"]
 vale = ["**/*.md"]
 tombi = ["**/*.toml"]
+
+[args.linters]
+yamllint = ["--strict"]
+tombi = ["--error-on-warnings"]
+eslint = ["--max-warnings", "0"]
 
 [versions]
 # TODO: Waiting for third-party library compatibility.

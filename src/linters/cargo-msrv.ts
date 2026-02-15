@@ -1,6 +1,7 @@
-import { installer } from '@/installer'
+import { env } from 'node:process'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
+import { installer } from '@/installer'
 import { type LinterKey } from '@/map'
 
 export async function runner(
@@ -15,7 +16,7 @@ export async function runner(
 
     await exec(toolName, ['verify', ...args], {
         env: {
-            ...process.env,
+            ...env,
             // eslint-disable-next-line @typescript-eslint/naming-convention
             CARGO_INCREMENTAL: '0',
         },

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/promise-function-async, @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type */
+
 export const formatter = {
     prettier: () => import('@/formatters/prettier'),
     'cargo-fmt': () => import('@/formatters/cargo-fmt'),
