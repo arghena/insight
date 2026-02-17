@@ -49,6 +49,13 @@ export default defineConfig(
                     allowNumber: false,
                 },
             ],
+            '@typescript-eslint/consistent-type-assertions': [
+                'error',
+                {
+                    arrayLiteralTypeAssertions: 'never',
+                    objectLiteralTypeAssertions: 'never',
+                },
+            ],
             '@typescript-eslint/naming-convention': [
                 'error',
                 {
