@@ -30,9 +30,3 @@ tombi = ["**/*.toml"]
 yamllint = ["--strict"]
 tombi = ["--error-on-warnings"]
 eslint = ["--max-warnings", "0"]
-
-[versions]
-# TODO: Waiting for third-party library compatibility.
-# https://eslint.org/docs/latest/use/migrate-to-10.0.0
-# https://github.com/typescript-eslint/typescript-eslint/issues/11952
-eslint = "9.39.2"
