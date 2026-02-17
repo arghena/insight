@@ -42,6 +42,7 @@ export default defineConfig(
             '@typescript-eslint/promise-function-async': 'error',
             '@typescript-eslint/strict-void-return': 'error',
             '@typescript-eslint/no-useless-empty-export': 'error',
+            '@typescript-eslint/default-param-last': 'error',
             '@typescript-eslint/strict-boolean-expressions': [
                 'error',
                 {
