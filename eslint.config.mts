@@ -41,6 +41,7 @@ export default defineConfig(
             '@typescript-eslint/return-await': ['error', 'always'],
             '@typescript-eslint/promise-function-async': 'error',
             '@typescript-eslint/strict-void-return': 'error',
+            '@typescript-eslint/no-useless-empty-export': 'error',
             '@typescript-eslint/strict-boolean-expressions': [
                 'error',
                 {
@@ -71,12 +72,6 @@ export default defineConfig(
                     selector: ['objectLiteralProperty'],
                     format: null,
                     modifiers: ['requiresQuotes'],
-                },
-            ],
-            '@typescript-eslint/consistent-type-imports': [
-                'error',
-                {
-                    fixStyle: 'inline-type-imports',
                 },
             ],
         },
