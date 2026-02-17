@@ -4,7 +4,7 @@ import { type FormatterKey, type LinterKey } from '@/map'
 
 export type ToolName = FormatterKey | LinterKey | 'commitlint' | 'commitlint-config-conventional'
 
-type PackageManager = 'npm' | 'rustup' | 'cargo-binstall' | 'uv' | 'docker'
+type PackageManager = 'pnpm' | 'rustup' | 'cargo-binstall' | 'uv' | 'docker'
 type SetupMap = Record<PackageManager, string[]>
 type ToolRegistry = Record<
     ToolName,
@@ -20,7 +20,9 @@ const installedTools = new Set<PackageManager | ToolName>()
 // `cargo-binstall` and `uv` doesn't actually work.
 export async function installer(toolName: ToolName, version: string): Promise<void> {
     const setupMap = {
-        npm: [],
+        pnpm: [
+            'curl -fsSL https://raw.githubusercontent.com/pnpm/get.pnpm.io/main/install.sh | sh',
+        ],
         rustup: [
             `rustup toolchain install ${version === 'latest' ? 'stable' : version} --profile minimal --no-self-update`,
             `rustup override set ${version === 'latest' ? 'stable' : version}`,
@@ -37,11 +39,11 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
     } satisfies SetupMap
     const toolRegistry = {
         'commitlint-config-conventional': {
-            packageManager: 'npm',
+            packageManager: 'pnpm',
             args: ['install', '--global', `@commitlint/config-conventional@${version}`],
         },
         commitlint: {
-            packageManager: 'npm',
+            packageManager: 'pnpm',
             args: ['install', '--global', `@commitlint/cli@${version}`],
         },
         'cargo-deny': {
@@ -49,19 +51,19 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
             args: ['--no-confirm', version === 'latest' ? 'cargo-deny' : `cargo-deny@${version}`],
         },
         'node-audit': {
-            packageManager: 'npm',
+            packageManager: 'pnpm',
             args: ['install', '--global', '@antfu/ni'],
         },
         'check-dist': {
-            packageManager: 'npm',
+            packageManager: 'pnpm',
             args: ['install', '--global', '@antfu/ni'],
         },
         prettier: {
-            packageManager: 'npm',
+            packageManager: 'pnpm',
             args: ['install', '--global', `prettier@${version}`],
         },
         eslint: {
-            packageManager: 'npm',
+            packageManager: 'pnpm',
             args: [
                 'install',
                 '--global',
@@ -107,11 +109,11 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
             ],
         },
         alex: {
-            packageManager: 'npm',
+            packageManager: 'pnpm',
             args: ['install', '--global', `alex@${version}`],
         },
         'markdownlint-cli2': {
-            packageManager: 'npm',
+            packageManager: 'pnpm',
             args: ['install', '--global', `markdownlint-cli2@${version}`],
         },
         vale: {
@@ -135,7 +137,7 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
             args: ['tool', 'install', `tombi@${version}`],
         },
         tsc: {
-            packageManager: 'npm',
+            packageManager: 'pnpm',
             args: ['install', '--global', '@antfu/ni', `typescript@${version}`],
         },
     } satisfies ToolRegistry
