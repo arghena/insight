@@ -4,7 +4,6 @@
     "lib": ["esnext"],
     "module": "esnext",
     "moduleResolution": "bundler",
-    "tsBuildInfoFile": "dist/.tsbuildinfo",
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
     "strict": true,

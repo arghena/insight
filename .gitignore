@@ -19,11 +19,14 @@ Session.vim
 .settings/
 .vs/
 
-## Tool
-.config/vale/styles/Google/
-
 ## Dependencies
 /node_modules
+
+## Vale
+.config/vale/styles/Google/
+
+## ESLint
+.eslintcache
 
 ## TypeScript
 *.tsbuildinfo

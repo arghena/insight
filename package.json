@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "format": "prettier -w '**/*.ts'",
-    "lint": "eslint '**/*.ts'",
+    "format": "prettier -w --cache '**/*.ts'",
+    "lint": "eslint --cache '**/*.ts'",
     "typecheck": "tsc",
     "build": "esbuild --bundle --platform=node src/index.ts --outdir=dist --minify"
   },
