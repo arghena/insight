@@ -144,13 +144,6 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
     } satisfies ToolRegistry
     const { packageManager, args } = toolRegistry[toolName]
 
-    if (packageManager === 'pnpm' && !installedTools.has(packageManager)) {
-        const pnpmHome = join(homedir(), '.local/share/pnpm')
-
-        process.env.PNPM_HOME = pnpmHome
-        process.env.PATH = `${pnpmHome}:${env.PATH ?? ''}`
-    }
-
     if (setupMap[packageManager].length !== 0 && !installedTools.has(packageManager)) {
         info(`[INSTALLER] Setting up the ${packageManager} environment`)
 
