@@ -149,26 +149,33 @@ eslint = "9.33.0"
 
 ## Available Linters
 
-| Tool                                                                                   | Linter name         | Supports scheduling |
-| -------------------------------------------------------------------------------------- | ------------------- | :-----------------: |
-| [cargo-deny](https://github.com/EmbarkStudios/cargo-deny)                              | `cargo-deny`        |         ✅          |
-| [node-audit](https://github.com/arghena/insight/blob/canary/src/linters/node-audit.ts) | `node-audit`        |         ✅          |
-| [check-dist](https://github.com/arghena/insight/blob/canary/src/linters/check-dist.ts) | `check-dist`        |                     |
-| [eslint](https://github.com/eslint/eslint)                                             | `eslint`            |                     |
-| [typos](https://github.com/crate-ci/typos)                                             | `typos`             |                     |
-| [yamllint](https://github.com/adrienverge/yamllint)                                    | `yamllint`          |                     |
-| [actionlint](https://github.com/rhysd/actionlint)                                      | `actionlint`        |                     |
-| [ast-grep](https://github.com/ast-grep/ast-grep)                                       | `ast-grep`          |                     |
-| [clippy](https://github.com/rust-lang/rust-clippy)                                     | `cargo-clippy`      |                     |
-| [cargo-msrv](https://github.com/foresterre/cargo-msrv)                                 | `cargo-msrv`        |                     |
-| [cargo-tarpaulin](https://github.com/xd009642/tarpaulin)                               | `cargo-tarpaulin`   |                     |
-| [alex](https://github.com/get-alex/alex)                                               | `alex`              |                     |
-| [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2)                   | `markdownlint-cli2` |                     |
-| [vale](https://github.com/errata-ai/vale)                                              | `vale`              |                     |
-| [shellcheck](https://github.com/koalaman/shellcheck)                                   | `shellcheck`        |                     |
-| [taplo](https://github.com/tamasfe/taplo)                                              | `taplo`             |                     |
-| [tombi](https://github.com/tombi-toml/tombi)                                           | `tombi`             |                     |
-| [tsc](https://github.com/microsoft/TypeScript)                                         | `tsc`               |                     |
+> [!NOTE]
+>
+> - `commitlint` only supports configuring `[args.linters]` and `[versions]`.
+> - `commitlint-config-conventional` only supports configuring `[versions]`.
+
+| Tool                                                                                                                                  | Linter name                      | Supports scheduling |
+| ------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- | :-----------------: |
+| [commitlint](https://github.com/conventional-changelog/commitlint)                                                                    | `commitlint`                     |                     |
+| [@commitlint/config-conventional](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional) | `commitlint-config-conventional` |                     |
+| [cargo-deny](https://github.com/EmbarkStudios/cargo-deny)                                                                             | `cargo-deny`                     |         ✅          |
+| [node-audit](https://github.com/arghena/insight/blob/canary/src/linters/node-audit.ts)                                                | `node-audit`                     |         ✅          |
+| [check-dist](https://github.com/arghena/insight/blob/canary/src/linters/check-dist.ts)                                                | `check-dist`                     |                     |
+| [eslint](https://github.com/eslint/eslint)                                                                                            | `eslint`                         |                     |
+| [typos](https://github.com/crate-ci/typos)                                                                                            | `typos`                          |                     |
+| [yamllint](https://github.com/adrienverge/yamllint)                                                                                   | `yamllint`                       |                     |
+| [actionlint](https://github.com/rhysd/actionlint)                                                                                     | `actionlint`                     |                     |
+| [ast-grep](https://github.com/ast-grep/ast-grep)                                                                                      | `ast-grep`                       |                     |
+| [clippy](https://github.com/rust-lang/rust-clippy)                                                                                    | `cargo-clippy`                   |                     |
+| [cargo-msrv](https://github.com/foresterre/cargo-msrv)                                                                                | `cargo-msrv`                     |                     |
+| [cargo-tarpaulin](https://github.com/xd009642/tarpaulin)                                                                              | `cargo-tarpaulin`                |                     |
+| [alex](https://github.com/get-alex/alex)                                                                                              | `alex`                           |                     |
+| [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2)                                                                  | `markdownlint-cli2`              |                     |
+| [vale](https://github.com/errata-ai/vale)                                                                                             | `vale`                           |                     |
+| [shellcheck](https://github.com/koalaman/shellcheck)                                                                                  | `shellcheck`                     |                     |
+| [taplo](https://github.com/tamasfe/taplo)                                                                                             | `taplo`                          |                     |
+| [tombi](https://github.com/tombi-toml/tombi)                                                                                          | `tombi`                          |                     |
+| [tsc](https://github.com/microsoft/TypeScript)                                                                                        | `tsc`                            |                     |
 
 ## Contributing
 
