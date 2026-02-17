@@ -12,18 +12,18 @@ Session.vim
 *.iml
 .vscode
 .project
-.vim/
-.helix/
-.zed/
+.vim
+.helix
+.zed
 .favorites.json
-.settings/
-.vs/
+.settings
+.vs
 
 ## Dependencies
-/node_modules
+node_modules
 
 ## Vale
-.config/vale/styles/Google/
+.config/vale/styles/Google
 
 ## ESLint
 .eslintcache
