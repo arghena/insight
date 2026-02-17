@@ -43,6 +43,9 @@ export default defineConfig(
             '@typescript-eslint/strict-void-return': 'error',
             '@typescript-eslint/no-useless-empty-export': 'error',
             '@typescript-eslint/default-param-last': 'error',
+            '@typescript-eslint/init-declarations': 'error',
+            '@typescript-eslint/max-params': 'error',
+            '@typescript-eslint/method-signature-style': 'error',
             '@typescript-eslint/strict-boolean-expressions': [
                 'error',
                 {

@@ -124,13 +124,9 @@ const defaultConfig = {
 
 export async function resolveConfig(): Promise<Config> {
     const { configPath } = actionContext
-    let rawConfig: string
-
-    if (await fileExists(configPath)) {
-        rawConfig = await readFile(configPath, { encoding: 'utf8' })
-    } else {
-        rawConfig = await getFileContent(configPath)
-    }
+    const rawConfig = (await fileExists(configPath))
+        ? await readFile(configPath, { encoding: 'utf8' })
+        : await getFileContent(configPath)
 
     return defu(parse(rawConfig), defaultConfig) as Config
 }
