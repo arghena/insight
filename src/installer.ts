@@ -1,3 +1,5 @@
+import { homedir } from 'node:os'
+import { join } from 'node:path'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
 import { type FormatterKey, type LinterKey } from '@/map'
@@ -20,7 +22,7 @@ const installedTools = new Set<PackageManager | ToolName>()
 // `cargo-binstall` and `uv` doesn't actually work.
 export async function installer(toolName: ToolName, version: string): Promise<void> {
     const setupMap = {
-        pnpm: ['corepack enable pnpm', 'pnpm setup'],
+        pnpm: ['corepack enable pnpm'],
         rustup: [
             `rustup toolchain install ${version === 'latest' ? 'stable' : version} --profile minimal --no-self-update`,
             `rustup override set ${version === 'latest' ? 'stable' : version}`,
@@ -145,6 +147,8 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
         info(`[INSTALLER] Setting up the ${packageManager} environment`)
 
         for (const cmd of setupMap[packageManager]) await exec('sh', ['-c', cmd])
+
+        if (packageManager === 'pnpm') process.env.PNPM_HOME = join(homedir(), '.local/share/pnpm')
 
         installedTools.add(packageManager)
     }
