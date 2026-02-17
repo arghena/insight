@@ -1,8 +1,9 @@
-import { access, constants, readFile } from 'node:fs/promises'
+import { readFile } from 'node:fs/promises'
 import { parse } from 'smol-toml'
 import { defu } from 'defu'
 import ignore, { type Ignore } from 'ignore'
-import { getFileContent } from '@/github'
+import { fileExists } from '@/utils'
+import { actionContext, getFileContent } from '@/github'
 import { type ToolName } from '@/installer'
 import { type FormatterKey, type LinterKey } from '@/map'
 
@@ -121,18 +122,14 @@ const defaultConfig: Config = {
     },
 }
 
-export async function resolveConfig(
-    configPath: string,
-    token: string,
-    repository: string,
-    sha: string,
-): Promise<Config> {
+export async function resolveConfig(): Promise<Config> {
+    const { configPath } = actionContext
     let rawConfig: string
 
     if (await fileExists(configPath)) {
         rawConfig = await readFile(configPath, { encoding: 'utf8' })
     } else {
-        rawConfig = await getFileContent(configPath, token, repository, sha)
+        rawConfig = await getFileContent(configPath)
     }
 
     return defu(parse(rawConfig), defaultConfig) as Config
@@ -147,14 +144,4 @@ export async function resolveGitignore(): Promise<Ignore> {
     }
 
     return ig
-}
-
-async function fileExists(path: string): Promise<boolean> {
-    try {
-        await access(path, constants.F_OK)
-
-        return true
-    } catch {
-        return false
-    }
 }

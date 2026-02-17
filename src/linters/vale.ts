@@ -2,14 +2,9 @@ import { cwd } from 'node:process'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
 import { installer } from '@/installer'
-import { type LinterKey } from '@/map'
 
-export async function runner(
-    paths: string[],
-    toolName: LinterKey,
-    version: string,
-    args: string[],
-): Promise<void> {
+export async function runner(version: string, args: string[], paths: string[]): Promise<void> {
+    const toolName = 'vale'
     const tag = version === 'latest' ? 'latest' : `v${version}`
     const dockerArgs = [
         'run',

@@ -2,54 +2,28 @@ import { getOctokit } from '@actions/github'
 import { getInput, info, group } from '@actions/core'
 import { unorderedList } from '@/utils'
 
-interface Inputs {
-    configPath: string
-    checkPullRequestTitle: string
-    sha: string
-    pullRequestTitle: string
-    eventName: string
-    refType: string
-    token: string
-    repository: string
-    pullRequestNumber: string
+export const actionContext = {
+    configPath: getInput('config-path', { required: false }),
+    checkPullRequestTitle: getInput('check-pull-request-title', { required: false }),
+    sha: getInput('sha', { required: false }),
+    pullRequestTitle: getInput('pull-request-title', {
+        required: false,
+    }),
+    eventName: getInput('event-name', { required: false }),
+    refType: getInput('ref-type', { required: false }),
+    token: getInput('token', { required: false }),
+    repository: getInput('repository', { required: false }),
+    pullRequestNumber: getInput('pull-request-number', {
+        required: false,
+    }),
 }
 
-export function getInputs(): Inputs {
-    const configPath = getInput('config-path', { required: false })
-    const checkPullRequestTitle = getInput('check-pull-request-title', { required: false })
-    const sha = getInput('sha', { required: false })
-    const pullRequestTitle = getInput('pull-request-title', {
-        required: false,
-    })
-    const eventName = getInput('event-name', { required: false })
-    const refType = getInput('ref-type', { required: false })
-    const token = getInput('token', { required: false })
-    const repository = getInput('repository', { required: false })
-    const pullRequestNumber = getInput('pull-request-number', {
-        required: false,
-    })
+const { token, repository, pullRequestNumber, sha } = actionContext
+const [owner, repo] = repository.split('/', 2)
+const octokit = getOctokit(token)
 
-    return {
-        configPath,
-        checkPullRequestTitle,
-        sha,
-        pullRequestTitle,
-        eventName,
-        refType,
-        token,
-        repository,
-        pullRequestNumber,
-    }
-}
-
-export async function getChangedFilePaths(
-    token: string,
-    repository: string,
-    pullRequestNumber: string,
-): Promise<string[]> {
+export async function getChangedFilePaths(): Promise<string[]> {
     return await group(`[PR] Changed file paths`, async () => {
-        const octokit = getOctokit(token)
-        const [owner, repo] = repository.split('/', 2)
         const changedFiles = await octokit.paginate(
             // NOTE: Responses include a maximum of 3000 files.
             // The paginated response returns 30 files per page by default.
@@ -77,14 +51,7 @@ export async function getChangedFilePaths(
     })
 }
 
-export async function getFileContent(
-    path: string,
-    token: string,
-    repository: string,
-    sha?: string,
-): Promise<string> {
-    const octokit = getOctokit(token)
-    const [owner, repo] = repository.split('/', 2)
+export async function getFileContent(path: string): Promise<string> {
     const { data } = await octokit.rest.repos.getContent({
         mediaType: {
             format: 'raw',

@@ -5,7 +5,7 @@ import { exec } from '@actions/exec'
 import { info, setFailed, group } from '@actions/core'
 import { installer } from '@/installer'
 import { unorderedList } from '@/utils'
-import { getInputs, getChangedFilePaths } from '@/github'
+import { actionContext, getChangedFilePaths } from '@/github'
 import { resolveConfig, resolveGitignore } from '@/config'
 import { formatter, linter, type FormatterKey, type LinterKey } from '@/map'
 
@@ -20,23 +20,8 @@ run().catch((error: unknown) => {
 })
 
 async function run(): Promise<void> {
-    const {
-        configPath,
-        checkPullRequestTitle,
-        sha,
-        pullRequestTitle,
-        eventName,
-        refType,
-        token,
-        repository,
-        pullRequestNumber,
-    } = getInputs()
-    const { match, schedule, push, formatters, linters, args, versions } = await resolveConfig(
-        configPath,
-        token,
-        repository,
-        sha,
-    )
+    const { checkPullRequestTitle, pullRequestTitle, eventName, refType } = actionContext
+    const { match, schedule, push, formatters, linters, args, versions } = await resolveConfig()
 
     if (checkPullRequestTitle === 'true') {
         await group(`[LINTER] commitlint`, async () => {
@@ -65,7 +50,7 @@ async function run(): Promise<void> {
 
                 info(`[SCHEDULE] Starting ${toolName} cron job`)
 
-                await runner([], toolName, versions[toolName], args.linters[toolName])
+                await runner(versions[toolName], args.linters[toolName], [])
             })
         }
 
@@ -85,7 +70,7 @@ async function run(): Promise<void> {
 
                 info(`[GLOB] Matched file paths:\n${unorderedList(paths)}`)
 
-                await runner(paths, toolName, versions[toolName], args.formatters[toolName])
+                await runner(versions[toolName], args.formatters[toolName], paths)
             })
         }
 
@@ -102,7 +87,7 @@ async function run(): Promise<void> {
 
                 info(`[GLOB] Matched file paths:\n${unorderedList(paths)}`)
 
-                await runner(paths, toolName, versions[toolName], args.linters[toolName])
+                await runner(versions[toolName], args.linters[toolName], paths)
             })
         }
 
@@ -111,7 +96,7 @@ async function run(): Promise<void> {
 
     const formatterKeys = Object.keys(formatter) as FormatterKey[]
     const linterKeys = Object.keys(linter) as LinterKey[]
-    const changedFilePaths = await getChangedFilePaths(token, repository, pullRequestNumber)
+    const changedFilePaths = await getChangedFilePaths()
 
     for (const toolName of formatterKeys) {
         const paths = micromatch(changedFilePaths, formatters[toolName], {
@@ -125,7 +110,7 @@ async function run(): Promise<void> {
 
             info(`[GLOB] Matched file paths:\n${unorderedList(paths)}`)
 
-            await runner(paths, toolName, versions[toolName], args.formatters[toolName])
+            await runner(versions[toolName], args.formatters[toolName], paths)
         })
     }
 
@@ -141,7 +126,7 @@ async function run(): Promise<void> {
 
             info(`[GLOB] Matched file paths:\n${unorderedList(paths)}`)
 
-            await runner(paths, toolName, versions[toolName], args.linters[toolName])
+            await runner(versions[toolName], args.linters[toolName], paths)
         })
     }
 }

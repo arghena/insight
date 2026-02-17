@@ -2,16 +2,11 @@ import { cwd } from 'node:process'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
 import { installer } from '@/installer'
-import { type FormatterKey } from '@/map'
 
 // NOTE: The `v3` tag of this formatter on Docker Hub is the latest stable version.
 // https://github.com/mvdan/sh/blob/master/README.md#docker
-export async function runner(
-    paths: string[],
-    toolName: FormatterKey,
-    version: string,
-    args: string[],
-): Promise<void> {
+export async function runner(version: string, args: string[], paths: string[]): Promise<void> {
+    const toolName = 'shfmt'
     const tag = version === 'latest' ? 'v3' : `v${version}`
     const dockerArgs = [
         'run',
