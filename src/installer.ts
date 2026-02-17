@@ -38,7 +38,7 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
     const toolRegistry = {
         'commitlint-config-conventional': {
             packageManager: 'npm',
-            args: ['install', '--no-save', `@commitlint/config-conventional@${version}`],
+            args: ['install', '--global', `@commitlint/config-conventional@${version}`],
         },
         commitlint: {
             packageManager: 'npm',
