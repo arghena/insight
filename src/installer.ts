@@ -1,3 +1,6 @@
+import { homedir } from 'node:os'
+import { join } from 'node:path'
+import { env } from 'node:process'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
 import { type FormatterKey, type LinterKey } from '@/map'
@@ -20,9 +23,7 @@ const installedTools = new Set<PackageManager | ToolName>()
 // `cargo-binstall` and `uv` doesn't actually work.
 export async function installer(toolName: ToolName, version: string): Promise<void> {
     const setupMap = {
-        pnpm: [
-            'curl -fsSL https://raw.githubusercontent.com/pnpm/get.pnpm.io/main/install.sh | sh',
-        ],
+        pnpm: [],
         rustup: [
             `rustup toolchain install ${version === 'latest' ? 'stable' : version} --profile minimal --no-self-update`,
             `rustup override set ${version === 'latest' ? 'stable' : version}`,
@@ -142,6 +143,15 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
         },
     } satisfies ToolRegistry
     const { packageManager, args } = toolRegistry[toolName]
+
+    if (packageManager === 'pnpm' && !installedTools.has(packageManager)) {
+        const pnpmHome = join(homedir(), '.local/share/pnpm')
+
+        process.env.PNPM_HOME = pnpmHome
+        process.env.PATH = `${pnpmHome}:${env.PATH ?? ''}`
+
+        installedTools.add(packageManager)
+    }
 
     if (setupMap[packageManager].length !== 0 && !installedTools.has(packageManager)) {
         info(`[INSTALLER] Setting up the ${packageManager} environment`)
