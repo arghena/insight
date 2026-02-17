@@ -149,8 +149,6 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
 
         process.env.PNPM_HOME = pnpmHome
         process.env.PATH = `${pnpmHome}:${env.PATH ?? ''}`
-
-        installedTools.add(packageManager)
     }
 
     if (setupMap[packageManager].length !== 0 && !installedTools.has(packageManager)) {
