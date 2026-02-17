@@ -19,7 +19,7 @@ const installedTools = new Set<PackageManager | ToolName>()
 // NOTE: The `#!/bin/sh` in the install scripts for
 // `cargo-binstall` and `uv` doesn't actually work.
 export async function installer(toolName: ToolName, version: string): Promise<void> {
-    const setupMap: SetupMap = {
+    const setupMap = {
         npm: [],
         rustup: [
             `rustup toolchain install ${version === 'latest' ? 'stable' : version} --profile minimal --no-self-update`,
@@ -34,8 +34,8 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
             'curl -fsSL https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh | sh',
         ],
         docker: [],
-    }
-    const toolRegistry: ToolRegistry = {
+    } satisfies SetupMap
+    const toolRegistry = {
         'commitlint-config-conventional': {
             packageManager: 'npm',
             args: ['install', '--no-save', `@commitlint/config-conventional@${version}`],
@@ -138,7 +138,7 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
             packageManager: 'npm',
             args: ['install', '--global', '@antfu/ni', `typescript@${version}`],
         },
-    }
+    } satisfies ToolRegistry
     const { packageManager, args } = toolRegistry[toolName]
 
     if (setupMap[packageManager].length !== 0 && !installedTools.has(packageManager)) {

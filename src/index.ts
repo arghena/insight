@@ -35,9 +35,13 @@ async function run(): Promise<void> {
 
             info(`[RUNNER] Checking the pull request title`)
 
-            await exec('commitlint', args.linters.commitlint, {
-                input: Buffer.from(`${pullRequestTitle}\n`),
-            })
+            await exec(
+                'commitlint',
+                ['-x', '@commitlint/config-conventional', ...args.linters.commitlint],
+                {
+                    input: Buffer.from(`${pullRequestTitle}\n`),
+                },
+            )
         })
 
         return

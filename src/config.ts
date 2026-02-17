@@ -27,7 +27,7 @@ interface Config {
     versions: Record<ToolName, string>
 }
 
-const defaultConfig: Config = {
+const defaultConfig = {
     match: {
         dot: false,
     },
@@ -120,7 +120,7 @@ const defaultConfig: Config = {
         tombi: 'latest',
         tsc: 'latest',
     },
-}
+} satisfies Config
 
 export async function resolveConfig(): Promise<Config> {
     const { configPath } = actionContext

@@ -126,6 +126,7 @@ shfmt = ["-i", "4", "-ci"]
 # Arguments passed to linters.
 # Default: []
 check-dist = ["prepare"]
+commitlint = ["--strict"]
 yamllint = ["--strict"]
 
 [versions]

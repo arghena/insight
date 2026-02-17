@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/promise-function-async, @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type */
 
+type RunnerFunc = (version: string, args: string[], paths: string[]) => Promise<void>
+type ToolLoader = () => Promise<{ runner: RunnerFunc }>
+
 export const formatter = {
     prettier: () => import('@/formatters/prettier'),
     'cargo-fmt': () => import('@/formatters/cargo-fmt'),
     shfmt: () => import('@/formatters/shfmt'),
     taplo: () => import('@/formatters/taplo'),
     tombi: () => import('@/formatters/tombi'),
-}
+} satisfies Record<string, ToolLoader>
 export const linter = {
     'cargo-deny': () => import('@/linters/cargo-deny'),
     'node-audit': () => import('@/linters/node-audit'),
@@ -26,7 +29,7 @@ export const linter = {
     taplo: () => import('@/linters/taplo'),
     tombi: () => import('@/linters/tombi'),
     tsc: () => import('@/linters/tsc'),
-}
+} satisfies Record<string, ToolLoader>
 
 export type FormatterKey = keyof typeof formatter
 export type LinterKey = keyof typeof linter
