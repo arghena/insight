@@ -1,6 +1,3 @@
-import { homedir } from 'node:os'
-import { join } from 'node:path'
-import { env } from 'node:process'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
 import { type FormatterKey, type LinterKey } from '@/map'
@@ -23,7 +20,7 @@ const installedTools = new Set<PackageManager | ToolName>()
 // `cargo-binstall` and `uv` doesn't actually work.
 export async function installer(toolName: ToolName, version: string): Promise<void> {
     const setupMap = {
-        pnpm: ['corepack enable pnpm'],
+        pnpm: ['corepack enable pnpm', 'pnpm setup'],
         rustup: [
             `rustup toolchain install ${version === 'latest' ? 'stable' : version} --profile minimal --no-self-update`,
             `rustup override set ${version === 'latest' ? 'stable' : version}`,
