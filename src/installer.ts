@@ -23,7 +23,9 @@ const installedTools = new Set<PackageManager | ToolName>()
 // `cargo-binstall` and `uv` doesn't actually work.
 export async function installer(toolName: ToolName, version: string): Promise<void> {
     const setupMap = {
-        pnpm: [],
+        pnpm: [
+            'curl -fsSL https://raw.githubusercontent.com/pnpm/get.pnpm.io/main/install.sh | sh',
+        ],
         rustup: [
             `rustup toolchain install ${version === 'latest' ? 'stable' : version} --profile minimal --no-self-update`,
             `rustup override set ${version === 'latest' ? 'stable' : version}`,
