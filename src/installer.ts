@@ -1,5 +1,3 @@
-import { dirname } from 'node:path'
-import { execPath } from 'node:process'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
 import { type FormatterKey, type LinterKey } from '@/map'
@@ -23,7 +21,7 @@ const installedTools = new Set<PackageManager | ToolName>()
 export async function installer(toolName: ToolName, version: string): Promise<void> {
     const setupMap = {
         npm: [],
-        pnpm: ['corepack enable pnpm', `pnpm config set global-bin-dir ${dirname(execPath)}`],
+        pnpm: ['corepack enable pnpm', 'pnpm config set global-bin-dir /usr/local/bin'],
         rustup: [
             `rustup toolchain install ${version === 'latest' ? 'stable' : version} --profile minimal --no-self-update`,
             `rustup override set ${version === 'latest' ? 'stable' : version}`,
