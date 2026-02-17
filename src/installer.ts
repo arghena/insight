@@ -5,15 +5,21 @@ import { type FormatterKey, type LinterKey } from '@/map'
 export type ToolName = FormatterKey | LinterKey | 'commitlint' | 'commitlint-config-conventional'
 
 type PackageManager = 'npm' | 'rustup' | 'cargo-binstall' | 'uv' | 'docker'
-type Setups = Record<PackageManager, string[]>
-type Tools = Record<ToolName, { packageManager: PackageManager; args: string[] }>
+type SetupMap = Record<PackageManager, string[]>
+type ToolRegistry = Record<
+    ToolName,
+    {
+        packageManager: PackageManager
+        args: string[]
+    }
+>
 
 const installedTools = new Set<PackageManager | ToolName>()
 
 // NOTE: The `#!/bin/sh` in the install scripts for
 // `cargo-binstall` and `uv` doesn't actually work.
 export async function installer(toolName: ToolName, version: string): Promise<void> {
-    const setups: Setups = {
+    const setupMap = {
         npm: [],
         rustup: [
             `rustup toolchain install ${version === 'latest' ? 'stable' : version} --profile minimal --no-self-update`,
@@ -28,8 +34,8 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
             'curl -fsSL https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh | sh',
         ],
         docker: [],
-    }
-    const tools: Tools = {
+    } satisfies SetupMap
+    const toolRegistry = {
         'commitlint-config-conventional': {
             packageManager: 'npm',
             args: ['install', '--no-save', `@commitlint/config-conventional@${version}`],
@@ -132,13 +138,13 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
             packageManager: 'npm',
             args: ['install', '--global', '@antfu/ni', `typescript@${version}`],
         },
-    }
-    const { packageManager, args } = tools[toolName]
+    } satisfies ToolRegistry
+    const { packageManager, args } = toolRegistry[toolName]
 
-    if (setups[packageManager].length !== 0 && !installedTools.has(packageManager)) {
+    if (setupMap[packageManager].length !== 0 && !installedTools.has(packageManager)) {
         info(`[INSTALLER] Setting up the ${packageManager} environment`)
 
-        for (const cmd of setups[packageManager]) await exec('sh', ['-c', cmd])
+        for (const cmd of setupMap[packageManager]) await exec('sh', ['-c', cmd])
 
         installedTools.add(packageManager)
     }

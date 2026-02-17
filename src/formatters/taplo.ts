@@ -1,14 +1,10 @@
-import { installer } from '@/installer'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
-import { type FormatterKey } from '@/map'
+import { installer } from '@/installer'
 
-export async function runner(
-    paths: string[],
-    toolName: FormatterKey,
-    version: string,
-    args: string[],
-): Promise<void> {
+export async function runner(version: string, args: string[], paths: string[]): Promise<void> {
+    const toolName = 'taplo'
+
     await installer(toolName, version)
 
     info(`[RUNNER] Running ${toolName} on ${paths.length.toString()} files`)

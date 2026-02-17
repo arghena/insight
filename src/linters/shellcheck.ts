@@ -1,15 +1,10 @@
-import { installer } from '@/installer'
+import { cwd } from 'node:process'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
-import { cwd } from 'process'
-import { type LinterKey } from '@/map'
+import { installer } from '@/installer'
 
-export async function runner(
-    paths: string[],
-    toolName: LinterKey,
-    version: string,
-    args: string[],
-): Promise<void> {
+export async function runner(version: string, args: string[], paths: string[]): Promise<void> {
+    const toolName = 'shellcheck'
     const tag = version === 'latest' ? 'stable' : `v${version}`
     const dockerArgs = [
         'run',

@@ -1,17 +1,12 @@
-import { installer } from '@/installer'
+import { cwd } from 'node:process'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
-import { cwd } from 'process'
-import { type LinterKey } from '@/map'
+import { installer } from '@/installer'
 
 // NOTE: This linter's tag on Docker Hub doesn't have the `v` prefix.
 // https://github.com/rhysd/actionlint/blob/main/docs/usage.md#docker-image
-export async function runner(
-    paths: string[],
-    toolName: LinterKey,
-    version: string,
-    args: string[],
-): Promise<void> {
+export async function runner(version: string, args: string[], paths: string[]): Promise<void> {
+    const toolName = 'actionlint'
     const dockerArgs = [
         'run',
         '--rm',

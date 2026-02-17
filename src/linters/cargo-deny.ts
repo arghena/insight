@@ -1,14 +1,9 @@
-import { installer } from '@/installer'
 import { exec } from '@actions/exec'
 import { info } from '@actions/core'
-import { type LinterKey } from '@/map'
+import { installer } from '@/installer'
 
-export async function runner(
-    paths: string[],
-    toolName: LinterKey,
-    version: string,
-    args: string[],
-): Promise<void> {
+export async function runner(version: string, args: string[], paths: string[]): Promise<void> {
+    const toolName = 'cargo-deny'
     const count = paths.length
 
     await installer(toolName, version)

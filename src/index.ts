@@ -1,34 +1,27 @@
+import { Buffer } from 'node:buffer'
 import fg from 'fast-glob'
 import micromatch from 'micromatch'
 import { exec } from '@actions/exec'
 import { info, setFailed, group } from '@actions/core'
 import { installer } from '@/installer'
 import { unorderedList } from '@/utils'
-import { getInputs, getChangedFilePaths } from '@/github'
+import { actionContext, getChangedFilePaths } from '@/github'
 import { resolveConfig, resolveGitignore } from '@/config'
 import { formatter, linter, type FormatterKey, type LinterKey } from '@/map'
 
-async function run() {
-    const {
-        configPath,
-        eventName,
-        refType,
-        checkPullRequestTitle,
-        pullRequestTitle,
-        token,
-        repository,
-        pullRequestNumber,
-    } = getInputs()
-    // prettier-ignore
-    const {
-        match,
-        schedule,
-        push,
-        args,
-        formatters,
-        linters,
-        versions,
-    } = await resolveConfig(configPath)
+run().catch((error: unknown) => {
+    if (error instanceof Error) {
+        setFailed(error.message)
+    } else if (typeof error === 'string') {
+        setFailed(error)
+    } else {
+        setFailed('Unknown error')
+    }
+})
+
+async function run(): Promise<void> {
+    const { checkPullRequestTitle, pullRequestTitle, eventName, refType } = actionContext
+    const { match, schedule, push, formatters, linters, args, versions } = await resolveConfig()
 
     if (checkPullRequestTitle === 'true') {
         await group(`[LINTER] commitlint`, async () => {
@@ -42,9 +35,13 @@ async function run() {
 
             info(`[RUNNER] Checking the pull request title`)
 
-            await exec('commitlint', args.linters.commitlint, {
-                input: Buffer.from(pullRequestTitle + '\n'),
-            })
+            await exec(
+                'commitlint',
+                ['-x', '@commitlint/config-conventional', ...args.linters.commitlint],
+                {
+                    input: Buffer.from(`${pullRequestTitle}\n`),
+                },
+            )
         })
 
         return
@@ -57,7 +54,7 @@ async function run() {
 
                 info(`[SCHEDULE] Starting ${toolName} cron job`)
 
-                await runner([], toolName, versions[toolName], args.linters[toolName])
+                await runner(versions[toolName], args.linters[toolName], [])
             })
         }
 
@@ -77,7 +74,7 @@ async function run() {
 
                 info(`[GLOB] Matched file paths:\n${unorderedList(paths)}`)
 
-                await runner(paths, toolName, versions[toolName], args.formatters[toolName])
+                await runner(versions[toolName], args.formatters[toolName], paths)
             })
         }
 
@@ -94,7 +91,7 @@ async function run() {
 
                 info(`[GLOB] Matched file paths:\n${unorderedList(paths)}`)
 
-                await runner(paths, toolName, versions[toolName], args.linters[toolName])
+                await runner(versions[toolName], args.linters[toolName], paths)
             })
         }
 
@@ -103,7 +100,7 @@ async function run() {
 
     const formatterKeys = Object.keys(formatter) as FormatterKey[]
     const linterKeys = Object.keys(linter) as LinterKey[]
-    const changedFilePaths = await getChangedFilePaths(token, repository, pullRequestNumber)
+    const changedFilePaths = await getChangedFilePaths()
 
     for (const toolName of formatterKeys) {
         const paths = micromatch(changedFilePaths, formatters[toolName], {
@@ -117,7 +114,7 @@ async function run() {
 
             info(`[GLOB] Matched file paths:\n${unorderedList(paths)}`)
 
-            await runner(paths, toolName, versions[toolName], args.formatters[toolName])
+            await runner(versions[toolName], args.formatters[toolName], paths)
         })
     }
 
@@ -133,17 +130,7 @@ async function run() {
 
             info(`[GLOB] Matched file paths:\n${unorderedList(paths)}`)
 
-            await runner(paths, toolName, versions[toolName], args.linters[toolName])
+            await runner(versions[toolName], args.linters[toolName], paths)
         })
     }
 }
-
-run().catch((error: unknown) => {
-    if (error instanceof Error) {
-        setFailed(error.message)
-    } else if (typeof error === 'string') {
-        setFailed(error)
-    } else {
-        setFailed('Unknown error')
-    }
-})
