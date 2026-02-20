@@ -44,6 +44,8 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           build-mode: none
+          # https://codeql.github.com/codeql-query-help
+          # https://docs.github.com/en/code-security/how-tos/scan-code-for-vulnerabilities/configure-code-scanning/customizing-your-advanced-setup-for-code-scanning#using-queries-in-ql-packs
           queries: security-and-quality
           config: |
             paths-ignore:
