@@ -2,10 +2,10 @@ import micromatch from 'micromatch'
 import { setFailed } from '@actions/core'
 import { runTool } from '@/tool'
 import { commitlint } from '@/linters/commitlint'
-import { actionContext, getChangedFilePaths } from '@/github'
 import { resolveConfig } from '@/config'
-import { renderErrorSummary } from '@/render'
 import { getExecErrors } from '@/store'
+import { renderErrorSummary } from '@/render'
+import { actionContext, getChangedFilePaths } from '@/github'
 import { formatter, linter, formatterKeys, linterKeys } from '@/map'
 
 const { isTitleCheckEnabled, pullRequestTitle, eventName } = actionContext
@@ -31,11 +31,7 @@ run()
     })
 
 async function run(): Promise<void> {
-    if (isTitleCheckEnabled) {
-        await commitlint(pullRequestTitle)
-
-        return
-    }
+    if (isTitleCheckEnabled) await commitlint(pullRequestTitle)
 
     const { match, schedule, formatters, linters, args, versions } = await resolveConfig()
 
@@ -50,37 +46,35 @@ async function run(): Promise<void> {
                 log: `[SCHEDULE] Starting ${toolName} cron job`,
             })
         }
+    } else if (eventName === 'pull_request') {
+        const changedFilePaths = await getChangedFilePaths()
 
-        return
-    }
+        for (const toolName of formatterKeys) {
+            const paths = micromatch(changedFilePaths, formatters[toolName], { dot: match.dot })
 
-    const changedFilePaths = await getChangedFilePaths()
+            if (paths.length === 0) continue
 
-    for (const toolName of formatterKeys) {
-        const paths = micromatch(changedFilePaths, formatters[toolName], { dot: match.dot })
+            await runTool({
+                loader: formatter[toolName],
+                toolType: 'formatter',
+                version: versions[toolName],
+                args: args.formatters[toolName],
+                paths,
+            })
+        }
 
-        if (paths.length === 0) continue
+        for (const toolName of linterKeys) {
+            const paths = micromatch(changedFilePaths, linters[toolName], { dot: match.dot })
 
-        await runTool({
-            loader: formatter[toolName],
-            toolType: 'formatter',
-            version: versions[toolName],
-            args: args.formatters[toolName],
-            paths,
-        })
-    }
+            if (paths.length === 0) continue
 
-    for (const toolName of linterKeys) {
-        const paths = micromatch(changedFilePaths, linters[toolName], { dot: match.dot })
-
-        if (paths.length === 0) continue
-
-        await runTool({
-            loader: linter[toolName],
-            toolType: 'linter',
-            version: versions[toolName],
-            args: args.linters[toolName],
-            paths,
-        })
+            await runTool({
+                loader: linter[toolName],
+                toolType: 'linter',
+                version: versions[toolName],
+                args: args.linters[toolName],
+                paths,
+            })
+        }
     }
 }
