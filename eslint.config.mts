@@ -21,6 +21,7 @@ export default defineConfig(
         files: ['**/*.ts'],
         rules: {
             eqeqeq: 'error',
+            curly: 'error',
             'prefer-template': 'error',
             'prefer-spread': 'error',
             'no-eval': 'error',
