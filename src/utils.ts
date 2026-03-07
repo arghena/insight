@@ -1,7 +1,7 @@
 import { cwd } from 'node:process'
 
 export function buildDockerRunArgs(imageName: string): string[] {
-    return ['run', '--rm', '-v', `${cwd()}:/mnt`, '-w', '/mnt', imageName]
+    return ['run', '--rm', '-e', 'NO_COLOR=1', '-v', `${cwd()}:/mnt`, '-w', '/mnt', imageName]
 }
 
 export function unorderedList(items: string[]): string {
