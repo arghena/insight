@@ -24,7 +24,7 @@ export async function commitlint(message: string): Promise<void> {
         addExecError({
             toolName: 'commitlint',
             toolType: 'linter',
-            stderr: format({ results: [{ warnings, errors, input }] }, { color: false }),
+            stderr: format({ results: [{ warnings, errors, input }] }),
         })
     }
 }

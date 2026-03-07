@@ -1,3 +1,4 @@
+import { stripVTControlCharacters } from 'node:util'
 import { summary } from '@actions/core'
 import type { ExecError } from '@/types'
 
@@ -21,7 +22,10 @@ export async function renderErrorSummary(execErrors: ExecError[]): Promise<void>
     summary.addHeading('Detailed Logs', 2)
 
     for (const { toolName, toolType, stderr } of sortedErrors) {
-        summary.addDetails(`${toolName} (${toolType})`, `\n\n\`\`\`\n${stderr}\n\`\`\`\n\n`)
+        summary.addDetails(
+            `${toolName} (${toolType})`,
+            `\n\n\`\`\`\n${stripVTControlCharacters(stderr)}\n\`\`\`\n\n`,
+        )
     }
 
     await summary.write()
