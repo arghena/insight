@@ -31,7 +31,11 @@ run()
     })
 
 async function run(): Promise<void> {
-    if (isTitleCheckEnabled) await commitlint(pullRequestTitle)
+    if (isTitleCheckEnabled) {
+        await commitlint(pullRequestTitle)
+
+        return
+    }
 
     const { match, schedule, formatters, linters, args, versions } = await resolveConfig()
 
