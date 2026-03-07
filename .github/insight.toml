@@ -23,7 +23,6 @@ vale = ["**/*.md"]
 tombi = ["**/*.toml"]
 
 [args.linters]
-commitlint = ["--strict"]
 yamllint = ["--strict"]
 tombi = ["--error-on-warnings"]
 eslint = ["--max-warnings", "0"]
