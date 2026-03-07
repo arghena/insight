@@ -50,14 +50,20 @@ async function run(): Promise<void> {
                 log: `[SCHEDULE] Starting ${toolName} cron job`,
             })
         }
-    } else if (eventName === 'pull_request') {
-        const changedFilePaths = await getChangedFilePaths()
 
-        for (const toolName of formatterKeys) {
-            const paths = micromatch(changedFilePaths, formatters[toolName], { dot: match.dot })
+        return
+    }
 
-            if (paths.length === 0) continue
+    if (eventName !== 'pull_request') {
+        throw new Error(`[EVENT] Invalid ${eventName} event`)
+    }
 
+    const changedFilePaths = await getChangedFilePaths()
+
+    for (const toolName of formatterKeys) {
+        const paths = micromatch(changedFilePaths, formatters[toolName], { dot: match.dot })
+
+        if (paths.length !== 0) {
             await runTool({
                 loader: formatter[toolName],
                 toolType: 'formatter',
@@ -66,12 +72,12 @@ async function run(): Promise<void> {
                 paths,
             })
         }
+    }
 
-        for (const toolName of linterKeys) {
-            const paths = micromatch(changedFilePaths, linters[toolName], { dot: match.dot })
+    for (const toolName of linterKeys) {
+        const paths = micromatch(changedFilePaths, linters[toolName], { dot: match.dot })
 
-            if (paths.length === 0) continue
-
+        if (paths.length !== 0) {
             await runTool({
                 loader: linter[toolName],
                 toolType: 'linter',

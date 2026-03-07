@@ -17,7 +17,9 @@ export async function fetchText(url: `https://${string}`): Promise<string> {
 }
 
 export function isValidHttpsUrl(str: string): str is `https://${string}` {
-    if (!URL.canParse(str)) return false
+    if (!URL.canParse(str)) {
+        return false
+    }
 
     const url = new URL(str)
 

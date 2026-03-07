@@ -30,14 +30,19 @@ export async function exec(command: string, args?: string[], options?: ExecOptio
 }
 
 function serializeInput(input?: string): Buffer | undefined {
-    if (input === undefined) return undefined
+    if (input === undefined) {
+        return undefined
+    }
 
     return Buffer.from(`${input}\n`)
 }
 
 function getToolType(toolName: string): ToolType {
-    if (isIncluded(toolName, formatterKeys)) return 'formatter'
-    if (isIncluded(toolName, linterKeys)) return 'linter'
+    if (isIncluded(toolName, formatterKeys)) {
+        return 'formatter'
+    } else if (isIncluded(toolName, linterKeys)) {
+        return 'linter'
+    }
 
     return 'other'
 }
