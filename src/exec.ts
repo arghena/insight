@@ -16,6 +16,7 @@ export async function exec(command: string, args?: string[], options?: ExecOptio
             CARGO_INCREMENTAL: '0',
             // https://github.com/antfu-collective/ni/blob/82611c44aeada5185d5fb5fc2c72c2ce6b921159/src/detect.ts#L39-L53
             NI_AUTO_INSTALL: 'true',
+            NO_COLOR: '1',
             /* eslint-enable @typescript-eslint/naming-convention */
         },
     })
