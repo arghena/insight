@@ -11,8 +11,9 @@ This is because users won't have access to those files locally when browsing the
   <h1>Insight</h1>
   <p>A GitHub Action for checking pull requests.</p>
 
-<a href="https://github.com/arghena/insight/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/arghena/insight/ci.yml?branch=v0.1.0-canary.32&style=for-the-badge&label=CI&labelColor=1a1b26&color=black&logo=github" alt="CI" /></a>
-<a href="https://github.com/arghena/insight/actions/workflows/cd.yml"><img src="https://img.shields.io/github/actions/workflow/status/arghena/insight/cd.yml?branch=v0.1.0-canary.32&style=for-the-badge&label=CD&labelColor=1a1b26&color=black&logo=github" alt="CD" /></a>
+<a href="https://github.com/arghena/insight/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/arghena/insight/ci.yml?branch=canary&style=for-the-badge&logo=github&label=ci&labelColor=1a1b26" alt="CI" /></a>
+<a href="https://github.com/arghena/insight/releases/latest"><img src="https://img.shields.io/github/v/release/arghena/insight?include_prereleases&style=for-the-badge&logo=github&label=release&labelColor=1a1b26" alt="Release" /></a>
+<a href="https://github.com/arghena/insight/blob/canary/LICENSE"><img src="https://img.shields.io/github/license/arghena/insight?style=for-the-badge&logo=opensourceinitiative&label=license&labelColor=1a1b26" alt="License" /></a>
 
 </div>
 
@@ -22,8 +23,7 @@ This is because users won't have access to those files locally when browsing the
 
 - Use the `insight.toml` config file to customize the formatters and linters your project needs.
 - Supports using [commitlint](https://commitlint.js.org) to check the pull request title.
-- Responds to [`on.schedule`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onschedule) and [`on.push.tags`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onpushbranchestagsbranches-ignoretags-ignore) events, respecting `.gitignore` when running linters.
-- Can check build files in `dist/` using a `git diff` approach.
+- Responds to [`on.schedule`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onschedule) events.
 - Lets you customize formatter and linter versions and arguments.
 - Supports [glob](<https://en.wikipedia.org/wiki/Glob_(programming)>) patterns to match exactly the files you want to check.
 - Ships with minimal defaults to keep opinionated behavior to a minimum.
@@ -44,10 +44,9 @@ jobs:
       - name: Checkout repository
         # If `check-pull-request-title` is set to `true`,
         # it's recommended to remove `actions/checkout`.
-        # The config file is fetched automatically.
         uses: actions/checkout@v6
       - name: Run Insight
-        uses: arghena/insight@v0.1.0-canary.32
+        uses: arghena/insight@v0.1.0-canary.33
         with:
           # The path to the Insight config file.
           # Default: '.github/insight.toml'
@@ -55,18 +54,12 @@ jobs:
           # Use `commitlint` to check the pull request title.
           # Default: 'false'
           check-pull-request-title: ''
-          # The commit SHA that triggered the workflow.
-          # Default: ${{ github.sha }}
-          sha: ''
           # The title of pull request event.
           # Default: ${{ github.event.pull_request.title }}
           pull-request-title: ''
           # The name of the event that triggered the workflow run.
           # Default: ${{ github.event_name }}
           event-name: ''
-          # The type of ref that triggered the workflow run.
-          # Default: ${{ github.ref_type }}
-          ref-type: ''
           # Personal access token (PAT) used to fetch the repository.
           # Default: ${{ github.token }}
           token: ''
@@ -94,19 +87,11 @@ dot = true
 # Default: []
 linters = ["cargo-deny"]
 
-[push]
-# Formatters to run on `on.push.tags` events.
-# Default: []
-formatters = ["prettier"]
-# Linters to run on `on.push.tags` events.
-# Default: []
-linters = ["check-dist", "eslint"]
-
 [formatters]
 # Glob patterns for files that trigger formatters.
 # Default: []
-prettier = ["**/*.yml", "**/*.ts", "**/*.md", "**/*.json"]
-shfmt = ["etc/ci/*.sh"]
+prettier = ["**/*.ts"]
+cargo-fmt = ["**/*.rs"]
 
 [linters]
 # Glob patterns for files that trigger linters.
@@ -114,68 +99,52 @@ shfmt = ["etc/ci/*.sh"]
 check-dist = ["src/**/*.ts", "package.json", "pnpm-lock.yaml"]
 cargo-deny = ["Cargo.toml", "Cargo.lock"]
 typos = ["**/*", "!dist/**"]
-yamllint = ["**/*.yml"]
-eslint = ["**/*.ts"]
 
 [args.formatters]
 # Arguments passed to formatters.
 # Default: []
-shfmt = ["-i", "4", "-ci"]
+cargo-fmt = ["--all"]
 
 [args.linters]
 # Arguments passed to linters.
 # Default: []
 check-dist = ["prepare"]
-commitlint = ["--strict"]
-yamllint = ["--strict"]
 
 [versions]
 # Lock formatter/linter versions.
 # Default: "latest"
-commitlint = "19.8.1"
 prettier = "3.6.2"
-eslint = "9.33.0"
 ```
 
 ## Available Formatters
 
-| Tool                                             | Formatter name |
-| ------------------------------------------------ | -------------- |
-| [prettier](https://github.com/prettier/prettier) | `prettier`     |
-| [rustfmt](https://github.com/rust-lang/rustfmt)  | `cargo-fmt`    |
-| [shfmt](https://github.com/mvdan/sh)             | `shfmt`        |
-| [taplo](https://github.com/tamasfe/taplo)        | `taplo`        |
-| [tombi](https://github.com/tombi-toml/tombi)     | `tombi`        |
+| Tool                                             | Formatter name | Accepts File Paths |
+| ------------------------------------------------ | -------------- | :----------------: |
+| [rustfmt](https://github.com/rust-lang/rustfmt)  | `cargo-fmt`    |                    |
+| [prettier](https://github.com/prettier/prettier) | `prettier`     |         ✅         |
+| [shfmt](https://github.com/mvdan/sh)             | `shfmt`        |         ✅         |
+| [tombi](https://github.com/tombi-toml/tombi)     | `tombi`        |         ✅         |
 
 ## Available Linters
 
-> [!NOTE]
->
-> - `commitlint` only supports configuring `[args.linters]` and `[versions]`.
-> - `commitlint-config-conventional` only supports configuring `[versions]`.
-
-| Tool                                                                                                                                  | Linter name                      | Supports scheduling |
-| ------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- | :-----------------: |
-| [commitlint](https://github.com/conventional-changelog/commitlint)                                                                    | `commitlint`                     |                     |
-| [@commitlint/config-conventional](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional) | `commitlint-config-conventional` |                     |
-| [cargo-deny](https://github.com/EmbarkStudios/cargo-deny)                                                                             | `cargo-deny`                     |         ✅          |
-| [node-audit](https://github.com/arghena/insight/blob/canary/src/linters/node-audit.ts)                                                | `node-audit`                     |         ✅          |
-| [check-dist](https://github.com/arghena/insight/blob/canary/src/linters/check-dist.ts)                                                | `check-dist`                     |                     |
-| [eslint](https://github.com/eslint/eslint)                                                                                            | `eslint`                         |                     |
-| [typos](https://github.com/crate-ci/typos)                                                                                            | `typos`                          |                     |
-| [yamllint](https://github.com/adrienverge/yamllint)                                                                                   | `yamllint`                       |                     |
-| [actionlint](https://github.com/rhysd/actionlint)                                                                                     | `actionlint`                     |                     |
-| [ast-grep](https://github.com/ast-grep/ast-grep)                                                                                      | `ast-grep`                       |                     |
-| [clippy](https://github.com/rust-lang/rust-clippy)                                                                                    | `cargo-clippy`                   |                     |
-| [cargo-msrv](https://github.com/foresterre/cargo-msrv)                                                                                | `cargo-msrv`                     |                     |
-| [cargo-tarpaulin](https://github.com/xd009642/tarpaulin)                                                                              | `cargo-tarpaulin`                |                     |
-| [alex](https://github.com/get-alex/alex)                                                                                              | `alex`                           |                     |
-| [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2)                                                                  | `markdownlint-cli2`              |                     |
-| [vale](https://github.com/errata-ai/vale)                                                                                             | `vale`                           |                     |
-| [shellcheck](https://github.com/koalaman/shellcheck)                                                                                  | `shellcheck`                     |                     |
-| [taplo](https://github.com/tamasfe/taplo)                                                                                             | `taplo`                          |                     |
-| [tombi](https://github.com/tombi-toml/tombi)                                                                                          | `tombi`                          |                     |
-| [tsc](https://github.com/microsoft/TypeScript)                                                                                        | `tsc`                            |                     |
+| Tool                                                                                   | Linter name         | Accepts File Paths | Supports scheduling |
+| -------------------------------------------------------------------------------------- | ------------------- | :----------------: | :-----------------: |
+| [actionlint](https://github.com/rhysd/actionlint)                                      | `actionlint`        |         ✅         |                     |
+| [alex](https://github.com/get-alex/alex)                                               | `alex`              |         ✅         |                     |
+| [ast-grep](https://github.com/ast-grep/ast-grep)                                       | `ast-grep`          |         ✅         |                     |
+| [clippy](https://github.com/rust-lang/rust-clippy)                                     | `cargo-clippy`      |                    |                     |
+| [cargo-deny](https://github.com/EmbarkStudios/cargo-deny)                              | `cargo-deny`        |                    |         ✅          |
+| [cargo-msrv](https://github.com/foresterre/cargo-msrv)                                 | `cargo-msrv`        |                    |                     |
+| [check-dist](https://github.com/arghena/insight/blob/canary/src/linters/check-dist.ts) | `check-dist`        |                    |                     |
+| [eslint](https://github.com/eslint/eslint)                                             | `eslint`            |         ✅         |                     |
+| [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2)                   | `markdownlint-cli2` |         ✅         |                     |
+| [node-audit](https://github.com/arghena/insight/blob/canary/src/linters/node-audit.ts) | `node-audit`        |                    |         ✅          |
+| [shellcheck](https://github.com/koalaman/shellcheck)                                   | `shellcheck`        |         ✅         |                     |
+| [tombi](https://github.com/tombi-toml/tombi)                                           | `tombi`             |         ✅         |                     |
+| [tsc](https://github.com/microsoft/TypeScript)                                         | `tsc`               |                    |                     |
+| [typos](https://github.com/crate-ci/typos)                                             | `typos`             |         ✅         |                     |
+| [vale](https://github.com/errata-ai/vale)                                              | `vale`              |         ✅         |                     |
+| [yamllint](https://github.com/adrienverge/yamllint)                                    | `yamllint`          |         ✅         |                     |
 
 ## Contributing
 

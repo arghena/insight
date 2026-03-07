@@ -1,32 +1,11 @@
 import { readFile } from 'node:fs/promises'
 import { parse } from 'smol-toml'
 import { defu } from 'defu'
-import ignore, { type Ignore } from 'ignore'
-import { fileExists } from '@/utils'
-import { actionContext, getFileContent } from '@/github'
-import { type ToolName } from '@/installer'
-import { type FormatterKey, type LinterKey } from '@/map'
+import { actionContext } from '@/github'
+import { formatterKeys, linterKeys } from '@/map'
+import { configSchema, type Config } from '@/schemas'
 
-interface Config {
-    match: {
-        dot: boolean
-    }
-    schedule: {
-        linters: ('cargo-deny' | 'node-audit')[]
-    }
-    push: {
-        formatters: FormatterKey[]
-        linters: LinterKey[]
-    }
-    formatters: Record<FormatterKey, string[]>
-    linters: Record<LinterKey, string[]>
-    args: {
-        formatters: Record<FormatterKey, string[]>
-        linters: Record<LinterKey | 'commitlint', string[]>
-    }
-    versions: Record<ToolName, string>
-}
-
+const { configPath } = actionContext
 const defaultConfig = {
     match: {
         dot: false,
@@ -34,110 +13,32 @@ const defaultConfig = {
     schedule: {
         linters: [],
     },
-    push: {
-        formatters: [],
-        linters: [],
-    },
-    formatters: {
-        prettier: [],
-        'cargo-fmt': [],
-        shfmt: [],
-        taplo: [],
-        tombi: [],
-    },
-    linters: {
-        'cargo-deny': [],
-        'node-audit': [],
-        'check-dist': [],
-        eslint: [],
-        typos: [],
-        yamllint: [],
-        actionlint: [],
-        'ast-grep': [],
-        'cargo-clippy': [],
-        'cargo-msrv': [],
-        'cargo-tarpaulin': [],
-        alex: [],
-        'markdownlint-cli2': [],
-        vale: [],
-        shellcheck: [],
-        taplo: [],
-        tombi: [],
-        tsc: [],
-    },
+    formatters: buildEmptyArrays(formatterKeys),
+    linters: buildEmptyArrays(linterKeys),
     args: {
-        formatters: {
-            prettier: [],
-            'cargo-fmt': [],
-            shfmt: [],
-            taplo: [],
-            tombi: [],
-        },
-        linters: {
-            commitlint: [],
-            'cargo-deny': [],
-            'node-audit': [],
-            'check-dist': [],
-            eslint: [],
-            typos: [],
-            yamllint: [],
-            actionlint: [],
-            'ast-grep': [],
-            'cargo-clippy': [],
-            'cargo-msrv': [],
-            'cargo-tarpaulin': [],
-            alex: [],
-            'markdownlint-cli2': [],
-            vale: [],
-            shellcheck: [],
-            taplo: [],
-            tombi: [],
-            tsc: [],
-        },
+        formatters: buildEmptyArrays(formatterKeys),
+        linters: buildEmptyArrays(linterKeys),
     },
-    versions: {
-        'commitlint-config-conventional': 'latest',
-        commitlint: 'latest',
-        'cargo-deny': 'latest',
-        'node-audit': 'latest',
-        'check-dist': 'latest',
-        prettier: 'latest',
-        eslint: 'latest',
-        typos: 'latest',
-        yamllint: 'latest',
-        actionlint: 'latest',
-        'ast-grep': 'latest',
-        'cargo-clippy': 'latest',
-        'cargo-fmt': 'latest',
-        'cargo-msrv': 'latest',
-        'cargo-tarpaulin': 'latest',
-        alex: 'latest',
-        'markdownlint-cli2': 'latest',
-        vale: 'latest',
-        shfmt: 'latest',
-        shellcheck: 'latest',
-        taplo: 'latest',
-        tombi: 'latest',
-        tsc: 'latest',
-    },
-} satisfies Config
+    versions: buildLatestVersions([...formatterKeys, ...linterKeys]),
+} as const satisfies Config
 
 export async function resolveConfig(): Promise<Config> {
-    const { configPath } = actionContext
-    const rawConfig = (await fileExists(configPath))
-        ? await readFile(configPath, { encoding: 'utf8' })
-        : await getFileContent(configPath)
+    const rawConfig = await readFile(configPath, { encoding: 'utf8' })
+    const parsed = parse(rawConfig)
+    const merged = defu(parsed, defaultConfig)
+    const validConfig = configSchema.parse(merged)
 
-    return defu(parse(rawConfig), defaultConfig) as Config
+    return validConfig
 }
 
-export async function resolveGitignore(): Promise<Ignore> {
-    const gitignorePath = '.gitignore'
-    const ig = ignore().add('.git')
+function buildEmptyArrays<K extends string>(keys: K[]): Record<K, never[]> {
+    return buildRecord(keys, () => [])
+}
 
-    if (await fileExists(gitignorePath)) {
-        ig.add(await readFile(gitignorePath, { encoding: 'utf8' }))
-    }
+function buildLatestVersions<K extends string>(keys: K[]): Record<K, string> {
+    return buildRecord(keys, () => 'latest')
+}
 
-    return ig
+function buildRecord<K extends string, V>(keys: K[], value: (key: K) => V): Record<K, V> {
+    return Object.fromEntries(keys.map((k): [K, V] => [k, value(k)])) as Record<K, V>
 }

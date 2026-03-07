@@ -1,15 +1,14 @@
-import { access, constants } from 'node:fs/promises'
+import { cwd } from 'node:process'
+
+export function buildDockerRunArgs(imageName: string): string[] {
+    return ['run', '--rm', '-v', `${cwd()}:/mnt`, '-w', '/mnt', imageName]
+}
 
 export function unorderedList(items: string[]): string {
     return items.map((item) => `- ${item}`).join('\n')
 }
 
-export async function fileExists(path: string): Promise<boolean> {
-    try {
-        await access(path, constants.F_OK)
-
-        return true
-    } catch {
-        return false
-    }
+// https://github.com/microsoft/TypeScript/issues/14520
+export function isIncluded<T extends string>(value: string, values: T[]): value is T {
+    return values.includes(value as T)
 }

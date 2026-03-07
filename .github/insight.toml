@@ -4,10 +4,6 @@ dot = true
 [schedule]
 linters = ["node-audit"]
 
-[push]
-formatters = ["prettier"]
-linters = ["tsc", "check-dist", "eslint", "ast-grep"]
-
 [formatters]
 prettier = ["**/*.yml", "**/*.ts", "**/*.md", "**/*.json"]
 tombi = ["**/*.toml"]
@@ -27,7 +23,6 @@ vale = ["**/*.md"]
 tombi = ["**/*.toml"]
 
 [args.linters]
-commitlint = ["--strict"]
 yamllint = ["--strict"]
 tombi = ["--error-on-warnings"]
 eslint = ["--max-warnings", "0"]

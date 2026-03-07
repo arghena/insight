@@ -1,10 +1,11 @@
-import { env } from 'node:process'
-import { exec } from '@actions/exec'
 import { info } from '@actions/core'
 import { installer } from '@/installer'
+import { exec } from '@/exec'
+import type { Runner } from '@/types'
 
-export async function runner(version: string, args: string[], paths: string[]): Promise<void> {
-    const toolName = 'node-audit'
+const toolName = 'node-audit'
+
+export const runner: Runner = async (version, args, paths) => {
     const count = paths.length
 
     await installer(toolName, version)
@@ -15,12 +16,5 @@ export async function runner(version: string, args: string[], paths: string[]): 
             : `[RUNNER] Running ${toolName} on ${count.toString()} files`,
     )
 
-    await exec('na', ['audit', ...args], {
-        // https://github.com/antfu-collective/ni/blob/82611c44aeada5185d5fb5fc2c72c2ce6b921159/src/detect.ts#L39-L53
-        env: {
-            ...env,
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            NI_AUTO_INSTALL: 'true',
-        },
-    })
+    await exec('na', ['audit', ...args], { toolName })
 }

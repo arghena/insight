@@ -1,25 +1,19 @@
-import { cwd } from 'node:process'
-import { exec } from '@actions/exec'
 import { info } from '@actions/core'
 import { installer } from '@/installer'
+import { exec } from '@/exec'
+import { buildDockerRunArgs } from '@/utils'
+import type { Runner } from '@/types'
 
-export async function runner(version: string, args: string[], paths: string[]): Promise<void> {
-    const toolName = 'vale'
+const toolName = 'vale'
+
+export const runner: Runner = async (version, args, paths) => {
     const tag = version === 'latest' ? 'latest' : `v${version}`
-    const dockerArgs = [
-        'run',
-        '--rm',
-        '-v',
-        `${cwd()}:/mnt`,
-        '-w',
-        '/mnt',
-        `jdkato/${toolName}:${tag}`,
-    ]
+    const dockerRunArgs = buildDockerRunArgs(`jdkato/${toolName}:${tag}`)
 
     await installer(toolName, tag)
 
     info(`[RUNNER] Running ${toolName} on ${paths.length.toString()} files`)
 
-    await exec('docker', [...dockerArgs, 'sync'])
-    await exec('docker', [...dockerArgs, ...args, '--', ...paths])
+    await exec('docker', [...dockerRunArgs, 'sync'], { toolName })
+    await exec('docker', [...dockerRunArgs, ...args, '--', ...paths], { toolName })
 }

@@ -1,9 +1,11 @@
-import { exec } from '@actions/exec'
 import { info } from '@actions/core'
 import { installer } from '@/installer'
+import { exec } from '@/exec'
+import type { Runner } from '@/types'
 
-export async function runner(version: string, args: string[], paths: string[]): Promise<void> {
-    const toolName = 'cargo-deny'
+const toolName = 'cargo-deny'
+
+export const runner: Runner = async (version, args, paths) => {
     const count = paths.length
 
     await installer(toolName, version)

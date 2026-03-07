@@ -27,9 +27,12 @@ export default defineConfig(
             'no-console': 'error',
             'object-shorthand': 'error',
             'no-useless-concat': 'error',
-            'no-return-assign': ['error', 'always'],
+            'prefer-arrow-callback': 'error',
+            'no-template-curly-in-string': 'error',
             'one-var': ['error', 'never'],
+            'no-return-assign': ['error', 'always'],
             'no-sequences': ['error', { allowInParentheses: false }],
+            'func-style': ['error', 'declaration', { allowTypeAnnotation: true }],
             // TODO: Migrate to `eslint-plugin-import-x`.
             // https://github.com/un-ts/eslint-plugin-import-x/issues/421
             // https://github.com/un-ts/eslint-plugin-import-x/issues/200
@@ -46,6 +49,7 @@ export default defineConfig(
             '@typescript-eslint/init-declarations': 'error',
             '@typescript-eslint/max-params': 'error',
             '@typescript-eslint/method-signature-style': 'error',
+            '@typescript-eslint/prefer-enum-initializers': 'error',
             '@typescript-eslint/strict-boolean-expressions': [
                 'error',
                 {
@@ -67,7 +71,7 @@ export default defineConfig(
                     format: ['strictCamelCase'],
                 },
                 {
-                    selector: ['interface', 'typeAlias', 'enum', 'enumMember'],
+                    selector: ['typeLike', 'enumMember'],
                     format: ['StrictPascalCase'],
                 },
                 {
@@ -80,7 +84,7 @@ export default defineConfig(
                     prefix: ['is', 'has', 'can'],
                 },
                 {
-                    selector: ['objectLiteralProperty'],
+                    selector: 'objectLiteralProperty',
                     format: null,
                     modifiers: ['requiresQuotes'],
                 },
