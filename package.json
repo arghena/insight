@@ -4,7 +4,7 @@
     "format": "prettier -w --cache '**/*.ts'",
     "lint": "eslint --cache '**/*.ts'",
     "typecheck": "tsc",
-    "build": "esbuild --bundle --platform=node src/index.ts --outdir=dist --minify"
+    "build": "esbuild --bundle --platform=node src/main.ts --outdir=dist --minify"
   },
   "packageManager": "pnpm@10.30.3+sha512.c961d1e0a2d8e354ecaa5166b822516668b7f44cb5bd95122d590dd81922f606f5473b6d23ec4a5be05e7fcd18e8488d47d978bbe981872f1145d06e9a740017",
   "devDependencies": {
@@ -22,10 +22,13 @@
     "@actions/core": "^3.0.0",
     "@actions/exec": "^3.0.0",
     "@actions/github": "^9.0.0",
+    "@actions/http-client": "^4.0.0",
+    "@commitlint/config-conventional": "^20.4.3",
+    "@commitlint/format": "^20.4.3",
+    "@commitlint/lint": "^20.4.3",
     "defu": "^6.1.4",
-    "fast-glob": "^3.3.3",
-    "ignore": "^7.0.5",
     "micromatch": "^4.0.8",
-    "smol-toml": "^1.6.0"
+    "smol-toml": "^1.6.0",
+    "zod": "^4.3.6"
   }
 }

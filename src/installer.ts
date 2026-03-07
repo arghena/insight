@@ -1,24 +1,12 @@
-import { exec } from '@actions/exec'
 import { info } from '@actions/core'
-import { type FormatterKey, type LinterKey } from '@/map'
-
-export type ToolName = FormatterKey | LinterKey | 'commitlint' | 'commitlint-config-conventional'
-
-type PackageManager = 'npm' | 'rustup' | 'cargo-binstall' | 'uv' | 'docker'
-type SetupMap = Record<PackageManager, string[]>
-type ToolRegistry = Record<
-    ToolName,
-    {
-        packageManager: PackageManager
-        args: string[]
-    }
->
-
-const installedTools = new Set<PackageManager | ToolName>()
+import { exec } from '@/exec'
+import { addInstalledTool, hasInstalledTool } from '@/store'
+import { fetchText, isValidHttpsUrl } from '@/fetch'
+import type { InstallableToolName, SetupMap, ToolRegistry } from '@/types'
 
 // NOTE: The `#!/bin/sh` in the install scripts for
 // `cargo-binstall` and `uv` doesn't actually work.
-export async function installer(toolName: ToolName, version: string): Promise<void> {
+export async function installer(toolName: InstallableToolName, version: string): Promise<void> {
     const setupMap = {
         npm: [],
         rustup: [
@@ -26,39 +14,43 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
             `rustup override set ${version === 'latest' ? 'stable' : version}`,
         ],
         'cargo-binstall': [
-            // TODO: `dash` v0.5.13 has implemented `set -o pipefail`.
-            // https://wiki.linuxfromscratch.org/blfs/ticket/22177
-            'curl -fsSL https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash',
+            'https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh',
         ],
-        uv: [
-            'curl -fsSL https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh | sh',
-        ],
+        uv: ['https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh'],
         docker: [],
-    } satisfies SetupMap
+    } as const satisfies SetupMap
     const toolRegistry = {
-        'commitlint-config-conventional': {
-            packageManager: 'npm',
-            args: ['install', '--global', `@commitlint/config-conventional@${version}`],
+        actionlint: {
+            packageManager: 'docker',
+            args: ['pull', `rhysd/actionlint:${version}`],
         },
-        commitlint: {
+        alex: {
             packageManager: 'npm',
-            args: ['install', '--global', `@commitlint/cli@${version}`],
+            args: ['install', '--global', `alex@${version}`],
+        },
+        'ast-grep': {
+            packageManager: 'cargo-binstall',
+            args: ['--no-confirm', version === 'latest' ? 'ast-grep' : `ast-grep@${version}`],
+        },
+        'cargo-clippy': {
+            packageManager: 'rustup',
+            args: ['component', 'add', 'clippy'],
         },
         'cargo-deny': {
             packageManager: 'cargo-binstall',
             args: ['--no-confirm', version === 'latest' ? 'cargo-deny' : `cargo-deny@${version}`],
         },
-        'node-audit': {
-            packageManager: 'npm',
-            args: ['install', '--global', '@antfu/ni'],
+        'cargo-fmt': {
+            packageManager: 'rustup',
+            args: ['component', 'add', 'rustfmt'],
+        },
+        'cargo-msrv': {
+            packageManager: 'cargo-binstall',
+            args: ['--no-confirm', version === 'latest' ? 'cargo-msrv' : `cargo-msrv@${version}`],
         },
         'check-dist': {
             packageManager: 'npm',
             args: ['install', '--global', '@antfu/ni'],
-        },
-        prettier: {
-            packageManager: 'npm',
-            args: ['install', '--global', `prettier@${version}`],
         },
         eslint: {
             packageManager: 'npm',
@@ -71,64 +63,25 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
                 'jiti',
             ],
         },
-        typos: {
-            packageManager: 'cargo-binstall',
-            args: ['--no-confirm', version === 'latest' ? 'typos-cli' : `typos-cli@${version}`],
-        },
-        yamllint: {
-            packageManager: 'uv',
-            args: ['tool', 'install', `yamllint@${version}`],
-        },
-        actionlint: {
-            packageManager: 'docker',
-            args: ['pull', `rhysd/actionlint:${version}`],
-        },
-        'ast-grep': {
-            packageManager: 'cargo-binstall',
-            args: ['--no-confirm', version === 'latest' ? 'ast-grep' : `ast-grep@${version}`],
-        },
-        'cargo-clippy': {
-            packageManager: 'rustup',
-            args: ['component', 'add', 'clippy'],
-        },
-        'cargo-fmt': {
-            packageManager: 'rustup',
-            args: ['component', 'add', 'rustfmt'],
-        },
-        'cargo-msrv': {
-            packageManager: 'cargo-binstall',
-            args: ['--no-confirm', version === 'latest' ? 'cargo-msrv' : `cargo-msrv@${version}`],
-        },
-        'cargo-tarpaulin': {
-            packageManager: 'cargo-binstall',
-            args: [
-                '--no-confirm',
-                version === 'latest' ? 'cargo-tarpaulin' : `cargo-tarpaulin@${version}`,
-            ],
-        },
-        alex: {
-            packageManager: 'npm',
-            args: ['install', '--global', `alex@${version}`],
-        },
         'markdownlint-cli2': {
             packageManager: 'npm',
             args: ['install', '--global', `markdownlint-cli2@${version}`],
         },
-        vale: {
-            packageManager: 'docker',
-            args: ['pull', `jdkato/vale:${version}`],
+        'node-audit': {
+            packageManager: 'npm',
+            args: ['install', '--global', '@antfu/ni'],
         },
-        shfmt: {
-            packageManager: 'docker',
-            args: ['pull', `mvdan/shfmt:${version}`],
+        prettier: {
+            packageManager: 'npm',
+            args: ['install', '--global', `prettier@${version}`],
         },
         shellcheck: {
             packageManager: 'docker',
             args: ['pull', `koalaman/shellcheck:${version}`],
         },
-        taplo: {
-            packageManager: 'cargo-binstall',
-            args: ['--no-confirm', version === 'latest' ? 'taplo-cli' : `taplo-cli@${version}`],
+        shfmt: {
+            packageManager: 'docker',
+            args: ['pull', `mvdan/shfmt:${version}`],
         },
         tombi: {
             packageManager: 'uv',
@@ -138,22 +91,36 @@ export async function installer(toolName: ToolName, version: string): Promise<vo
             packageManager: 'npm',
             args: ['install', '--global', '@antfu/ni', `typescript@${version}`],
         },
-    } satisfies ToolRegistry
+        typos: {
+            packageManager: 'cargo-binstall',
+            args: ['--no-confirm', version === 'latest' ? 'typos-cli' : `typos-cli@${version}`],
+        },
+        vale: {
+            packageManager: 'docker',
+            args: ['pull', `jdkato/vale:${version}`],
+        },
+        yamllint: {
+            packageManager: 'uv',
+            args: ['tool', 'install', `yamllint@${version}`],
+        },
+    } as const satisfies ToolRegistry
     const { packageManager, args } = toolRegistry[toolName]
 
-    if (setupMap[packageManager].length !== 0 && !installedTools.has(packageManager)) {
+    if (setupMap[packageManager].length !== 0 && !hasInstalledTool(packageManager)) {
         info(`[INSTALLER] Setting up the ${packageManager} environment`)
 
-        for (const cmd of setupMap[packageManager]) await exec('sh', ['-c', cmd])
+        for (const setup of setupMap[packageManager]) {
+            await exec('sh', [], { input: isValidHttpsUrl(setup) ? await fetchText(setup) : setup })
+        }
 
-        installedTools.add(packageManager)
+        addInstalledTool(packageManager)
     }
 
-    if (!installedTools.has(toolName)) {
+    if (!hasInstalledTool(toolName)) {
         info(`[INSTALLER] Installing ${toolName} using ${packageManager}`)
 
         await exec(packageManager, args)
 
-        installedTools.add(toolName)
+        addInstalledTool(toolName)
     }
 }

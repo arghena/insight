@@ -1,8 +1,7 @@
-formatters|Formatters
+[Ff]ormatters
 config
 rustfmt
 shfmt
-taplo
 tombi
 tsc
 commitlint

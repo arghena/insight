@@ -1,35 +1,38 @@
-/* eslint-disable @typescript-eslint/promise-function-async, @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/naming-convention */
+// We need to use the exact tool names (like `ast-grep`), so standard naming rules don't work here.
 
-type RunnerFunc = (version: string, args: string[], paths: string[]) => Promise<void>
-type ToolLoader = () => Promise<{ runner: RunnerFunc }>
+/* eslint-disable @typescript-eslint/promise-function-async */
+// Dynamic imports return a `Promise` anyway, so adding `async` is just redundant.
+
+import type { Loader } from '@/types'
 
 export const formatter = {
-    prettier: () => import('@/formatters/prettier'),
     'cargo-fmt': () => import('@/formatters/cargo-fmt'),
+    prettier: () => import('@/formatters/prettier'),
     shfmt: () => import('@/formatters/shfmt'),
-    taplo: () => import('@/formatters/taplo'),
     tombi: () => import('@/formatters/tombi'),
-} satisfies Record<string, ToolLoader>
+} as const satisfies Record<string, Loader>
 export const linter = {
-    'cargo-deny': () => import('@/linters/cargo-deny'),
-    'node-audit': () => import('@/linters/node-audit'),
-    'check-dist': () => import('@/linters/check-dist'),
-    typos: () => import('@/linters/typos'),
-    yamllint: () => import('@/linters/yamllint'),
-    eslint: () => import('@/linters/eslint'),
     actionlint: () => import('@/linters/actionlint'),
+    alex: () => import('@/linters/alex'),
     'ast-grep': () => import('@/linters/ast-grep'),
     'cargo-clippy': () => import('@/linters/cargo-clippy'),
+    'cargo-deny': () => import('@/linters/cargo-deny'),
     'cargo-msrv': () => import('@/linters/cargo-msrv'),
-    'cargo-tarpaulin': () => import('@/linters/cargo-tarpaulin'),
-    alex: () => import('@/linters/alex'),
+    'check-dist': () => import('@/linters/check-dist'),
+    eslint: () => import('@/linters/eslint'),
     'markdownlint-cli2': () => import('@/linters/markdownlint-cli2'),
-    vale: () => import('@/linters/vale'),
+    'node-audit': () => import('@/linters/node-audit'),
     shellcheck: () => import('@/linters/shellcheck'),
-    taplo: () => import('@/linters/taplo'),
     tombi: () => import('@/linters/tombi'),
     tsc: () => import('@/linters/tsc'),
-} satisfies Record<string, ToolLoader>
+    typos: () => import('@/linters/typos'),
+    vale: () => import('@/linters/vale'),
+    yamllint: () => import('@/linters/yamllint'),
+} as const satisfies Record<string, Loader>
 
 export type FormatterKey = keyof typeof formatter
 export type LinterKey = keyof typeof linter
+
+export const formatterKeys = Object.keys(formatter) as FormatterKey[]
+export const linterKeys = Object.keys(linter) as LinterKey[]
