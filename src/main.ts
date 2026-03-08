@@ -10,25 +10,25 @@ import { formatter, linter, formatterKeys, linterKeys } from '@/map'
 
 const { isTitleCheckEnabled, pullRequestTitle, eventName } = actionContext
 
-run()
-    .then(async () => {
-        const execErrors = getExecErrors()
+try {
+    await run()
 
-        if (execErrors.length !== 0) {
-            await renderErrorSummary(execErrors)
+    const execErrors = getExecErrors()
 
-            setFailed('[INSIGHT] Detected linting errors')
-        }
-    })
-    .catch((error: unknown) => {
-        if (error instanceof Error) {
-            setFailed(error.message)
-        } else if (typeof error === 'string') {
-            setFailed(error)
-        } else {
-            setFailed('Unknown error')
-        }
-    })
+    if (execErrors.length !== 0) {
+        await renderErrorSummary(execErrors)
+
+        setFailed('[INSIGHT] Detected linting errors')
+    }
+} catch (error) {
+    if (error instanceof Error) {
+        setFailed(error.message)
+    } else if (typeof error === 'string') {
+        setFailed(error)
+    } else {
+        setFailed('Unknown error')
+    }
+}
 
 async function run(): Promise<void> {
     if (isTitleCheckEnabled) {

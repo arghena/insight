@@ -25,7 +25,7 @@ inputs:
     default: ${{ github.event.pull_request.number }}
 runs:
   using: 'node24'
-  main: 'dist/main.js'
+  main: 'dist/main.mjs'
 branding:
   color: 'black'
   icon: 'check-square'
