@@ -39,4 +39,4 @@ jobs:
       - name: Run bundle-analyzer
         # TODO: Waiting for bundle-analyzer to support esbuild.
         # https://github.com/codecov/codecov-javascript-bundler-plugins/issues/41
-        run: pnpx @codecov/bundle-analyzer ./dist -c .config/codecov/bundle-analyzer.json
+        run: pnpm dlx @codecov/bundle-analyzer ./dist -c .config/codecov/bundle-analyzer.json
