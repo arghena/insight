@@ -25,7 +25,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    name: Bundle Analysis
+    name: Bundle analysis
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -37,4 +37,6 @@ jobs:
       - name: Build dist
         run: nr build
       - name: Run bundle-analyzer
+        # TODO: Waiting for bundle-analyzer to support esbuild.
+        # https://github.com/codecov/codecov-javascript-bundler-plugins/issues/41
         run: npx @codecov/bundle-analyzer ./dist -c .config/codecov/bundle-analyzer.json
