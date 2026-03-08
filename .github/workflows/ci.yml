@@ -1,22 +1,40 @@
 name: CI
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref_name }}
   cancel-in-progress: true
 
 on:
+  push:
+    branches: [canary]
+    paths:
+      - '**/*.ts'
+      - '**/package.json'
+      - '**/pnpm-lock.yaml'
   pull_request:
-    types: [opened, synchronize]
+    paths:
+      - '**/*.ts'
+      - '**/package.json'
+      - '**/pnpm-lock.yaml'
 
 permissions:
   contents: read
 
 jobs:
-  insight:
-    name: Insight
+  bundle_analysis:
+    permissions:
+      id-token: write
+      contents: read
+    name: Bundle Analysis
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Run Insight
-        uses: ./
+      - name: Install ni
+        run: npm i -g @antfu/ni
+      - name: Install dependencies
+        run: nci
+      - name: Build dist
+        run: nr build
+      - name: Run bundle-analyzer
+        run: npx @codecov/bundle-analyzer ./dist -c .config/codecov/bundle-analyzer.json

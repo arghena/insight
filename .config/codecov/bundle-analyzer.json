@@ -1,0 +1,7 @@
+{
+  "bundleName": "insight",
+  "oidc": {
+    "useGitHubOIDC": true
+  },
+  "telemetry": false
+}
