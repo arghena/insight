@@ -1,5 +1,6 @@
 {
   "bundleName": "insight",
+  "enableBundleAnalysis": true,
   "oidc": {
     "useGitHubOIDC": true
   },
