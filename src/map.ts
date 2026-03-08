@@ -4,6 +4,7 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
 // Dynamic imports return a `Promise` anyway, so adding `async` is just redundant.
 
+import { getKeys } from '@/utils'
 import type { Loader } from '@/types'
 
 export const formatter = {
@@ -34,5 +35,5 @@ export const linter = {
 export type FormatterKey = keyof typeof formatter
 export type LinterKey = keyof typeof linter
 
-export const formatterKeys = Object.keys(formatter) as FormatterKey[]
-export const linterKeys = Object.keys(linter) as LinterKey[]
+export const formatterKeys = getKeys(formatter)
+export const linterKeys = getKeys(linter)

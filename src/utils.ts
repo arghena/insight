@@ -12,3 +12,7 @@ export function unorderedList(items: string[]): string {
 export function isIncluded<T extends string>(value: string, values: T[]): value is T {
     return values.includes(value as T)
 }
+
+export function getKeys<T extends object>(obj: T): (keyof T)[] {
+    return Object.keys(obj) as (keyof T)[]
+}
