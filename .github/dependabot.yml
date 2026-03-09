@@ -12,8 +12,9 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
+      interval: 'cron'
       # Runs every Monday.
-      interval: 'weekly'
+      cronjob: '0 0 * * 1'
     open-pull-requests-limit: 10
     labels: ['build']
     commit-message:
@@ -22,8 +23,9 @@ updates:
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
+      interval: 'cron'
       # Runs every Monday.
-      interval: 'weekly'
+      cronjob: '0 0 * * 1'
     open-pull-requests-limit: 10
     labels: ['ci']
     commit-message:
