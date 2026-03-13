@@ -5,7 +5,14 @@ dot = true
 linters = ["node-audit"]
 
 [formatters]
-prettier = ["**/*.yml", "**/*.ts", "**/*.md", "**/*.json"]
+prettier = [
+  "**/*.yml",
+  "**/*.yaml",
+  "!**/pnpm-lock.yaml",
+  "**/*.ts",
+  "**/*.md",
+  "**/*.json",
+]
 tombi = ["**/*.toml"]
 
 [linters]
@@ -14,7 +21,7 @@ trivy = ["**/package.json", "**/pnpm-lock.yaml"]
 tsc = ["**/*.ts", "**/package.json", "**/pnpm-lock.yaml"]
 check-dist = ["src/**/*.ts", "**/package.json", "**/pnpm-lock.yaml"]
 typos = ["**/*", "!dist/**"]
-yamllint = ["**/*.yml"]
+yamllint = ["**/*.yml", "**/*.yaml", "!**/pnpm-lock.yaml"]
 actionlint = [".github/workflows/*.yml"]
 eslint = ["**/*.ts"]
 ast-grep = ["**/*.ts"]
