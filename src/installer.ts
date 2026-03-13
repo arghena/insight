@@ -146,12 +146,12 @@ function buildNpmArgs(...packageNames: string[]): string[] {
     return ['install', '--global', ...packageNames]
 }
 
-function buildRustupArgs(componentName: string): string[] {
-    return ['component', 'add', componentName]
+function buildRustupArgs(...componentNames: string[]): string[] {
+    return ['component', 'add', ...componentNames]
 }
 
-function buildBinstallArgs(packageName: string): string[] {
-    return ['--no-confirm', packageName]
+function buildBinstallArgs(...packageNames: string[]): string[] {
+    return ['--no-confirm', ...packageNames]
 }
 
 function getBinstallPackageName(toolName: InstallableToolName, version: string): string {
@@ -168,12 +168,12 @@ function getBinstallPackageName(toolName: InstallableToolName, version: string):
     }
 }
 
-function buildUvArgs(packageName: string): string[] {
-    return ['tool', 'install', packageName]
+function buildUvArgs(...packageNames: string[]): string[] {
+    return ['tool', 'install', ...packageNames]
 }
 
-function buildDockerArgs(imageName: string): string[] {
-    return ['pull', imageName]
+function buildDockerArgs(...imageNames: string[]): string[] {
+    return ['pull', ...imageNames]
 }
 
 async function ensurePackageManager(
@@ -186,7 +186,6 @@ async function ensurePackageManager(
 
     const setupMap = {
         npm: [],
-        docker: [],
         rustup: [
             `rustup toolchain install ${version} --profile minimal --no-self-update`,
             `rustup override set ${version}`,
@@ -195,6 +194,7 @@ async function ensurePackageManager(
             'https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh',
         ],
         uv: ['https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh'],
+        docker: [],
     } as const satisfies SetupMap
     const setupScripts = setupMap[packageManager]
 
