@@ -7,7 +7,7 @@ import type { ExecOptions, ToolType } from '@/types'
 
 export async function exec(command: string, args?: string[], options?: ExecOptions): Promise<void> {
     const toolName = options?.toolName ?? command
-    const { stderr, exitCode } = await getExecOutput(command, args, {
+    const { stdout, stderr, exitCode } = await getExecOutput(command, args, {
         input: serializeInput(options?.input),
         ignoreReturnCode: true,
         env: {
@@ -24,7 +24,7 @@ export async function exec(command: string, args?: string[], options?: ExecOptio
         addExecError({
             toolName,
             toolType: options?.toolType ?? getToolType(toolName),
-            stderr: getStderr(toolName, stderr),
+            stderr: getStderr(toolName, options?.stderr === true ? stdout + stderr : stderr),
         })
     }
 }

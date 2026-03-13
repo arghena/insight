@@ -40,6 +40,7 @@ export interface ExecOptions {
     toolName?: string
     toolType?: ToolType
     input?: string
+    stderr?: boolean
 }
 
 export interface ExecError {
