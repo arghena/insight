@@ -186,7 +186,7 @@ export async function installer(
                 addInstalledTool(packageManager)
             }
 
-            info(`[INSTALLER] Installing ${toolName} using ${packageManager}`)
+            info(`[INSTALLER] Setting up the ${toolName} tool`)
 
             await exec(packageManager, args)
         }
