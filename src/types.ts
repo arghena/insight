@@ -1,6 +1,6 @@
 import type { FormatterKey, LinterKey } from '@/map'
 
-export type ToolRegistry = Record<InstallableToolName, ToolStep[]>
+export type ToolRegistry = Record<InstallableToolName, ToolStep | ToolStep[]>
 
 export interface ToolStep {
     packageManager: PackageManager
