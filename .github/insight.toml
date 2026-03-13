@@ -10,6 +10,7 @@ tombi = ["**/*.toml"]
 
 [linters]
 node-audit = ["**/package.json", "**/pnpm-lock.yaml"]
+trivy = ["**/package.json", "**/pnpm-lock.yaml"]
 tsc = ["**/*.ts", "**/package.json", "**/pnpm-lock.yaml"]
 check-dist = ["src/**/*.ts", "**/package.json", "**/pnpm-lock.yaml"]
 typos = ["**/*", "!dist/**"]
