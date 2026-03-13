@@ -24,7 +24,10 @@ export async function exec(command: string, args?: string[], options?: ExecOptio
         addExecError({
             toolName,
             toolType: options?.toolType ?? getToolType(toolName),
-            stderr: getStderr(toolName, options?.stderr === true ? stdout + stderr : stderr),
+            stderr: getStderr(
+                toolName,
+                options?.stderr === true ? [stdout, stderr].filter(Boolean).join('\n') : stderr,
+            ),
         })
     }
 }
