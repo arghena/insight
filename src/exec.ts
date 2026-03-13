@@ -42,9 +42,9 @@ function getToolType(toolName: string): ToolType {
         return 'formatter'
     } else if (isIncluded(toolName, linterKeys)) {
         return 'linter'
+    } else {
+        return 'other'
     }
-
-    return 'other'
 }
 
 function getStderr(toolName: string, stderr: string): string {
