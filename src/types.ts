@@ -1,12 +1,11 @@
 import type { FormatterKey, LinterKey } from '@/map'
 
-export type ToolRegistry = Record<
-    InstallableToolName,
-    {
-        packageManager: PackageManager
-        args: string[]
-    }
->
+export type ToolRegistry = Record<InstallableToolName, ToolStep[]>
+
+export interface ToolStep {
+    packageManager: PackageManager
+    args: string[]
+}
 
 export type SetupMap = Record<PackageManager, string[]>
 
@@ -31,6 +30,11 @@ export interface RunToolContext {
 
 export type Loader = () => Promise<{ runner: Runner }>
 export type Runner = (version: string, args: string[], paths: string[]) => Promise<void>
+
+export interface InstallerOptions {
+    hasEslintConfig?: boolean
+    hasPackageJson?: boolean
+}
 
 export interface ExecOptions {
     toolName?: string

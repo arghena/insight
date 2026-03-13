@@ -26,6 +26,7 @@ export const linter = {
     'node-audit': () => import('@/linters/node-audit'),
     shellcheck: () => import('@/linters/shellcheck'),
     tombi: () => import('@/linters/tombi'),
+    trivy: () => import('@/linters/trivy'),
     tsc: () => import('@/linters/tsc'),
     typos: () => import('@/linters/typos'),
     vale: () => import('@/linters/vale'),

@@ -1,0 +1,25 @@
+exit-code: 1
+
+scan:
+  scanners:
+    - license
+
+severity:
+  - UNKNOWN
+  # - LOW
+  - MEDIUM
+  - HIGH
+  - CRITICAL
+
+# https://trivy.dev/docs/latest/guide/scanner/license/#custom-classification
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository#searching-github-by-license-type
+license:
+  forbidden:
+    - AGPL-3.0
+    - EUPL-1.1
+    - EUPL-1.2
+    - GPL-2.0
+    - GPL-3.0
+    - LGPL-2.1
+    - LGPL-3.0
+    - OSL-3.0

@@ -1,5 +1,7 @@
 yaml-files:
   - '**/*.yml'
+  - '**/*.yaml'
+  - '!**/pnpm-lock.yaml'
 
 ignore-from-file: .gitignore
 

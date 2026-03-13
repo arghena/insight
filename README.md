@@ -97,8 +97,8 @@ cargo-fmt = ["**/*.rs"]
 [linters]
 # Glob patterns for files that trigger linters.
 # Default: []
-check-dist = ["src/**/*.ts", "package.json", "pnpm-lock.yaml"]
-cargo-deny = ["Cargo.toml", "Cargo.lock"]
+check-dist = ["src/**/*.ts", "**/package.json", "**/pnpm-lock.yaml"]
+cargo-deny = ["**/Cargo.toml", "**/Cargo.lock"]
 typos = ["**/*", "!dist/**"]
 
 [args.formatters]
@@ -142,6 +142,7 @@ prettier = "3.6.2"
 | [node-audit](https://github.com/arghena/insight/blob/canary/src/linters/node-audit.ts) | `node-audit`        |                    |         ✅          |
 | [shellcheck](https://github.com/koalaman/shellcheck)                                   | `shellcheck`        |         ✅         |                     |
 | [tombi](https://github.com/tombi-toml/tombi)                                           | `tombi`             |         ✅         |                     |
+| [trivy](https://github.com/aquasecurity/trivy)                                         | `trivy`             |                    |                     |
 | [tsc](https://github.com/microsoft/TypeScript)                                         | `tsc`               |                    |                     |
 | [typos](https://github.com/crate-ci/typos)                                             | `typos`             |         ✅         |                     |
 | [vale](https://github.com/errata-ai/vale)                                              | `vale`              |         ✅         |                     |
