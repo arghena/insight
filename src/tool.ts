@@ -12,7 +12,7 @@ export async function runTool({
     const logTag = `[${toolType.toUpperCase()}]`
     const { runner } = await loader()
 
-    info(`${logTag} Kicking off ${toolName} (version ${version})`)
+    info(`${logTag} Kicking off ${toolName}`)
 
     await runner(version, args, paths)
 
