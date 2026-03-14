@@ -22,6 +22,7 @@ This is because users won't have access to those files locally when browsing the
 ## Features
 
 - Use the `insight.toml` config file to customize the formatters and linters your project needs.
+- Runs formatters and linters concurrently.
 - Supports using [commitlint](https://commitlint.js.org) to check the pull request title.
 - Responds to [`on.schedule`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onschedule) events.
 - Lets you customize formatter and linter versions and arguments.
@@ -47,7 +48,7 @@ jobs:
         # it's recommended to remove `actions/checkout`.
         uses: actions/checkout@v6
       - name: Run Insight
-        uses: arghena/insight@v0.1.0-canary.35
+        uses: arghena/insight@v0.1.0-canary.36
         with:
           # The path to the Insight config file.
           # Default: '.github/insight.toml'
