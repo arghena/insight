@@ -2,6 +2,7 @@ import type { ToolName, ExecError } from '@/types'
 
 const installedTools = new Set<ToolName>()
 const setupPromises = new Map<ToolName, Promise<void>>()
+const execPromises = new Map<ToolName, Promise<void>>()
 const execErrors: ExecError[] = []
 
 export function addInstalledTool(toolName: ToolName): void {
@@ -24,7 +25,25 @@ export async function getSetupPromise(toolName: ToolName): Promise<void> {
     const promise = setupPromises.get(toolName)
 
     if (!promise) {
-        throw new Error(`[SETUP] Setup promise missing for ${toolName}`)
+        throw new Error(`[PROMISE] Setup promise missing for ${toolName}`)
+    }
+
+    await promise
+}
+
+export function addExecPromise(toolName: ToolName, installTask: Promise<void>): void {
+    execPromises.set(toolName, installTask)
+}
+
+export function hasExecPromise(toolName: ToolName): boolean {
+    return execPromises.has(toolName)
+}
+
+export async function getExecPromise(toolName: ToolName): Promise<void> {
+    const promise = execPromises.get(toolName)
+
+    if (!promise) {
+        throw new Error(`[PROMISE] Exec promise missing for ${toolName}`)
     }
 
     await promise

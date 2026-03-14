@@ -5,6 +5,9 @@ import {
     addSetupPromise,
     hasSetupPromise,
     getSetupPromise,
+    addExecPromise,
+    hasExecPromise,
+    getExecPromise,
 } from '@/store'
 import { fetchText, isValidHttpsUrl } from '@/fetch'
 import type { ToolName, InstallerOptions, ToolStep, ToolRegistry } from '@/types'
@@ -38,7 +41,11 @@ export async function installer(
 
                 await installer(packageManager, version, options)
 
-                await exec(packageManager, args)
+                if (packageManager === 'nci') {
+                    await execOnce(packageManager, args)
+                } else {
+                    await exec(packageManager, args)
+                }
             }
         }
 
@@ -211,4 +218,18 @@ function buildUvArgs(...packageNames: string[]): string[] {
 
 function buildDockerArgs(...imageNames: string[]): string[] {
     return ['pull', ...imageNames]
+}
+
+async function execOnce(toolName: ToolName, args?: string[]): Promise<void> {
+    if (hasExecPromise(toolName)) {
+        await getExecPromise(toolName)
+
+        return
+    }
+
+    const task = exec(toolName, args)
+
+    addExecPromise(toolName, task)
+
+    await task
 }
