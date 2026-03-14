@@ -1,3 +1,4 @@
+import { performance } from 'node:perf_hooks'
 import { info } from '@actions/core'
 import type { RunToolContext } from '@/types'
 
@@ -11,10 +12,12 @@ export async function runTool({
     const toolName = loader.name
     const logTag = `[${toolType.toUpperCase()}]`
     const { runner } = await loader()
-
-    info(`${logTag} Kicking off ${toolName}`)
+    const startTime = performance.now()
 
     await runner(version, args, paths)
 
-    info(`${logTag} Wrapped up ${toolName} successfully`)
+    const endTime = performance.now()
+    const durationMs = Math.round(endTime - startTime)
+
+    info(`${logTag} ✔ ${toolName} (${durationMs.toString()}ms)`)
 }
