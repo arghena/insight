@@ -1,4 +1,3 @@
-import { info } from '@actions/core'
 import { exec } from '@/exec'
 import {
     addInstalledTool,
@@ -36,8 +35,6 @@ export async function installer(
 
         for (const { packageManager, args } of steps) {
             await ensurePackageManager(packageManager, version)
-
-            info(`[INSTALLER] Setting up the ${toolName} tool`)
 
             await exec(packageManager, args)
         }
@@ -222,8 +219,6 @@ async function ensurePackageManager(
         const setupScripts = setupMap[packageManager]
 
         if (setupScripts.length > 0) {
-            info(`[INSTALLER] Setting up the ${packageManager} environment`)
-
             for (const script of setupScripts) {
                 await exec('sh', [], {
                     input: isValidHttpsUrl(script) ? await fetchText(script) : script,

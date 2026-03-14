@@ -1,4 +1,3 @@
-import { info } from '@actions/core'
 import { installer } from '@/installer'
 import { exec } from '@/exec'
 import { fileExists, ensureNci } from '@/utils'
@@ -15,8 +14,6 @@ export const runner: Runner = async (version, args, paths) => {
     )
 
     await installer(toolName, version, { hasTsEslintConfig })
-
-    info(`[RUNNER] Running ${toolName} on ${paths.length.toString()} files`)
 
     await ensureNci()
     await exec(toolName, [...args, '--', ...paths])

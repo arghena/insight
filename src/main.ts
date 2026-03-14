@@ -44,11 +44,9 @@ async function run(): Promise<void> {
         const schedulePromises = schedule.linters.map((toolName) =>
             runTool({
                 loader: linter[toolName],
-                toolType: 'linter',
                 version: versions[toolName],
                 args: args.linters[toolName],
                 paths: [],
-                log: `[SCHEDULE] Starting ${toolName} cron job`,
             }),
         )
 
@@ -71,7 +69,6 @@ async function run(): Promise<void> {
 
         await runTool({
             loader: formatter[toolName],
-            toolType: 'formatter',
             version: versions[toolName],
             args: args.formatters[toolName],
             paths,
@@ -86,7 +83,6 @@ async function run(): Promise<void> {
 
         await runTool({
             loader: linter[toolName],
-            toolType: 'linter',
             version: versions[toolName],
             args: args.linters[toolName],
             paths,

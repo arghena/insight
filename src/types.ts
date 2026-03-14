@@ -21,11 +21,9 @@ export interface ActionContext {
 
 export interface RunToolContext {
     loader: Loader
-    toolType: ToolType
     version: string
     args: string[]
     paths: string[]
-    log?: string
 }
 
 export type Loader = () => Promise<{ runner: Runner }>

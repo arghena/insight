@@ -1,20 +1,7 @@
-import { info, group } from '@actions/core'
-import { unorderedList } from '@/utils'
 import type { RunToolContext } from '@/types'
 
-export async function runTool({
-    loader,
-    toolType,
-    version,
-    args,
-    paths,
-    log,
-}: RunToolContext): Promise<void> {
-    await group(`[${toolType.toUpperCase()}] ${loader.name}`, async () => {
-        const { runner } = await loader()
+export async function runTool({ loader, version, args, paths }: RunToolContext): Promise<void> {
+    const { runner } = await loader()
 
-        info(log ?? `[GLOB] Matched file paths:\n${unorderedList(paths)}`)
-
-        await runner(version, args, paths)
-    })
+    await runner(version, args, paths)
 }

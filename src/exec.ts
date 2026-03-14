@@ -9,6 +9,7 @@ export async function exec(command: string, args?: string[], options?: ExecOptio
     const toolName = options?.toolName ?? command
     const { stdout, stderr, exitCode } = await getExecOutput(command, args, {
         input: serializeInput(options?.input),
+        silent: true,
         ignoreReturnCode: true,
         env: {
             ...process.env,
