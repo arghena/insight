@@ -1,6 +1,12 @@
 import { info } from '@actions/core'
 import { exec } from '@/exec'
-import { addInstalledTool, hasInstalledTool } from '@/store'
+import {
+    addInstalledTool,
+    hasInstalledTool,
+    addSetupPromise,
+    hasSetupPromise,
+    getSetupPromise,
+} from '@/store'
 import { fetchText, isValidHttpsUrl } from '@/fetch'
 import type {
     InstallableToolName,
@@ -19,18 +25,29 @@ export async function installer(
     if (hasInstalledTool(toolName)) {
         return
     }
+    if (hasSetupPromise(toolName)) {
+        await getSetupPromise(toolName)
 
-    const steps = getToolSteps(toolName, version, options)
-
-    for (const { packageManager, args } of steps) {
-        await ensurePackageManager(packageManager, version)
-
-        info(`[INSTALLER] Setting up the ${toolName} tool`)
-
-        await exec(packageManager, args)
+        return
     }
 
-    addInstalledTool(toolName)
+    const installTask = (async (): Promise<void> => {
+        const steps = getToolSteps(toolName, version, options)
+
+        for (const { packageManager, args } of steps) {
+            await ensurePackageManager(packageManager, version)
+
+            info(`[INSTALLER] Setting up the ${toolName} tool`)
+
+            await exec(packageManager, args)
+        }
+
+        addInstalledTool(toolName)
+    })()
+
+    addSetupPromise(toolName, installTask)
+
+    await installTask
 }
 
 function getToolSteps(
@@ -46,7 +63,7 @@ function getToolSteps(
         },
     ]
 
-    if (options?.hasEslintConfig === true) {
+    if (options?.hasTsEslintConfig === true) {
         // https://eslint.org/docs/latest/use/configure/configuration-files#typescript-configuration-files
         eslintArgs.push('jiti')
     }
@@ -183,30 +200,41 @@ async function ensurePackageManager(
     if (hasInstalledTool(packageManager)) {
         return
     }
+    if (hasSetupPromise(packageManager)) {
+        await getSetupPromise(packageManager)
 
-    const setupMap = {
-        npm: [],
-        rustup: [
-            `rustup toolchain install ${version} --profile minimal --no-self-update`,
-            `rustup override set ${version}`,
-        ],
-        'cargo-binstall': [
-            'https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh',
-        ],
-        uv: ['https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh'],
-        docker: [],
-    } as const satisfies SetupMap
-    const setupScripts = setupMap[packageManager]
-
-    if (setupScripts.length > 0) {
-        info(`[INSTALLER] Setting up the ${packageManager} environment`)
-
-        for (const script of setupScripts) {
-            await exec('sh', [], {
-                input: isValidHttpsUrl(script) ? await fetchText(script) : script,
-            })
-        }
+        return
     }
 
-    addInstalledTool(packageManager)
+    const setupTask = (async (): Promise<void> => {
+        const setupMap = {
+            npm: [],
+            rustup: [
+                `rustup toolchain install ${version} --profile minimal --no-self-update`,
+                `rustup override set ${version}`,
+            ],
+            'cargo-binstall': [
+                'https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh',
+            ],
+            uv: ['https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh'],
+            docker: [],
+        } as const satisfies SetupMap
+        const setupScripts = setupMap[packageManager]
+
+        if (setupScripts.length > 0) {
+            info(`[INSTALLER] Setting up the ${packageManager} environment`)
+
+            for (const script of setupScripts) {
+                await exec('sh', [], {
+                    input: isValidHttpsUrl(script) ? await fetchText(script) : script,
+                })
+            }
+        }
+
+        addInstalledTool(packageManager)
+    })()
+
+    addSetupPromise(packageManager, setupTask)
+
+    await setupTask
 }

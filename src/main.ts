@@ -40,16 +40,19 @@ async function run(): Promise<void> {
     const { match, schedule, formatters, linters, args, versions } = await resolveConfig()
 
     if (eventName === 'schedule') {
-        for (const toolName of schedule.linters) {
-            await runTool({
+        // eslint-disable-next-line @typescript-eslint/promise-function-async
+        const schedulePromises = schedule.linters.map((toolName) =>
+            runTool({
                 loader: linter[toolName],
                 toolType: 'linter',
                 version: versions[toolName],
                 args: args.linters[toolName],
                 paths: [],
                 log: `[SCHEDULE] Starting ${toolName} cron job`,
-            })
-        }
+            }),
+        )
+
+        await Promise.all(schedulePromises)
 
         return
     }
@@ -59,32 +62,36 @@ async function run(): Promise<void> {
     }
 
     const changedFilePaths = await getChangedFilePaths()
-
-    for (const toolName of formatterKeys) {
+    const formatterPromises = formatterKeys.map(async (toolName) => {
         const paths = micromatch(changedFilePaths, formatters[toolName], { dot: match.dot })
 
-        if (paths.length !== 0) {
-            await runTool({
-                loader: formatter[toolName],
-                toolType: 'formatter',
-                version: versions[toolName],
-                args: args.formatters[toolName],
-                paths,
-            })
+        if (paths.length === 0) {
+            return
         }
-    }
 
-    for (const toolName of linterKeys) {
+        await runTool({
+            loader: formatter[toolName],
+            toolType: 'formatter',
+            version: versions[toolName],
+            args: args.formatters[toolName],
+            paths,
+        })
+    })
+    const linterPromises = linterKeys.map(async (toolName) => {
         const paths = micromatch(changedFilePaths, linters[toolName], { dot: match.dot })
 
-        if (paths.length !== 0) {
-            await runTool({
-                loader: linter[toolName],
-                toolType: 'linter',
-                version: versions[toolName],
-                args: args.linters[toolName],
-                paths,
-            })
+        if (paths.length === 0) {
+            return
         }
-    }
+
+        await runTool({
+            loader: linter[toolName],
+            toolType: 'linter',
+            version: versions[toolName],
+            args: args.linters[toolName],
+            paths,
+        })
+    })
+
+    await Promise.all([...formatterPromises, ...linterPromises])
 }

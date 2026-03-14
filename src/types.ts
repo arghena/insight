@@ -32,7 +32,7 @@ export type Loader = () => Promise<{ runner: Runner }>
 export type Runner = (version: string, args: string[], paths: string[]) => Promise<void>
 
 export interface InstallerOptions {
-    hasEslintConfig?: boolean
+    hasTsEslintConfig?: boolean
     hasPackageJson?: boolean
 }
 

@@ -1,5 +1,21 @@
 import { cwd } from 'node:process'
 import { access, constants } from 'node:fs/promises'
+import { exec } from '@/exec'
+import { hasNciPromise, getNciPromise, addNciPromise } from '@/store'
+
+export async function ensureNci(): Promise<void> {
+    if (hasNciPromise()) {
+        await getNciPromise()
+
+        return
+    }
+
+    const task = exec('nci')
+
+    addNciPromise(task)
+
+    await task
+}
 
 export function buildDockerRunArgs(imageName: string): string[] {
     return ['run', '--rm', '-v', `${cwd()}:/mnt`, '-w', '/mnt', imageName]
