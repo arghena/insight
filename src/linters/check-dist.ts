@@ -7,7 +7,6 @@ const toolName = 'check-dist'
 export const runner: Runner = async (version, args) => {
     await installer(toolName, version)
 
-    await exec('nci')
     await exec('nr', args.length === 0 ? ['build'] : args)
 
     await exec('git', ['diff', '--quiet', 'dist/'], { toolName })

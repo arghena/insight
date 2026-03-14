@@ -38,9 +38,7 @@ export async function installer(
 
                 await installer(packageManager, version, options)
 
-                if (packageManager !== 'ni') {
-                    await exec(packageManager, args)
-                }
+                await exec(packageManager, args)
             }
         }
 
@@ -66,7 +64,7 @@ function getToolSteps(toolName: ToolName, version: string, options?: InstallerOp
             script: 'https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh',
         },
         docker: [],
-        ni: { script: `npm ${buildNpmArgs('@antfu/ni').join(' ')}` },
+        nci: { script: `npm ${buildNpmArgs('@antfu/ni').join(' ')}` },
 
         actionlint: {
             packageManager: 'docker',
@@ -97,7 +95,7 @@ function getToolSteps(toolName: ToolName, version: string, options?: InstallerOp
             args: buildBinstallArgs(getBinstallPackageName(toolName, version)),
         },
         'check-dist': {
-            packageManager: 'ni',
+            packageManager: 'nci',
             args: [],
         },
         eslint: [
@@ -110,7 +108,7 @@ function getToolSteps(toolName: ToolName, version: string, options?: InstallerOp
                 ),
             },
             {
-                packageManager: 'ni',
+                packageManager: 'nci',
                 args: [],
             },
         ],
@@ -119,7 +117,7 @@ function getToolSteps(toolName: ToolName, version: string, options?: InstallerOp
             args: buildNpmArgs(`markdownlint-cli2@${version}`),
         },
         'node-audit': {
-            packageManager: 'ni',
+            packageManager: 'nci',
             args: [],
         },
         prettier: {
@@ -143,10 +141,11 @@ function getToolSteps(toolName: ToolName, version: string, options?: InstallerOp
                 packageManager: 'docker',
                 args: buildDockerArgs(`ghcr.io/aquasecurity/trivy:${version}`),
             },
+            // https://trivy.dev/docs/latest/guide/coverage/language/nodejs/#pnpm
             ...(options?.hasPackageJson === true
                 ? [
                       {
-                          packageManager: 'ni',
+                          packageManager: 'nci',
                           args: [],
                       } satisfies ToolStep,
                   ]
@@ -158,7 +157,7 @@ function getToolSteps(toolName: ToolName, version: string, options?: InstallerOp
                 args: buildNpmArgs(`typescript@${version}`),
             },
             {
-                packageManager: 'ni',
+                packageManager: 'nci',
                 args: [],
             },
         ],
