@@ -12,6 +12,7 @@ export async function runTool({
 }: RunToolContext): Promise<void> {
     const toolName = loader.name
     const logTag = `[${toolType.toUpperCase()}]`
+    const successIcon = styleText('green', '✔', { validateStream: false })
     const { runner } = await loader()
     const startTime = performance.now()
 
@@ -19,8 +20,9 @@ export async function runTool({
 
     const endTime = performance.now()
     const durationMs = Math.round(endTime - startTime)
-    const successIcon = styleText('green', '✔')
-    const formattedDuration = styleText('gray', `(${durationMs.toString()}ms)`)
+    const formattedDuration = styleText('gray', `(${durationMs.toString()}ms)`, {
+        validateStream: false,
+    })
 
     info(`${logTag} ${successIcon} ${toolName} ${formattedDuration}`)
 }
