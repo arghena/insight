@@ -1,4 +1,5 @@
 import { performance } from 'node:perf_hooks'
+import { styleText } from 'node:util'
 import { info } from '@actions/core'
 import type { RunToolContext } from '@/types'
 
@@ -18,6 +19,8 @@ export async function runTool({
 
     const endTime = performance.now()
     const durationMs = Math.round(endTime - startTime)
+    const successIcon = styleText('green', '✔')
+    const formattedDuration = styleText('gray', `(${durationMs.toString()}ms)`)
 
-    info(`${logTag} ✔ ${toolName} (${durationMs.toString()}ms)`)
+    info(`${logTag} ${successIcon} ${toolName} ${formattedDuration}`)
 }
