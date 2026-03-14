@@ -1,6 +1,6 @@
 import { installer } from '@/installer'
 import { exec } from '@/exec'
-import { fileExists, ensureNci } from '@/utils'
+import { fileExists } from '@/utils'
 import type { Runner } from '@/types'
 
 const toolName = 'eslint'
@@ -15,6 +15,6 @@ export const runner: Runner = async (version, args, paths) => {
 
     await installer(toolName, version, { hasTsEslintConfig })
 
-    await ensureNci()
+    await exec('nci')
     await exec(toolName, [...args, '--', ...paths])
 }

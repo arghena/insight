@@ -1,27 +1,26 @@
-import type { InstalledToolName, ExecError } from '@/types'
+import type { ToolName, ExecError } from '@/types'
 
-const installedTools = new Set<InstalledToolName>()
-const setupPromises = new Map<InstalledToolName, Promise<void>>()
+const installedTools = new Set<ToolName>()
+const setupPromises = new Map<ToolName, Promise<void>>()
 const execErrors: ExecError[] = []
-let nciPromise: Promise<void> | null = null
 
-export function addInstalledTool(toolName: InstalledToolName): void {
+export function addInstalledTool(toolName: ToolName): void {
     installedTools.add(toolName)
 }
 
-export function hasInstalledTool(toolName: InstalledToolName): boolean {
+export function hasInstalledTool(toolName: ToolName): boolean {
     return installedTools.has(toolName)
 }
 
-export function addSetupPromise(toolName: InstalledToolName, installTask: Promise<void>): void {
+export function addSetupPromise(toolName: ToolName, installTask: Promise<void>): void {
     setupPromises.set(toolName, installTask)
 }
 
-export function hasSetupPromise(toolName: InstalledToolName): boolean {
+export function hasSetupPromise(toolName: ToolName): boolean {
     return setupPromises.has(toolName)
 }
 
-export async function getSetupPromise(toolName: InstalledToolName): Promise<void> {
+export async function getSetupPromise(toolName: ToolName): Promise<void> {
     const promise = setupPromises.get(toolName)
 
     if (!promise) {
@@ -37,20 +36,4 @@ export function addExecError(error: ExecError): void {
 
 export function getExecErrors(): ExecError[] {
     return [...execErrors]
-}
-
-export function hasNciPromise(): boolean {
-    return nciPromise !== null
-}
-
-export async function getNciPromise(): Promise<void> {
-    if (!nciPromise) {
-        throw new Error('[STORE] NCI promise is missing')
-    }
-
-    await nciPromise
-}
-
-export function addNciPromise(promise: Promise<void>): void {
-    nciPromise = promise
 }

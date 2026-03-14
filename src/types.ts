@@ -1,13 +1,15 @@
 import type { FormatterKey, LinterKey } from '@/map'
 
-export type ToolRegistry = Record<InstallableToolName, ToolStep | ToolStep[]>
+export type ToolRegistry = Record<ToolName, ToolStep | ToolStep[]>
 
-export interface ToolStep {
-    packageManager: PackageManager
-    args: string[]
-}
-
-export type SetupMap = Record<PackageManager, string[]>
+export type ToolStep =
+    | {
+          packageManager: PackageManager
+          args: string[]
+      }
+    | {
+          script: string
+      }
 
 export interface ActionContext {
     configPath: string
@@ -48,9 +50,7 @@ export interface ExecError {
     stderr: string
 }
 
+export type ToolName = PackageManager | FormatterKey | LinterKey
+
 export type ToolType = 'formatter' | 'linter' | 'other'
 export type PackageManager = 'npm' | 'rustup' | 'cargo-binstall' | 'uv' | 'docker'
-
-export type InstallableToolName = FormatterKey | LinterKey
-
-export type InstalledToolName = PackageManager | InstallableToolName

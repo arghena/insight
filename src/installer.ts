@@ -7,17 +7,10 @@ import {
     getSetupPromise,
 } from '@/store'
 import { fetchText, isValidHttpsUrl } from '@/fetch'
-import type {
-    InstallableToolName,
-    InstallerOptions,
-    ToolStep,
-    SetupMap,
-    PackageManager,
-    ToolRegistry,
-} from '@/types'
+import type { ToolName, InstallerOptions, ToolStep, ToolRegistry } from '@/types'
 
 export async function installer(
-    toolName: InstallableToolName,
+    toolName: ToolName,
     version: string,
     options?: InstallerOptions,
 ): Promise<void> {
@@ -33,10 +26,20 @@ export async function installer(
     const installTask = (async (): Promise<void> => {
         const steps = getToolSteps(toolName, version, options)
 
-        for (const { packageManager, args } of steps) {
-            await ensurePackageManager(packageManager, version)
+        for (const step of steps) {
+            if ('script' in step) {
+                const content = isValidHttpsUrl(step.script)
+                    ? await fetchText(step.script)
+                    : step.script
 
-            await exec(packageManager, args)
+                await exec('sh', [], { input: content })
+            } else {
+                const { packageManager, args } = step
+
+                await installer(packageManager, version, options)
+
+                await exec(packageManager, args)
+            }
         }
 
         addInstalledTool(toolName)
@@ -47,11 +50,7 @@ export async function installer(
     await installTask
 }
 
-function getToolSteps(
-    toolName: InstallableToolName,
-    version: string,
-    options?: InstallerOptions,
-): ToolStep[] {
+function getToolSteps(toolName: ToolName, version: string, options?: InstallerOptions): ToolStep[] {
     const eslintArgs = buildNpmArgs('@antfu/ni', `eslint@${version}`)
     const trivySteps: ToolStep[] = [
         {
@@ -73,6 +72,19 @@ function getToolSteps(
     }
 
     const toolRegistry = {
+        npm: [],
+        rustup: [
+            { script: `rustup toolchain install ${version} --profile minimal --no-self-update` },
+            { script: `rustup override set ${version}` },
+        ],
+        'cargo-binstall': {
+            script: 'https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh',
+        },
+        uv: {
+            script: 'https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh',
+        },
+        docker: [],
+
         actionlint: {
             packageManager: 'docker',
             args: buildDockerArgs(`rhysd/${toolName}:${version}`),
@@ -168,7 +180,7 @@ function buildBinstallArgs(...packageNames: string[]): string[] {
     return ['--no-confirm', ...packageNames]
 }
 
-function getBinstallPackageName(toolName: InstallableToolName, version: string): string {
+function getBinstallPackageName(toolName: ToolName, version: string): string {
     const isLatest = version === 'latest'
 
     switch (toolName) {
@@ -188,48 +200,4 @@ function buildUvArgs(...packageNames: string[]): string[] {
 
 function buildDockerArgs(...imageNames: string[]): string[] {
     return ['pull', ...imageNames]
-}
-
-async function ensurePackageManager(
-    packageManager: PackageManager,
-    version: string,
-): Promise<void> {
-    if (hasInstalledTool(packageManager)) {
-        return
-    }
-    if (hasSetupPromise(packageManager)) {
-        await getSetupPromise(packageManager)
-
-        return
-    }
-
-    const setupTask = (async (): Promise<void> => {
-        const setupMap = {
-            npm: [],
-            rustup: [
-                `rustup toolchain install ${version} --profile minimal --no-self-update`,
-                `rustup override set ${version}`,
-            ],
-            'cargo-binstall': [
-                'https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh',
-            ],
-            uv: ['https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh'],
-            docker: [],
-        } as const satisfies SetupMap
-        const setupScripts = setupMap[packageManager]
-
-        if (setupScripts.length > 0) {
-            for (const script of setupScripts) {
-                await exec('sh', [], {
-                    input: isValidHttpsUrl(script) ? await fetchText(script) : script,
-                })
-            }
-        }
-
-        addInstalledTool(packageManager)
-    })()
-
-    addSetupPromise(packageManager, setupTask)
-
-    await setupTask
 }

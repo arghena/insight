@@ -1,6 +1,6 @@
 import { installer } from '@/installer'
 import { exec } from '@/exec'
-import { fileExists, buildDockerRunArgs, ensureNci } from '@/utils'
+import { fileExists, buildDockerRunArgs } from '@/utils'
 import type { Runner } from '@/types'
 
 const toolName = 'trivy'
@@ -11,7 +11,7 @@ export const runner: Runner = async (version, args) => {
     await installer(toolName, version, { hasPackageJson })
 
     if (hasPackageJson) {
-        await ensureNci()
+        await exec('nci')
     }
 
     await exec(
