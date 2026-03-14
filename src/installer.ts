@@ -38,7 +38,9 @@ export async function installer(
 
                 await installer(packageManager, version, options)
 
-                await exec(packageManager, args)
+                if (packageManager !== 'ni') {
+                    await exec(packageManager, args)
+                }
             }
         }
 
@@ -51,26 +53,6 @@ export async function installer(
 }
 
 function getToolSteps(toolName: ToolName, version: string, options?: InstallerOptions): ToolStep[] {
-    const eslintArgs = buildNpmArgs('@antfu/ni', `eslint@${version}`)
-    const trivySteps: ToolStep[] = [
-        {
-            packageManager: 'docker',
-            args: buildDockerArgs(`ghcr.io/aquasecurity/trivy:${version}`),
-        },
-    ]
-
-    if (options?.hasTsEslintConfig === true) {
-        // https://eslint.org/docs/latest/use/configure/configuration-files#typescript-configuration-files
-        eslintArgs.push('jiti')
-    }
-    if (options?.hasPackageJson === true) {
-        // https://trivy.dev/docs/latest/guide/coverage/language/nodejs/#pnpm
-        trivySteps.push({
-            packageManager: 'npm',
-            args: buildNpmArgs('@antfu/ni'),
-        })
-    }
-
     const toolRegistry = {
         npm: [],
         rustup: [
@@ -84,6 +66,7 @@ function getToolSteps(toolName: ToolName, version: string, options?: InstallerOp
             script: 'https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh',
         },
         docker: [],
+        ni: { script: `npm ${buildNpmArgs('@antfu/ni').join(' ')}` },
 
         actionlint: {
             packageManager: 'docker',
@@ -114,20 +97,30 @@ function getToolSteps(toolName: ToolName, version: string, options?: InstallerOp
             args: buildBinstallArgs(getBinstallPackageName(toolName, version)),
         },
         'check-dist': {
-            packageManager: 'npm',
-            args: buildNpmArgs('@antfu/ni'),
+            packageManager: 'ni',
+            args: [],
         },
-        eslint: {
-            packageManager: 'npm',
-            args: eslintArgs,
-        },
+        eslint: [
+            {
+                packageManager: 'npm',
+                // https://eslint.org/docs/latest/use/configure/configuration-files#typescript-configuration-files
+                args: buildNpmArgs(
+                    `eslint@${version}`,
+                    ...(options?.hasTsEslintConfig === true ? ['jiti'] : []),
+                ),
+            },
+            {
+                packageManager: 'ni',
+                args: [],
+            },
+        ],
         'markdownlint-cli2': {
             packageManager: 'npm',
             args: buildNpmArgs(`markdownlint-cli2@${version}`),
         },
         'node-audit': {
-            packageManager: 'npm',
-            args: buildNpmArgs('@antfu/ni'),
+            packageManager: 'ni',
+            args: [],
         },
         prettier: {
             packageManager: 'npm',
@@ -145,11 +138,30 @@ function getToolSteps(toolName: ToolName, version: string, options?: InstallerOp
             packageManager: 'uv',
             args: buildUvArgs(`${toolName}@${version}`),
         },
-        trivy: trivySteps,
-        tsc: {
-            packageManager: 'npm',
-            args: buildNpmArgs('@antfu/ni', `typescript@${version}`),
-        },
+        trivy: [
+            {
+                packageManager: 'docker',
+                args: buildDockerArgs(`ghcr.io/aquasecurity/trivy:${version}`),
+            },
+            ...(options?.hasPackageJson === true
+                ? [
+                      {
+                          packageManager: 'ni',
+                          args: [],
+                      } satisfies ToolStep,
+                  ]
+                : []),
+        ],
+        tsc: [
+            {
+                packageManager: 'npm',
+                args: buildNpmArgs(`typescript@${version}`),
+            },
+            {
+                packageManager: 'ni',
+                args: [],
+            },
+        ],
         typos: {
             packageManager: 'cargo-binstall',
             args: buildBinstallArgs(getBinstallPackageName(toolName, version)),

@@ -11,6 +11,7 @@ export const runner: Runner = async (version, args) => {
     await installer(toolName, version, { hasPackageJson })
 
     if (hasPackageJson) {
+        // https://trivy.dev/docs/latest/guide/coverage/language/nodejs/#pnpm
         await exec('nci')
     }
 
