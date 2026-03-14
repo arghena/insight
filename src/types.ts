@@ -21,6 +21,7 @@ export interface ActionContext {
 
 export interface RunToolContext {
     loader: Loader
+    toolType: ToolType
     version: string
     args: string[]
     paths: string[]

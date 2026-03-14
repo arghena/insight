@@ -1,5 +1,5 @@
 import { getOctokit } from '@actions/github'
-import { getInput, getBooleanInput, info } from '@actions/core'
+import { getInput, getBooleanInput, startGroup, info, endGroup } from '@actions/core'
 import { unorderedList } from '@/utils'
 import type { ActionContext } from '@/types'
 
@@ -37,8 +37,9 @@ export async function getChangedFilePaths(): Promise<string[]> {
         .filter(({ status }) => status === 'added' || status === 'modified')
         .map(({ filename }) => filename)
 
-    info(`[PR] Found ${changedFilePaths.length.toString()} changed files`)
+    startGroup(`[PR] Found ${changedFilePaths.length.toString()} changed files`)
     info(unorderedList(changedFilePaths))
+    endGroup()
 
     return changedFilePaths
 }
