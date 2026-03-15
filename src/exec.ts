@@ -1,9 +1,23 @@
 import { Buffer } from 'node:buffer'
 import { getExecOutput } from '@actions/exec'
-import { addExecError } from '@/store'
+import { addExecError, addPromise, hasPromise, getPromise } from '@/store'
 import { isIncluded } from '@/utils'
-import { formatterKeys, linterKeys } from '@/map'
-import type { ExecOptions, ToolType } from '@/types'
+import { formatterKeys, linterKeys } from '@/registries'
+import type { ExecOptions, ToolName, ToolType } from '@/types'
+
+export async function execOnce(toolName: ToolName, args?: string[]): Promise<void> {
+    if (hasPromise(toolName, 'exec')) {
+        await getPromise(toolName, 'exec')
+
+        return
+    }
+
+    const execTask = exec(toolName, args)
+
+    addPromise(toolName, { promiseType: 'exec', task: execTask })
+
+    await execTask
+}
 
 export async function exec(
     command: string,

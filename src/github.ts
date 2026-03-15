@@ -1,6 +1,5 @@
 import { getOctokit } from '@actions/github'
 import { getInput, getBooleanInput, startGroup, info, endGroup } from '@actions/core'
-import { unorderedList } from '@/utils'
 import type { ActionContext } from '@/types'
 
 export const actionContext = {
@@ -42,4 +41,8 @@ export async function getChangedFilePaths(): Promise<string[]> {
     endGroup()
 
     return changedFilePaths
+}
+
+function unorderedList(items: string[]): string {
+    return items.map((item) => `- ${item}`).join('\n')
 }

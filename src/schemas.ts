@@ -1,7 +1,7 @@
 // NOTE: Enables tree-shaking.
 // https://github.com/colinhacks/zod/pull/4569
 import * as z from 'zod'
-import { formatterKeys, linterKeys } from '@/map'
+import { formatterKeys, linterKeys } from '@/registries'
 
 const formatterKeySchema = z.enum(formatterKeys)
 const linterKeySchema = z.enum(linterKeys)

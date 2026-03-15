@@ -2,7 +2,8 @@ import { readFile } from 'node:fs/promises'
 import { parse } from 'smol-toml'
 import { defu } from 'defu'
 import { actionContext } from '@/github'
-import { formatterKeys, linterKeys } from '@/map'
+import { formatterKeys, linterKeys } from '@/registries'
+import { buildEmptyArrays, buildLatestVersions } from '@/builders'
 import { configSchema, type Config } from '@/schemas'
 
 const { configPath } = actionContext
@@ -29,16 +30,4 @@ export async function resolveConfig(): Promise<Config> {
     const validConfig = configSchema.parse(merged)
 
     return validConfig
-}
-
-function buildEmptyArrays<K extends string>(keys: K[]): Record<K, never[]> {
-    return buildRecord(keys, () => [])
-}
-
-function buildLatestVersions<K extends string>(keys: K[]): Record<K, string> {
-    return buildRecord(keys, () => 'latest')
-}
-
-function buildRecord<K extends string, V>(keys: K[], value: (key: K) => V): Record<K, V> {
-    return Object.fromEntries(keys.map((k): [K, V] => [k, value(k)])) as Record<K, V>
 }

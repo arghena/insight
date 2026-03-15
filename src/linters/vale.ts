@@ -1,11 +1,11 @@
 import { installer } from '@/installer'
 import { exec } from '@/exec'
-import { buildDockerRunArgs } from '@/utils'
+import { buildDockerRunArgs } from '@/builders'
 import type { Runner } from '@/types'
 
 const toolName = 'vale'
 
-export const runner: Runner = async (version, args, paths) => {
+export const runner: Runner = async ({ version, args, paths }) => {
     const tag = version === 'latest' ? 'latest' : `v${version}`
     const dockerRunArgs = buildDockerRunArgs(`jdkato/${toolName}:${tag}`)
 
