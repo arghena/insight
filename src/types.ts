@@ -51,4 +51,5 @@ export interface ExecError {
 export type ToolName = PackageManager | FormatterKey | LinterKey
 
 export type ToolType = 'formatter' | 'linter' | 'other'
+export type PromiseType = 'setup' | 'exec'
 export type PackageManager = 'npm' | 'rustup' | 'cargo-binstall' | 'uv' | 'docker' | 'nci'

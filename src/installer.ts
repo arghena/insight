@@ -1,14 +1,5 @@
 import { exec } from '@/exec'
-import {
-    addInstalledTool,
-    hasInstalledTool,
-    addSetupPromise,
-    hasSetupPromise,
-    getSetupPromise,
-    addExecPromise,
-    hasExecPromise,
-    getExecPromise,
-} from '@/store'
+import { addInstalledTool, hasInstalledTool, addPromise, hasPromise, getPromise } from '@/store'
 import { fetchText, isValidHttpsUrl } from '@/fetch'
 import type { ToolName, InstallerOptions, ToolStep } from '@/types'
 
@@ -20,8 +11,8 @@ export async function installer(
     if (hasInstalledTool(toolName)) {
         return
     }
-    if (hasSetupPromise(toolName)) {
-        await getSetupPromise(toolName)
+    if (hasPromise(toolName, 'setup')) {
+        await getPromise(toolName, 'setup')
 
         return
     }
@@ -52,7 +43,7 @@ export async function installer(
         addInstalledTool(toolName)
     })()
 
-    addSetupPromise(toolName, installTask)
+    addPromise(toolName, 'setup', installTask)
 
     await installTask
 }
@@ -281,15 +272,15 @@ function buildDockerArgs(...imageNames: string[]): string[] {
 }
 
 async function execOnce(toolName: ToolName, args?: string[]): Promise<void> {
-    if (hasExecPromise(toolName)) {
-        await getExecPromise(toolName)
+    if (hasPromise(toolName, 'exec')) {
+        await getPromise(toolName, 'exec')
 
         return
     }
 
     const task = exec(toolName, args)
 
-    addExecPromise(toolName, task)
+    addPromise(toolName, 'exec', task)
 
     await task
 }

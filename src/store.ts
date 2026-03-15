@@ -1,4 +1,4 @@
-import type { ToolName, ExecError } from '@/types'
+import type { ToolName, PromiseType, ExecError } from '@/types'
 
 const installedTools = new Set<ToolName>()
 const setupPromises = new Map<ToolName, Promise<void>>()
@@ -13,37 +13,32 @@ export function hasInstalledTool(toolName: ToolName): boolean {
     return installedTools.has(toolName)
 }
 
-export function addSetupPromise(toolName: ToolName, installTask: Promise<void>): void {
-    setupPromises.set(toolName, installTask)
+export function addPromise(
+    toolName: ToolName,
+    promiseType: PromiseType,
+    installTask: Promise<void>,
+): void {
+    if (promiseType === 'setup') {
+        setupPromises.set(toolName, installTask)
+    } else {
+        execPromises.set(toolName, installTask)
+    }
 }
 
-export function hasSetupPromise(toolName: ToolName): boolean {
-    return setupPromises.has(toolName)
-}
-
-export async function getSetupPromise(toolName: ToolName): Promise<void> {
-    const promise = setupPromises.get(toolName)
-
-    if (!promise) {
-        throw new Error(`[PROMISE] Setup promise missing for ${toolName}`)
+export function hasPromise(toolName: ToolName, promiseType: PromiseType): boolean {
+    if (promiseType === 'setup') {
+        return setupPromises.has(toolName)
     }
 
-    await promise
-}
-
-export function addExecPromise(toolName: ToolName, installTask: Promise<void>): void {
-    execPromises.set(toolName, installTask)
-}
-
-export function hasExecPromise(toolName: ToolName): boolean {
     return execPromises.has(toolName)
 }
 
-export async function getExecPromise(toolName: ToolName): Promise<void> {
-    const promise = execPromises.get(toolName)
+export async function getPromise(toolName: ToolName, promiseType: PromiseType): Promise<void> {
+    // prettier-ignore
+    const promise = promiseType === 'setup' ? setupPromises.get(toolName) : execPromises.get(toolName)
 
     if (!promise) {
-        throw new Error(`[PROMISE] Exec promise missing for ${toolName}`)
+        throw new Error(`[PROMISE] Missing promise for ${toolName}`)
     }
 
     await promise
