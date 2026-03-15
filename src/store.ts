@@ -34,8 +34,8 @@ export function hasPromise(toolName: ToolName, promiseType: PromiseType): boolea
 }
 
 export async function getPromise(toolName: ToolName, promiseType: PromiseType): Promise<void> {
-    // prettier-ignore
-    const promise = promiseType === 'setup' ? setupPromises.get(toolName) : execPromises.get(toolName)
+    const targetPromises = promiseType === 'setup' ? setupPromises : execPromises
+    const promise = targetPromises.get(toolName)
 
     if (!promise) {
         throw new Error(`[PROMISE] Missing promise for ${toolName}`)
