@@ -1,4 +1,6 @@
+import { availableParallelism } from 'node:os'
 import micromatch from 'micromatch'
+import pLimit from 'p-limit'
 import { setFailed } from '@actions/core'
 import { runTool } from '@/tool'
 import { commitlint } from '@/linters/commitlint'
@@ -9,6 +11,7 @@ import { actionContext, getChangedFilePaths } from '@/github'
 import { formatter, linter, formatterKeys, linterKeys } from '@/map'
 
 const { isTitleCheckEnabled, pullRequestTitle, eventName } = actionContext
+const limit = pLimit(availableParallelism())
 
 run()
     .then(async () => {
@@ -40,16 +43,15 @@ async function run(): Promise<void> {
     const { match, schedule, formatters, linters, args, versions } = await resolveConfig()
 
     if (eventName === 'schedule') {
-        for (const toolName of schedule.linters) {
+        await limit.map(schedule.linters, async (toolName) => {
             await runTool({
                 loader: linter[toolName],
                 toolType: 'linter',
                 version: versions[toolName],
                 args: args.linters[toolName],
                 paths: [],
-                log: `[SCHEDULE] Starting ${toolName} cron job`,
             })
-        }
+        })
 
         return
     }
@@ -60,10 +62,14 @@ async function run(): Promise<void> {
 
     const changedFilePaths = await getChangedFilePaths()
 
-    for (const toolName of formatterKeys) {
-        const paths = micromatch(changedFilePaths, formatters[toolName], { dot: match.dot })
+    await Promise.all([
+        limit.map(formatterKeys, async (toolName) => {
+            const paths = micromatch(changedFilePaths, formatters[toolName], { dot: match.dot })
 
-        if (paths.length !== 0) {
+            if (paths.length === 0) {
+                return
+            }
+
             await runTool({
                 loader: formatter[toolName],
                 toolType: 'formatter',
@@ -71,13 +77,14 @@ async function run(): Promise<void> {
                 args: args.formatters[toolName],
                 paths,
             })
-        }
-    }
+        }),
+        limit.map(linterKeys, async (toolName) => {
+            const paths = micromatch(changedFilePaths, linters[toolName], { dot: match.dot })
 
-    for (const toolName of linterKeys) {
-        const paths = micromatch(changedFilePaths, linters[toolName], { dot: match.dot })
+            if (paths.length === 0) {
+                return
+            }
 
-        if (paths.length !== 0) {
             await runTool({
                 loader: linter[toolName],
                 toolType: 'linter',
@@ -85,6 +92,6 @@ async function run(): Promise<void> {
                 args: args.linters[toolName],
                 paths,
             })
-        }
-    }
+        }),
+    ])
 }

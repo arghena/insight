@@ -38,6 +38,10 @@ export default defineConfig(
             // https://github.com/un-ts/eslint-plugin-import-x/issues/421
             // https://github.com/un-ts/eslint-plugin-import-x/issues/200
             'no-duplicate-imports': ['error', { includeExports: true }],
+            '@typescript-eslint/switch-exhaustiveness-check': [
+                'error',
+                { allowDefaultCaseForExhaustiveSwitch: false, requireDefaultForNonUnion: true },
+            ],
             '@typescript-eslint/require-array-sort-compare': 'error',
             '@typescript-eslint/explicit-function-return-type': 'error',
             '@typescript-eslint/prefer-destructuring': 'error',

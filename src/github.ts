@@ -1,5 +1,5 @@
 import { getOctokit } from '@actions/github'
-import { getInput, getBooleanInput, info, group } from '@actions/core'
+import { getInput, getBooleanInput, startGroup, info, endGroup } from '@actions/core'
 import { unorderedList } from '@/utils'
 import type { ActionContext } from '@/types'
 
@@ -18,30 +18,28 @@ const [owner, repo] = repository.split('/', 2)
 const octokit = getOctokit(token)
 
 export async function getChangedFilePaths(): Promise<string[]> {
-    return await group(`[PR] Changed file paths`, async () => {
-        const changedFiles = await octokit.paginate(
-            // NOTE: Responses include a maximum of 3000 files.
-            // The paginated response returns 30 files per page by default.
-            // https://github.com/octokit/plugin-rest-endpoint-methods.js/blob/main/docs/pulls/listFiles.md
-            octokit.rest.pulls.listFiles,
-            {
-                owner,
-                repo,
-                /* eslint-disable @typescript-eslint/naming-convention */
-                pull_number: pullRequestNumber,
-                per_page: 100, // max
-                /* eslint-enable @typescript-eslint/naming-convention */
-            },
-        )
-        // TODO: The filtering logic isn't perfect.
-        const changedFilePaths = changedFiles
-            .filter(({ status }) => status === 'added' || status === 'modified')
-            .map(({ filename }) => filename)
+    const changedFiles = await octokit.paginate(
+        // NOTE: Responses include a maximum of 3000 files.
+        // The paginated response returns 30 files per page by default.
+        // https://github.com/octokit/plugin-rest-endpoint-methods.js/blob/main/docs/pulls/listFiles.md
+        octokit.rest.pulls.listFiles,
+        {
+            owner,
+            repo,
+            /* eslint-disable @typescript-eslint/naming-convention */
+            pull_number: pullRequestNumber,
+            per_page: 100, // max
+            /* eslint-enable @typescript-eslint/naming-convention */
+        },
+    )
+    // TODO: The filtering logic isn't perfect.
+    const changedFilePaths = changedFiles
+        .filter(({ status }) => status === 'added' || status === 'modified')
+        .map(({ filename }) => filename)
 
-        info(
-            `[TOTAL] Found ${changedFilePaths.length.toString()} changed files:\n${unorderedList(changedFilePaths)}`,
-        )
+    startGroup(`[PR] Found ${changedFilePaths.length.toString()} changed files`)
+    info(unorderedList(changedFilePaths))
+    endGroup()
 
-        return changedFilePaths
-    })
+    return changedFilePaths
 }

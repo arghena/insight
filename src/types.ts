@@ -1,13 +1,13 @@
 import type { FormatterKey, LinterKey } from '@/map'
 
-export type ToolRegistry = Record<InstallableToolName, ToolStep | ToolStep[]>
-
-export interface ToolStep {
-    packageManager: PackageManager
-    args: string[]
-}
-
-export type SetupMap = Record<PackageManager, string[]>
+export type ToolStep =
+    | {
+          packageManager: PackageManager
+          args: string[]
+      }
+    | {
+          script: string
+      }
 
 export interface ActionContext {
     configPath: string
@@ -25,14 +25,13 @@ export interface RunToolContext {
     version: string
     args: string[]
     paths: string[]
-    log?: string
 }
 
 export type Loader = () => Promise<{ runner: Runner }>
 export type Runner = (version: string, args: string[], paths: string[]) => Promise<void>
 
 export interface InstallerOptions {
-    hasEslintConfig?: boolean
+    hasTsEslintConfig?: boolean
     hasPackageJson?: boolean
 }
 
@@ -49,9 +48,8 @@ export interface ExecError {
     stderr: string
 }
 
+export type ToolName = PackageManager | FormatterKey | LinterKey
+
 export type ToolType = 'formatter' | 'linter' | 'other'
-export type PackageManager = 'npm' | 'rustup' | 'cargo-binstall' | 'uv' | 'docker'
-
-export type InstallableToolName = FormatterKey | LinterKey
-
-export type InstalledToolName = PackageManager | InstallableToolName
+export type PromiseType = 'setup' | 'exec'
+export type PackageManager = 'npm' | 'rustup' | 'cargo-binstall' | 'uv' | 'docker' | 'nci'

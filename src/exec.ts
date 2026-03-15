@@ -9,6 +9,7 @@ export async function exec(command: string, args?: string[], options?: ExecOptio
     const toolName = options?.toolName ?? command
     const { stdout, stderr, exitCode } = await getExecOutput(command, args, {
         input: serializeInput(options?.input),
+        silent: true,
         ignoreReturnCode: true,
         env: {
             ...process.env,
@@ -51,10 +52,9 @@ function getToolType(toolName: string): ToolType {
 }
 
 function getStderr(toolName: string, stderr: string): string {
-    switch (toolName) {
-        case 'check-dist':
-            return '[DIFF] Detected uncommitted changes after build'
-        default:
-            return stderr
+    if (toolName === 'check-dist') {
+        return '[DIFF] Detected uncommitted changes after build'
     }
+
+    return stderr
 }

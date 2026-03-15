@@ -21,13 +21,12 @@ This is because users won't have access to those files locally when browsing the
 
 ## Features
 
-- Use the `insight.toml` config file to customize the formatters and linters your project needs.
-- Supports using [commitlint](https://commitlint.js.org) to check the pull request title.
-- Responds to [`on.schedule`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onschedule) events.
-- Lets you customize formatter and linter versions and arguments.
-- Supports [glob](<https://en.wikipedia.org/wiki/Glob_(programming)>) patterns to match exactly the files you want to check.
-- Generates a neat GitHub Actions job summary with an error table and collapsible logs.
-- Ships with minimal defaults to keep opinionated behavior to a minimum.
+- **Blazing Fast:** Runs formatters and linters concurrently to speed up your CI workflows.
+- **Highly Customizable:** Use a single `insight.toml` file to define exactly what your project needs, including tool versions and CLI arguments.
+- **Precise Targeting:** Supports [glob](<https://en.wikipedia.org/wiki/Glob_(programming)>) patterns to match exactly the files you want to check.
+- **Rich Job Summaries:** Automatically generates comprehensive GitHub Actions job summaries complete with error tables and collapsible logs.
+- **GitHub Native:** Seamlessly validates PR titles via [commitlint](https://commitlint.js.org) and supports [`on.schedule`](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onschedule) events.
+- **Unopinionated:** Ships with minimal defaults, keeping opinionated behavior to an absolute minimum so you remain in control.
 
 ## Usage
 
@@ -47,7 +46,7 @@ jobs:
         # it's recommended to remove `actions/checkout`.
         uses: actions/checkout@v6
       - name: Run Insight
-        uses: arghena/insight@v0.1.0-canary.35
+        uses: arghena/insight@v0.1.0-canary.36
         with:
           # The path to the Insight config file.
           # Default: '.github/insight.toml'
