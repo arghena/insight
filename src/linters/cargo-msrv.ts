@@ -7,5 +7,5 @@ const toolName = 'cargo-msrv'
 export const runner: Runner = async (version, args) => {
     await installer(toolName, version)
 
-    await exec(toolName, ['verify', ...args])
+    return await exec(toolName, ['verify', ...args])
 }

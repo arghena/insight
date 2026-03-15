@@ -7,5 +7,5 @@ const toolName = 'cargo-deny'
 export const runner: Runner = async (version, args) => {
     await installer(toolName, version)
 
-    await exec(toolName, ['check', ...args])
+    return await exec(toolName, ['check', ...args])
 }

@@ -13,10 +13,11 @@ export async function runTool({
     const toolName = loader.name
     const logTag = `[${toolType.toUpperCase()}]`
     const successIcon = styleText('green', '✔', { validateStream: false })
+    const failureIcon = styleText('red', '✖', { validateStream: false })
     const { runner } = await loader()
     const startTime = performance.now()
 
-    await runner(version, args, paths)
+    const exitCode = await runner(version, args, paths)
 
     const endTime = performance.now()
     const durationMs = Math.round(endTime - startTime)
@@ -24,5 +25,5 @@ export async function runTool({
         validateStream: false,
     })
 
-    info(`${logTag} ${successIcon} ${toolName} ${formattedDuration}`)
+    info(`${logTag} ${exitCode === 0 ? successIcon : failureIcon} ${toolName} ${formattedDuration}`)
 }

@@ -28,7 +28,7 @@ export interface RunToolContext {
 }
 
 export type Loader = () => Promise<{ runner: Runner }>
-export type Runner = (version: string, args: string[], paths: string[]) => Promise<void>
+export type Runner = (version: string, args: string[], paths: string[]) => Promise<number>
 
 export interface InstallerOptions {
     hasTsEslintConfig?: boolean
@@ -49,6 +49,10 @@ export interface ExecError {
 }
 
 export type ToolName = PackageManager | FormatterKey | LinterKey
+
+export type PromisePayload =
+    | { promiseType: 'setup'; task: Promise<void> }
+    | { promiseType: 'exec'; task: Promise<number> }
 
 export type ToolType = 'formatter' | 'linter' | 'other'
 export type PromiseType = 'setup' | 'exec'

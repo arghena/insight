@@ -5,7 +5,11 @@ import { isIncluded } from '@/utils'
 import { formatterKeys, linterKeys } from '@/map'
 import type { ExecOptions, ToolType } from '@/types'
 
-export async function exec(command: string, args?: string[], options?: ExecOptions): Promise<void> {
+export async function exec(
+    command: string,
+    args?: string[],
+    options?: ExecOptions,
+): Promise<number> {
     const toolName = options?.toolName ?? command
     const { stdout, stderr, exitCode } = await getExecOutput(command, args, {
         input: serializeInput(options?.input),
@@ -31,6 +35,8 @@ export async function exec(command: string, args?: string[], options?: ExecOptio
             ),
         })
     }
+
+    return exitCode
 }
 
 function serializeInput(input?: string): Buffer | undefined {

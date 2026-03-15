@@ -7,5 +7,5 @@ const toolName = 'node-audit'
 export const runner: Runner = async (version, args) => {
     await installer(toolName, version)
 
-    await exec('na', ['audit', ...args], { toolName })
+    return await exec('na', ['audit', ...args], { toolName })
 }
