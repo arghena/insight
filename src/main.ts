@@ -11,7 +11,7 @@ import { actionContext, getChangedFilePaths } from '@/github'
 import { formatter, linter, formatterKeys, linterKeys } from '@/map'
 
 const { isTitleCheckEnabled, pullRequestTitle, eventName } = actionContext
-const limit = pLimit(availableParallelism())
+const limit = pLimit(availableParallelism() * 2)
 
 run()
     .then(async () => {
