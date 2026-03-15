@@ -8,6 +8,7 @@ inputs:
   check-pull-request-title:
     description: 'Use `commitlint` to check the pull request title.'
     default: 'false'
+  # TODO: Add `cache: ...`.
   pull-request-title:
     description: 'The title of pull request event.'
     default: ${{ github.event.pull_request.title }}
