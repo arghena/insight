@@ -4,7 +4,7 @@ import type { Runner } from '@/types'
 
 const toolName = 'tsc'
 
-export const runner: Runner = async (version, args) => {
+export const runner: Runner = async ({ version, args }) => {
     await installer(toolName, version)
 
     // NOTE: Passing explicit file paths can lead to unexpected behavior.

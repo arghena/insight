@@ -4,7 +4,7 @@ import type { Runner } from '@/types'
 
 const toolName = 'node-audit'
 
-export const runner: Runner = async (version, args) => {
+export const runner: Runner = async ({ version, args }) => {
     await installer(toolName, version)
 
     return await exec('na', ['audit', ...args], { toolName })

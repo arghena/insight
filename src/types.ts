@@ -1,4 +1,4 @@
-import type { FormatterKey, LinterKey } from '@/map'
+import type { FormatterKey, LinterKey } from '@/registries'
 
 export type ToolStep =
     | {
@@ -28,7 +28,21 @@ export interface RunToolContext {
 }
 
 export type Loader = () => Promise<{ runner: Runner }>
-export type Runner = (version: string, args: string[], paths: string[]) => Promise<number>
+export type Runner = (runnerContext: RunnerContext) => Promise<number>
+
+export interface RunnerContext {
+    version: string
+    args: string[]
+    paths: string[]
+}
+
+export type ToolStepBuilder = (toolStepBuilderContext: ToolStepBuilderContext) => ToolStep[]
+
+export interface ToolStepBuilderContext {
+    toolName: ToolName
+    version: string
+    options?: InstallerOptions
+}
 
 export interface InstallerOptions {
     hasTsEslintConfig?: boolean

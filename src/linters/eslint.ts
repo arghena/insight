@@ -5,7 +5,7 @@ import type { Runner } from '@/types'
 
 const toolName = 'eslint'
 
-export const runner: Runner = async (version, args, paths) => {
+export const runner: Runner = async ({ version, args, paths }) => {
     // https://eslint.org/docs/latest/use/configure/configuration-files#configuration-file
     const hasTsEslintConfig = await fileExists(
         `${toolName}.config.ts`,

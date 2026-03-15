@@ -4,7 +4,7 @@ import type { Runner } from '@/types'
 
 const toolName = 'check-dist'
 
-export const runner: Runner = async (version, args) => {
+export const runner: Runner = async ({ version, args }) => {
     await installer(toolName, version)
 
     await exec('nr', args.length === 0 ? ['build'] : args)
