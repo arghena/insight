@@ -10,7 +10,7 @@ import {
     getExecPromise,
 } from '@/store'
 import { fetchText, isValidHttpsUrl } from '@/fetch'
-import type { ToolName, InstallerOptions, ToolStep, ToolRegistry } from '@/types'
+import type { ToolName, InstallerOptions, ToolStep } from '@/types'
 
 export async function installer(
     toolName: ToolName,
@@ -58,132 +58,194 @@ export async function installer(
 }
 
 function getToolSteps(toolName: ToolName, version: string, options?: InstallerOptions): ToolStep[] {
-    const toolRegistry = {
-        npm: [],
-        rustup: [
-            { script: `rustup toolchain install ${version} --profile minimal --no-self-update` },
-            { script: `rustup override set ${version}` },
-        ],
-        'cargo-binstall': {
-            script: 'https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh',
-        },
-        uv: {
-            script: 'https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh',
-        },
-        docker: [],
-        nci: { script: `npm ${buildNpmArgs('@antfu/ni').join(' ')}` },
-
-        actionlint: {
-            packageManager: 'docker',
-            args: buildDockerArgs(`rhysd/${toolName}:${version}`),
-        },
-        alex: {
-            packageManager: 'npm',
-            args: buildNpmArgs(`alex@${version}`),
-        },
-        'ast-grep': {
-            packageManager: 'cargo-binstall',
-            args: buildBinstallArgs(getBinstallPackageName(toolName, version)),
-        },
-        'cargo-clippy': {
-            packageManager: 'rustup',
-            args: buildRustupArgs('clippy'),
-        },
-        'cargo-deny': {
-            packageManager: 'cargo-binstall',
-            args: buildBinstallArgs(getBinstallPackageName(toolName, version)),
-        },
-        'cargo-fmt': {
-            packageManager: 'rustup',
-            args: buildRustupArgs('rustfmt'),
-        },
-        'cargo-msrv': {
-            packageManager: 'cargo-binstall',
-            args: buildBinstallArgs(getBinstallPackageName(toolName, version)),
-        },
-        'check-dist': {
-            packageManager: 'nci',
-            args: [],
-        },
-        eslint: [
-            {
-                packageManager: 'npm',
-                // https://eslint.org/docs/latest/use/configure/configuration-files#typescript-configuration-files
-                args: buildNpmArgs(
-                    `eslint@${version}`,
-                    ...(options?.hasTsEslintConfig === true ? ['jiti'] : []),
-                ),
-            },
-            {
-                packageManager: 'nci',
-                args: [],
-            },
-        ],
-        'markdownlint-cli2': {
-            packageManager: 'npm',
-            args: buildNpmArgs(`markdownlint-cli2@${version}`),
-        },
-        'node-audit': {
-            packageManager: 'nci',
-            args: [],
-        },
-        prettier: {
-            packageManager: 'npm',
-            args: buildNpmArgs(`prettier@${version}`),
-        },
-        shellcheck: {
-            packageManager: 'docker',
-            args: buildDockerArgs(`koalaman/${toolName}:${version}`),
-        },
-        shfmt: {
-            packageManager: 'docker',
-            args: buildDockerArgs(`mvdan/${toolName}:${version}`),
-        },
-        tombi: {
-            packageManager: 'uv',
-            args: buildUvArgs(`${toolName}@${version}`),
-        },
-        trivy: [
-            {
-                packageManager: 'docker',
-                args: buildDockerArgs(`ghcr.io/aquasecurity/trivy:${version}`),
-            },
-            // https://trivy.dev/docs/latest/guide/coverage/language/nodejs/#pnpm
-            ...(options?.hasPackageJson === true
-                ? [
-                      {
-                          packageManager: 'nci',
-                          args: [],
-                      } satisfies ToolStep,
-                  ]
-                : []),
-        ],
-        tsc: [
-            {
-                packageManager: 'npm',
-                args: buildNpmArgs(`typescript@${version}`),
-            },
-            {
-                packageManager: 'nci',
-                args: [],
-            },
-        ],
-        typos: {
-            packageManager: 'cargo-binstall',
-            args: buildBinstallArgs(getBinstallPackageName(toolName, version)),
-        },
-        vale: {
-            packageManager: 'docker',
-            args: buildDockerArgs(`jdkato/${toolName}:${version}`),
-        },
-        yamllint: {
-            packageManager: 'uv',
-            args: buildUvArgs(`${toolName}@${version}`),
-        },
-    } as const satisfies ToolRegistry
-    const steps = toolRegistry[toolName]
-
-    return Array.isArray(steps) ? steps : [steps]
+    switch (toolName) {
+        case 'npm':
+            return []
+        case 'rustup':
+            return [
+                {
+                    script: `rustup toolchain install ${version} --profile minimal --no-self-update`,
+                },
+                { script: `rustup override set ${version}` },
+            ]
+        case 'cargo-binstall':
+            return [
+                {
+                    script: 'https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh',
+                },
+            ]
+        case 'uv':
+            return [
+                {
+                    script: 'https://github.com/astral-sh/uv/releases/latest/download/uv-installer.sh',
+                },
+            ]
+        case 'docker':
+            return []
+        case 'nci':
+            return [{ script: `npm ${buildNpmArgs('@antfu/ni').join(' ')}` }]
+        case 'actionlint':
+            return [
+                {
+                    packageManager: 'docker',
+                    args: buildDockerArgs(`rhysd/${toolName}:${version}`),
+                },
+            ]
+        case 'alex':
+            return [
+                {
+                    packageManager: 'npm',
+                    args: buildNpmArgs(`alex@${version}`),
+                },
+            ]
+        case 'ast-grep':
+            return [
+                {
+                    packageManager: 'cargo-binstall',
+                    args: buildBinstallArgs(getBinstallPackageName(toolName, version)),
+                },
+            ]
+        case 'cargo-clippy':
+            return [
+                {
+                    packageManager: 'rustup',
+                    args: buildRustupArgs('clippy'),
+                },
+            ]
+        case 'cargo-deny':
+            return [
+                {
+                    packageManager: 'cargo-binstall',
+                    args: buildBinstallArgs(getBinstallPackageName(toolName, version)),
+                },
+            ]
+        case 'cargo-fmt':
+            return [
+                {
+                    packageManager: 'rustup',
+                    args: buildRustupArgs('rustfmt'),
+                },
+            ]
+        case 'cargo-msrv':
+            return [
+                {
+                    packageManager: 'cargo-binstall',
+                    args: buildBinstallArgs(getBinstallPackageName(toolName, version)),
+                },
+            ]
+        case 'check-dist':
+            return [
+                {
+                    packageManager: 'nci',
+                    args: [],
+                },
+            ]
+        case 'eslint':
+            return [
+                {
+                    packageManager: 'npm',
+                    // https://eslint.org/docs/latest/use/configure/configuration-files#typescript-configuration-files
+                    args: buildNpmArgs(
+                        `eslint@${version}`,
+                        ...(options?.hasTsEslintConfig === true ? ['jiti'] : []),
+                    ),
+                },
+                {
+                    packageManager: 'nci',
+                    args: [],
+                },
+            ]
+        case 'markdownlint-cli2':
+            return [
+                {
+                    packageManager: 'npm',
+                    args: buildNpmArgs(`markdownlint-cli2@${version}`),
+                },
+            ]
+        case 'node-audit':
+            return [
+                {
+                    packageManager: 'nci',
+                    args: [],
+                },
+            ]
+        case 'prettier':
+            return [
+                {
+                    packageManager: 'npm',
+                    args: buildNpmArgs(`prettier@${version}`),
+                },
+            ]
+        case 'shellcheck':
+            return [
+                {
+                    packageManager: 'docker',
+                    args: buildDockerArgs(`koalaman/${toolName}:${version}`),
+                },
+            ]
+        case 'shfmt':
+            return [
+                {
+                    packageManager: 'docker',
+                    args: buildDockerArgs(`mvdan/${toolName}:${version}`),
+                },
+            ]
+        case 'tombi':
+            return [
+                {
+                    packageManager: 'uv',
+                    args: buildUvArgs(`${toolName}@${version}`),
+                },
+            ]
+        case 'trivy':
+            return [
+                {
+                    packageManager: 'docker',
+                    args: buildDockerArgs(`ghcr.io/aquasecurity/trivy:${version}`),
+                },
+                // https://trivy.dev/docs/latest/guide/coverage/language/nodejs/#pnpm
+                ...(options?.hasPackageJson === true
+                    ? [
+                          {
+                              packageManager: 'nci',
+                              args: [],
+                          } satisfies ToolStep,
+                      ]
+                    : []),
+            ]
+        case 'tsc':
+            return [
+                {
+                    packageManager: 'npm',
+                    args: buildNpmArgs(`typescript@${version}`),
+                },
+                {
+                    packageManager: 'nci',
+                    args: [],
+                },
+            ]
+        case 'typos':
+            return [
+                {
+                    packageManager: 'cargo-binstall',
+                    args: buildBinstallArgs(getBinstallPackageName(toolName, version)),
+                },
+            ]
+        case 'vale':
+            return [
+                {
+                    packageManager: 'docker',
+                    args: buildDockerArgs(`jdkato/${toolName}:${version}`),
+                },
+            ]
+        case 'yamllint':
+            return [
+                {
+                    packageManager: 'uv',
+                    args: buildUvArgs(`${toolName}@${version}`),
+                },
+            ]
+    }
 }
 
 function buildNpmArgs(...packageNames: string[]): string[] {
@@ -201,15 +263,13 @@ function buildBinstallArgs(...packageNames: string[]): string[] {
 function getBinstallPackageName(toolName: ToolName, version: string): string {
     const isLatest = version === 'latest'
 
-    switch (toolName) {
-        case 'typos': {
-            const packageName = `${toolName}-cli`
+    if (toolName === 'typos') {
+        const packageName = `${toolName}-cli`
 
-            return isLatest ? packageName : `${packageName}@${version}`
-        }
-        default:
-            return isLatest ? toolName : `${toolName}@${version}`
+        return isLatest ? packageName : `${packageName}@${version}`
     }
+
+    return isLatest ? toolName : `${toolName}@${version}`
 }
 
 function buildUvArgs(...packageNames: string[]): string[] {

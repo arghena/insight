@@ -52,10 +52,9 @@ function getToolType(toolName: string): ToolType {
 }
 
 function getStderr(toolName: string, stderr: string): string {
-    switch (toolName) {
-        case 'check-dist':
-            return '[DIFF] Detected uncommitted changes after build'
-        default:
-            return stderr
+    if (toolName === 'check-dist') {
+        return '[DIFF] Detected uncommitted changes after build'
     }
+
+    return stderr
 }

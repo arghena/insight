@@ -28,6 +28,7 @@
     "@commitlint/lint": "^20.4.4",
     "defu": "^6.1.4",
     "micromatch": "^4.0.8",
+    "p-limit": "^7.3.0",
     "smol-toml": "^1.6.0",
     "zod": "^4.3.6"
   }
