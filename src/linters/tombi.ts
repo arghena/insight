@@ -7,5 +7,5 @@ const toolName = 'tombi'
 export const runner: Runner = async (version, args, paths) => {
     await installer(toolName, version)
 
-    await exec(toolName, ['lint', ...args, '--', ...paths], { toolType: 'linter' })
+    return await exec(toolName, ['lint', ...args, '--', ...paths], { toolType: 'linter' })
 }

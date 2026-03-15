@@ -10,7 +10,7 @@ export const runner: Runner = async (version, args, paths) => {
     const dockerRunArgs = buildDockerRunArgs(`jdkato/${toolName}:${tag}`)
 
     await installer(toolName, tag)
-
     await exec('docker', [...dockerRunArgs, 'sync'], { toolName })
-    await exec('docker', [...dockerRunArgs, ...args, '--', ...paths], { toolName })
+
+    return await exec('docker', [...dockerRunArgs, ...args, '--', ...paths], { toolName })
 }

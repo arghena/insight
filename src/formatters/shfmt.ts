@@ -10,7 +10,7 @@ export const runner: Runner = async (version, args, paths) => {
 
     await installer(toolName, tag)
 
-    await exec(
+    return await exec(
         'docker',
         [...buildDockerRunArgs(`mvdan/${toolName}:${tag}`), '--diff', ...args, '--', ...paths],
         { toolName },

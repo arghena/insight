@@ -8,5 +8,5 @@ const toolName = 'cargo-clippy'
 export const runner: Runner = async (version, args) => {
     await installer(toolName, version === 'latest' ? 'stable' : version)
 
-    await exec(toolName, args)
+    return await exec(toolName, args)
 }

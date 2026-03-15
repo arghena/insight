@@ -1,8 +1,8 @@
-import type { ToolName, PromiseType, ExecError } from '@/types'
+import type { ToolName, PromisePayload, PromiseType, ExecError } from '@/types'
 
 const installedTools = new Set<ToolName>()
 const setupPromiseMap = new Map<ToolName, Promise<void>>()
-const execPromiseMap = new Map<ToolName, Promise<void>>()
+const execPromiseMap = new Map<ToolName, Promise<number>>()
 const execErrors: ExecError[] = []
 
 export function addInstalledTool(toolName: ToolName): void {
@@ -13,15 +13,11 @@ export function hasInstalledTool(toolName: ToolName): boolean {
     return installedTools.has(toolName)
 }
 
-export function addPromise(
-    toolName: ToolName,
-    promiseType: PromiseType,
-    installTask: Promise<void>,
-): void {
+export function addPromise(toolName: ToolName, { promiseType, task }: PromisePayload): void {
     if (promiseType === 'setup') {
-        setupPromiseMap.set(toolName, installTask)
+        setupPromiseMap.set(toolName, task)
     } else {
-        execPromiseMap.set(toolName, installTask)
+        execPromiseMap.set(toolName, task)
     }
 }
 

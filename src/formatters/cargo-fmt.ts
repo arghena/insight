@@ -8,5 +8,5 @@ const toolName = 'cargo-fmt'
 export const runner: Runner = async (version, args) => {
     await installer(toolName, version === 'latest' ? 'stable' : version)
 
-    await exec(toolName, ['--check', ...args])
+    return await exec(toolName, ['--check', ...args])
 }

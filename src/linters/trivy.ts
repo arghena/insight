@@ -10,7 +10,7 @@ export const runner: Runner = async (version, args) => {
 
     await installer(toolName, version, { hasPackageJson })
 
-    await exec(
+    return await exec(
         'docker',
         [
             ...buildDockerRunArgs(`ghcr.io/aquasecurity/${toolName}:${version}`),

@@ -7,5 +7,5 @@ const toolName = 'ast-grep'
 export const runner: Runner = async (version, args, paths) => {
     await installer(toolName, version)
 
-    await exec(toolName, ['scan', ...args, '--', ...paths])
+    return await exec(toolName, ['scan', ...args, '--', ...paths])
 }

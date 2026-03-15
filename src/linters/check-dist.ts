@@ -9,5 +9,5 @@ export const runner: Runner = async (version, args) => {
 
     await exec('nr', args.length === 0 ? ['build'] : args)
 
-    await exec('git', ['diff', '--quiet', 'dist/'], { toolName })
+    return await exec('git', ['diff', '--quiet', 'dist/'], { toolName })
 }

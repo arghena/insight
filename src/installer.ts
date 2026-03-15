@@ -43,7 +43,7 @@ export async function installer(
         addInstalledTool(toolName)
     })()
 
-    addPromise(toolName, 'setup', installTask)
+    addPromise(toolName, { promiseType: 'setup', task: installTask })
 
     await installTask
 }
@@ -278,9 +278,9 @@ async function execOnce(toolName: ToolName, args?: string[]): Promise<void> {
         return
     }
 
-    const task = exec(toolName, args)
+    const execTask = exec(toolName, args)
 
-    addPromise(toolName, 'exec', task)
+    addPromise(toolName, { promiseType: 'exec', task: execTask })
 
-    await task
+    await execTask
 }

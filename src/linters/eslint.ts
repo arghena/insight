@@ -15,5 +15,5 @@ export const runner: Runner = async (version, args, paths) => {
 
     await installer(toolName, version, { hasTsEslintConfig })
 
-    await exec(toolName, [...args, '--', ...paths])
+    return await exec(toolName, [...args, '--', ...paths])
 }
