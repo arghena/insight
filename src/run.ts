@@ -1,17 +1,17 @@
 import { styleText } from 'node:util'
 import { performance } from 'node:perf_hooks'
-import { availableParallelism } from 'node:os'
 import micromatch from 'micromatch'
 import pLimit from 'p-limit'
 import { info } from '@actions/core'
+import { concurrency } from '@/constants'
 import { commitlint } from '@/linters/commitlint'
 import { resolveConfig } from '@/config'
 import { actionContext, getChangedFilePaths } from '@/github'
 import { formatterRegistry, linterRegistry, formatterKeys, linterKeys } from '@/registries'
-import type { RunToolContext } from '@/types'
+import type { SetupToolContext, RunToolContext } from '@/types'
 
 const { isTitleCheckEnabled, pullRequestTitle, eventName } = actionContext
-const limit = pLimit(availableParallelism() * 2)
+const limit = pLimit(concurrency)
 
 export async function run(): Promise<void> {
     if (isTitleCheckEnabled) {
@@ -21,59 +21,62 @@ export async function run(): Promise<void> {
     }
 
     const { match, schedule, formatters, linters, args, versions } = await resolveConfig()
+    const tasks: RunToolContext[] = []
 
     if (eventName === 'schedule') {
-        await limit.map(schedule.linters, async (toolName) => {
-            await runTool({
+        for (const toolName of schedule.linters) {
+            tasks.push({
                 loader: linterRegistry[toolName],
                 toolType: 'linter',
                 version: versions[toolName],
                 args: args.linters[toolName],
                 paths: [],
             })
-        })
+        }
+    } else if (eventName === 'pull_request') {
+        const changedFilePaths = await getChangedFilePaths()
 
-        return
-    }
+        for (const toolName of formatterKeys) {
+            const paths = micromatch(changedFilePaths, formatters[toolName], { dot: match.dot })
 
-    if (eventName !== 'pull_request') {
+            if (paths.length > 0) {
+                tasks.push({
+                    loader: formatterRegistry[toolName],
+                    toolType: 'formatter',
+                    version: versions[toolName],
+                    args: args.formatters[toolName],
+                    paths,
+                })
+            }
+        }
+
+        for (const toolName of linterKeys) {
+            const paths = micromatch(changedFilePaths, linters[toolName], { dot: match.dot })
+
+            if (paths.length > 0) {
+                tasks.push({
+                    loader: linterRegistry[toolName],
+                    toolType: 'linter',
+                    version: versions[toolName],
+                    args: args.linters[toolName],
+                    paths,
+                })
+            }
+        }
+    } else {
         throw new Error(`[EVENT] Invalid ${eventName} event`)
     }
 
-    const changedFilePaths = await getChangedFilePaths()
+    // eslint-disable-next-line @typescript-eslint/promise-function-async
+    await limit.map(tasks, ({ loader, version }) => setupTool({ loader, version }))
+    // eslint-disable-next-line @typescript-eslint/promise-function-async
+    await limit.map(tasks, (task) => runTool(task))
+}
 
-    await Promise.all([
-        limit.map(formatterKeys, async (toolName) => {
-            const paths = micromatch(changedFilePaths, formatters[toolName], { dot: match.dot })
+async function setupTool({ loader, version }: SetupToolContext): Promise<void> {
+    const { setup } = await loader()
 
-            if (paths.length === 0) {
-                return
-            }
-
-            await runTool({
-                loader: formatterRegistry[toolName],
-                toolType: 'formatter',
-                version: versions[toolName],
-                args: args.formatters[toolName],
-                paths,
-            })
-        }),
-        limit.map(linterKeys, async (toolName) => {
-            const paths = micromatch(changedFilePaths, linters[toolName], { dot: match.dot })
-
-            if (paths.length === 0) {
-                return
-            }
-
-            await runTool({
-                loader: linterRegistry[toolName],
-                toolType: 'linter',
-                version: versions[toolName],
-                args: args.linters[toolName],
-                paths,
-            })
-        }),
-    ])
+    await setup({ version })
 }
 
 async function runTool({ loader, toolType, version, args, paths }: RunToolContext): Promise<void> {

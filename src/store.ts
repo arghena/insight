@@ -1,8 +1,7 @@
-import type { ToolName, PromisePayload, PromiseType, ExecError } from '@/types'
+import type { ToolName, ExecError } from '@/types'
 
 const installedTools = new Set<ToolName>()
-const setupPromiseMap = new Map<ToolName, Promise<void>>()
-const execPromiseMap = new Map<ToolName, Promise<number>>()
+const promiseMap = new Map<ToolName, Promise<void>>()
 const execErrors: ExecError[] = []
 
 export function addInstalledTool(toolName: ToolName): void {
@@ -13,25 +12,16 @@ export function hasInstalledTool(toolName: ToolName): boolean {
     return installedTools.has(toolName)
 }
 
-export function addPromise(toolName: ToolName, { promiseType, task }: PromisePayload): void {
-    if (promiseType === 'setup') {
-        setupPromiseMap.set(toolName, task)
-    } else {
-        execPromiseMap.set(toolName, task)
-    }
+export function addPromise(toolName: ToolName, task: Promise<void>): void {
+    promiseMap.set(toolName, task)
 }
 
-export function hasPromise(toolName: ToolName, promiseType: PromiseType): boolean {
-    if (promiseType === 'setup') {
-        return setupPromiseMap.has(toolName)
-    }
-
-    return execPromiseMap.has(toolName)
+export function hasPromise(toolName: ToolName): boolean {
+    return promiseMap.has(toolName)
 }
 
-export async function getPromise(toolName: ToolName, promiseType: PromiseType): Promise<void> {
-    const targetPromiseMap = promiseType === 'setup' ? setupPromiseMap : execPromiseMap
-    const promise = targetPromiseMap.get(toolName)
+export async function getPromise(toolName: ToolName): Promise<void> {
+    const promise = promiseMap.get(toolName)
 
     if (!promise) {
         throw new Error(`[PROMISE] Missing promise for ${toolName}`)
