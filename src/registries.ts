@@ -41,13 +41,12 @@ export const linterRegistry = {
     yamllint: () => import('@/linters/yamllint'),
 } as const satisfies Record<string, Loader>
 
-export const toolStepBuilderRegistry: Record<ToolName, ToolStepBuilder> = {
+export const toolStepBuilderRegistry = {
     npm: () => [],
     rustup: ({ toolName, version }) => [
         {
-            script: `${toolName} toolchain install ${version} --profile minimal --no-self-update`,
+            script: `${toolName} toolchain install ${version} --profile minimal --no-self-update --override`,
         },
-        { script: `${toolName} override set ${version}` },
     ],
     'cargo-binstall': ({ toolName }) => [
         {
@@ -203,7 +202,7 @@ export const toolStepBuilderRegistry: Record<ToolName, ToolStepBuilder> = {
             args: buildUvArgs(`${toolName}@${version}`),
         },
     ],
-}
+} as const satisfies Record<ToolName, ToolStepBuilder>
 
 export type FormatterKey = keyof typeof formatterRegistry
 export type LinterKey = keyof typeof linterRegistry

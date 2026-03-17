@@ -19,17 +19,23 @@ export interface ActionContext {
     pullRequestNumber: number
 }
 
-export interface RunToolContext {
+export interface SetupToolContext extends SetupContext {
     loader: Loader
-    toolType: ToolType
-    version: string
-    args: string[]
-    paths: string[]
 }
 
-export type Loader = () => Promise<{ runner: Runner }>
+export interface RunToolContext extends RunnerContext {
+    loader: Loader
+    toolType: ToolType
+}
+
+export type Loader = () => Promise<{ setup: Setup; runner: Runner }>
+
+export type Setup = (setupContext: SetupContext) => Promise<void>
 export type Runner = (runnerContext: RunnerContext) => Promise<number>
 
+export interface SetupContext {
+    version: string
+}
 export interface RunnerContext {
     version: string
     args: string[]
@@ -53,7 +59,6 @@ export interface ExecOptions {
     toolName?: string
     toolType?: ToolType
     input?: string
-    stderr?: boolean
 }
 
 export interface ExecError {
@@ -62,12 +67,9 @@ export interface ExecError {
     stderr: string
 }
 
+export type ExecKey = `${ToolName}:${string}`
+
 export type ToolName = PackageManager | FormatterKey | LinterKey
 
-export type PromisePayload =
-    | { promiseType: 'setup'; task: Promise<void> }
-    | { promiseType: 'exec'; task: Promise<number> }
-
 export type ToolType = 'formatter' | 'linter' | 'other'
-export type PromiseType = 'setup' | 'exec'
 export type PackageManager = 'npm' | 'rustup' | 'cargo-binstall' | 'uv' | 'docker' | 'nci'

@@ -1,8 +1,28 @@
-import { exec, execOnce } from '@/exec'
+import pLimit, { type LimitFunction } from 'p-limit'
+import { exec } from '@/exec'
+import { concurrency } from '@/constants'
 import { toolStepBuilderRegistry } from '@/registries'
-import { addInstalledTool, hasInstalledTool, addPromise, hasPromise, getPromise } from '@/store'
+import {
+    addInstalledTool,
+    hasInstalledTool,
+    addSetupPromise,
+    hasSetupPromise,
+    getSetupPromise,
+    addExecPromise,
+    hasExecPromise,
+    getExecPromise,
+} from '@/store'
 import { fetchText, isValidHttpsUrl } from '@/fetch'
-import type { ToolName, InstallerOptions } from '@/types'
+import type { PackageManager, ToolName, InstallerOptions, ExecKey } from '@/types'
+
+const pmLimitMap = {
+    npm: pLimit(concurrency),
+    rustup: pLimit(1),
+    'cargo-binstall': pLimit(concurrency),
+    uv: pLimit(concurrency),
+    docker: pLimit(concurrency),
+    nci: pLimit(1),
+} as const satisfies Record<PackageManager, LimitFunction>
 
 export async function installer(
     toolName: ToolName,
@@ -12,8 +32,8 @@ export async function installer(
     if (hasInstalledTool(toolName)) {
         return
     }
-    if (hasPromise(toolName, 'setup')) {
-        await getPromise(toolName, 'setup')
+    if (hasSetupPromise(toolName)) {
+        await getSetupPromise(toolName)
 
         return
     }
@@ -33,10 +53,17 @@ export async function installer(
 
                 await installer(packageManager, version, options)
 
-                if (packageManager === 'nci') {
-                    await execOnce(packageManager, args)
+                const execKey: ExecKey = `${packageManager}:${args.join(' ')}`
+
+                if (hasExecPromise(execKey)) {
+                    await getExecPromise(execKey)
                 } else {
-                    await exec(packageManager, args)
+                    // eslint-disable-next-line @typescript-eslint/promise-function-async
+                    const execTask = pmLimitMap[packageManager](() => exec(packageManager, args))
+
+                    addExecPromise(execKey, execTask)
+
+                    await execTask
                 }
             }
         }
@@ -44,7 +71,7 @@ export async function installer(
         addInstalledTool(toolName)
     })()
 
-    addPromise(toolName, { promiseType: 'setup', task: installTask })
+    addSetupPromise(toolName, installTask)
 
     await installTask
 }
