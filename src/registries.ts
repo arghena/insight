@@ -132,7 +132,8 @@ export const toolStepBuilderRegistry = {
     'node-audit': () => [
         {
             packageManager: 'nci',
-            args: [],
+            // HACK: Avoid actually installing dependencies.
+            args: ['--version'],
         },
     ],
     prettier: ({ toolName, version }) => [
