@@ -17,11 +17,8 @@ export async function exec(
         ignoreReturnCode: true,
         env: {
             ...process.env,
-            /* eslint-disable @typescript-eslint/naming-convention */
+            /* eslint-disable-next-line @typescript-eslint/naming-convention */
             CARGO_INCREMENTAL: '0',
-            // https://github.com/antfu-collective/ni/blob/82611c44aeada5185d5fb5fc2c72c2ce6b921159/src/detect.ts#L39-L53
-            NI_AUTO_INSTALL: 'true',
-            /* eslint-enable @typescript-eslint/naming-convention */
         },
     })
 
