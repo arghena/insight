@@ -67,6 +67,8 @@ export interface ExecError {
     stderr: string
 }
 
+export type ExecKey = `${ToolName}:${string}`
+
 export type ToolName = PackageManager | FormatterKey | LinterKey
 
 export type ToolType = 'formatter' | 'linter' | 'other'

@@ -2,9 +2,18 @@ import pLimit, { type LimitFunction } from 'p-limit'
 import { exec } from '@/exec'
 import { concurrency } from '@/constants'
 import { toolStepBuilderRegistry } from '@/registries'
-import { addInstalledTool, hasInstalledTool, addPromise, hasPromise, getPromise } from '@/store'
+import {
+    addInstalledTool,
+    hasInstalledTool,
+    addSetupPromise,
+    hasSetupPromise,
+    getSetupPromise,
+    addExecPromise,
+    hasExecPromise,
+    getExecPromise,
+} from '@/store'
 import { fetchText, isValidHttpsUrl } from '@/fetch'
-import type { PackageManager, ToolName, InstallerOptions } from '@/types'
+import type { PackageManager, ToolName, InstallerOptions, ExecKey } from '@/types'
 
 const pmLimitMap = {
     npm: pLimit(concurrency),
@@ -23,8 +32,8 @@ export async function installer(
     if (hasInstalledTool(toolName)) {
         return
     }
-    if (hasPromise(toolName)) {
-        await getPromise(toolName)
+    if (hasSetupPromise(toolName)) {
+        await getSetupPromise(toolName)
 
         return
     }
@@ -44,15 +53,25 @@ export async function installer(
 
                 await installer(packageManager, version, options)
 
-                // eslint-disable-next-line @typescript-eslint/promise-function-async
-                await pmLimitMap[packageManager](() => exec(packageManager, args))
+                const execKey: ExecKey = `${packageManager}:${args.join(' ')}`
+
+                if (hasExecPromise(execKey)) {
+                    await getExecPromise(execKey)
+                } else {
+                    // eslint-disable-next-line @typescript-eslint/promise-function-async
+                    const execTask = pmLimitMap[packageManager](() => exec(packageManager, args))
+
+                    addExecPromise(execKey, execTask)
+
+                    await execTask
+                }
             }
         }
 
         addInstalledTool(toolName)
     })()
 
-    addPromise(toolName, installTask)
+    addSetupPromise(toolName, installTask)
 
     await installTask
 }
