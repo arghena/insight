@@ -32,6 +32,7 @@ export const linterRegistry = {
     eslint: () => import('@/linters/eslint'),
     'markdownlint-cli2': () => import('@/linters/markdownlint-cli2'),
     'node-audit': () => import('@/linters/node-audit'),
+    'node-dedupe': () => import('@/linters/node-dedupe'),
     shellcheck: () => import('@/linters/shellcheck'),
     tombi: () => import('@/linters/tombi'),
     trivy: () => import('@/linters/trivy'),
@@ -132,7 +133,12 @@ export const toolStepBuilderRegistry = {
     'node-audit': () => [
         {
             packageManager: 'nci',
-            // HACK: Avoid actually installing dependencies.
+            args: ['--version'],
+        },
+    ],
+    'node-dedupe': () => [
+        {
+            packageManager: 'nci',
             args: ['--version'],
         },
     ],
