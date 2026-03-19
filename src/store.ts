@@ -1,17 +1,8 @@
 import type { ToolName, ExecKey, ExecError } from '@/types'
 
-const installedTools = new Set<ToolName>()
 const setupPromiseMap = new Map<ToolName, Promise<void>>()
 const execPromiseMap = new Map<ExecKey, Promise<number>>()
 const execErrors: ExecError[] = []
-
-export function addInstalledTool(toolName: ToolName): void {
-    installedTools.add(toolName)
-}
-
-export function hasInstalledTool(toolName: ToolName): boolean {
-    return installedTools.has(toolName)
-}
 
 export function addSetupPromise(toolName: ToolName, task: Promise<void>): void {
     setupPromiseMap.set(toolName, task)

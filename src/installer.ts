@@ -3,8 +3,6 @@ import { exec } from '@/exec'
 import { concurrency } from '@/constants'
 import { toolStepBuilderRegistry } from '@/registries'
 import {
-    addInstalledTool,
-    hasInstalledTool,
     addSetupPromise,
     hasSetupPromise,
     getSetupPromise,
@@ -29,9 +27,6 @@ export async function installer(
     version: string,
     options?: InstallerOptions,
 ): Promise<void> {
-    if (hasInstalledTool(toolName)) {
-        return
-    }
     if (hasSetupPromise(toolName)) {
         await getSetupPromise(toolName)
 
@@ -67,8 +62,6 @@ export async function installer(
                 }
             }
         }
-
-        addInstalledTool(toolName)
     })()
 
     addSetupPromise(toolName, installTask)
