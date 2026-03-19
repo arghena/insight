@@ -127,25 +127,26 @@ prettier = "3.6.2"
 
 ## Available Linters
 
-| Tool                                                                                   | Linter name         | Accepts File Paths | Supports scheduling |
-| -------------------------------------------------------------------------------------- | ------------------- | :----------------: | :-----------------: |
-| [actionlint](https://github.com/rhysd/actionlint)                                      | `actionlint`        |         ✅         |                     |
-| [alex](https://github.com/get-alex/alex)                                               | `alex`              |         ✅         |                     |
-| [ast-grep](https://github.com/ast-grep/ast-grep)                                       | `ast-grep`          |         ✅         |                     |
-| [clippy](https://github.com/rust-lang/rust-clippy)                                     | `cargo-clippy`      |                    |                     |
-| [cargo-deny](https://github.com/EmbarkStudios/cargo-deny)                              | `cargo-deny`        |                    |         ✅          |
-| [cargo-msrv](https://github.com/foresterre/cargo-msrv)                                 | `cargo-msrv`        |                    |                     |
-| [check-dist](https://github.com/arghena/insight/blob/canary/src/linters/check-dist.ts) | `check-dist`        |                    |                     |
-| [eslint](https://github.com/eslint/eslint)                                             | `eslint`            |         ✅         |                     |
-| [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2)                   | `markdownlint-cli2` |         ✅         |                     |
-| [node-audit](https://github.com/arghena/insight/blob/canary/src/linters/node-audit.ts) | `node-audit`        |                    |         ✅          |
-| [shellcheck](https://github.com/koalaman/shellcheck)                                   | `shellcheck`        |         ✅         |                     |
-| [tombi](https://github.com/tombi-toml/tombi)                                           | `tombi`             |         ✅         |                     |
-| [trivy](https://github.com/aquasecurity/trivy)                                         | `trivy`             |                    |                     |
-| [tsc](https://github.com/microsoft/TypeScript)                                         | `tsc`               |                    |                     |
-| [typos](https://github.com/crate-ci/typos)                                             | `typos`             |         ✅         |                     |
-| [vale](https://github.com/errata-ai/vale)                                              | `vale`              |         ✅         |                     |
-| [yamllint](https://github.com/adrienverge/yamllint)                                    | `yamllint`          |         ✅         |                     |
+| Tool                                                                                     | Linter name         | Accepts File Paths | Supports scheduling |
+| ---------------------------------------------------------------------------------------- | ------------------- | :----------------: | :-----------------: |
+| [actionlint](https://github.com/rhysd/actionlint)                                        | `actionlint`        |         ✅         |                     |
+| [alex](https://github.com/get-alex/alex)                                                 | `alex`              |         ✅         |                     |
+| [ast-grep](https://github.com/ast-grep/ast-grep)                                         | `ast-grep`          |         ✅         |                     |
+| [clippy](https://github.com/rust-lang/rust-clippy)                                       | `cargo-clippy`      |                    |                     |
+| [cargo-deny](https://github.com/EmbarkStudios/cargo-deny)                                | `cargo-deny`        |                    |         ✅          |
+| [cargo-msrv](https://github.com/foresterre/cargo-msrv)                                   | `cargo-msrv`        |                    |                     |
+| [check-dist](https://github.com/arghena/insight/blob/canary/src/linters/check-dist.ts)   | `check-dist`        |                    |                     |
+| [eslint](https://github.com/eslint/eslint)                                               | `eslint`            |         ✅         |                     |
+| [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2)                     | `markdownlint-cli2` |         ✅         |                     |
+| [node-audit](https://github.com/arghena/insight/blob/canary/src/linters/node-audit.ts)   | `node-audit`        |                    |         ✅          |
+| [node-dedupe](https://github.com/arghena/insight/blob/canary/src/linters/node-dedupe.ts) | `node-dedupe`       |                    |                     |
+| [shellcheck](https://github.com/koalaman/shellcheck)                                     | `shellcheck`        |         ✅         |                     |
+| [tombi](https://github.com/tombi-toml/tombi)                                             | `tombi`             |         ✅         |                     |
+| [trivy](https://github.com/aquasecurity/trivy)                                           | `trivy`             |                    |                     |
+| [tsc](https://github.com/microsoft/TypeScript)                                           | `tsc`               |                    |                     |
+| [typos](https://github.com/crate-ci/typos)                                               | `typos`             |         ✅         |                     |
+| [vale](https://github.com/errata-ai/vale)                                                | `vale`              |         ✅         |                     |
+| [yamllint](https://github.com/adrienverge/yamllint)                                      | `yamllint`          |         ✅         |                     |
 
 ## Contributing
 
