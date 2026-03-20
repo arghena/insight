@@ -12,7 +12,7 @@ import type { SetupToolContext, RunToolContext } from '@/types'
 
 const { isTitleCheckEnabled, pullRequestTitle, eventName } = actionContext
 const limit = pLimit(concurrency)
-const styleTextOptions: StyleTextOptions = { validateStream: false }
+const styleTextOptions = { validateStream: false } as const satisfies StyleTextOptions
 const successIcon = styleText('green', '✔', styleTextOptions)
 const failureIcon = styleText('red', '✖', styleTextOptions)
 
