@@ -1,4 +1,4 @@
-import { styleText } from 'node:util'
+import { styleText, type StyleTextOptions } from 'node:util'
 import { performance } from 'node:perf_hooks'
 import micromatch from 'micromatch'
 import pLimit from 'p-limit'
@@ -12,6 +12,9 @@ import type { SetupToolContext, RunToolContext } from '@/types'
 
 const { isTitleCheckEnabled, pullRequestTitle, eventName } = actionContext
 const limit = pLimit(concurrency)
+const styleTextOptions: StyleTextOptions = { validateStream: false }
+const successIcon = styleText('green', '✔', styleTextOptions)
+const failureIcon = styleText('red', '✖', styleTextOptions)
 
 export async function run(): Promise<void> {
     if (isTitleCheckEnabled) {
@@ -82,8 +85,6 @@ async function setupTool({ loader, version }: SetupToolContext): Promise<void> {
 async function runTool({ loader, toolType, version, args, paths }: RunToolContext): Promise<void> {
     const toolName = loader.name
     const logTag = `[${toolType.toUpperCase()}]`
-    const successIcon = styleText('green', '✔', { validateStream: false })
-    const failureIcon = styleText('red', '✖', { validateStream: false })
     const { runner } = await loader()
     const startTime = performance.now()
 
@@ -91,9 +92,7 @@ async function runTool({ loader, toolType, version, args, paths }: RunToolContex
 
     const endTime = performance.now()
     const durationMs = Math.round(endTime - startTime)
-    const formattedDuration = styleText('gray', `(${durationMs.toString()}ms)`, {
-        validateStream: false,
-    })
+    const formattedDuration = styleText('gray', `(${durationMs.toString()}ms)`, styleTextOptions)
 
     info(`${logTag} ${exitCode === 0 ? successIcon : failureIcon} ${toolName} ${formattedDuration}`)
 }
