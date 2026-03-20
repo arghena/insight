@@ -142,11 +142,19 @@ export const toolStepBuilderRegistry = {
             args: ['--version'],
         },
     ],
-    prettier: ({ toolName, version }) => [
+    prettier: ({ toolName, version, options }) => [
         {
             packageManager: 'npm',
             args: buildNpmArgs(`${toolName}@${version}`),
         },
+        ...(options?.hasPackageJson === true
+            ? [
+                  {
+                      packageManager: 'nci',
+                      args: [],
+                  } satisfies ToolStep,
+              ]
+            : []),
     ],
     shellcheck: ({ toolName, version }) => [
         {
