@@ -20,6 +20,9 @@ updates:
     commit-message:
       prefix: 'build'
       include: 'scope'
+    groups:
+      commitlint:
+        patterns: ['@commitlint/*']
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
