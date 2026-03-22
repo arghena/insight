@@ -30,14 +30,14 @@ export function hasExecPromise(key: ExecKey): boolean {
     return execPromiseMap.has(key)
 }
 
-export async function getExecPromise(key: ExecKey): Promise<void> {
+export async function getExecPromise(key: ExecKey): Promise<number> {
     const promise = execPromiseMap.get(key)
 
     if (!promise) {
         throw new Error(`[PROMISE] Missing exec promise for ${key}`)
     }
 
-    await promise
+    return await promise
 }
 
 export function addExecError(error: ExecError): void {
