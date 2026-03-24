@@ -16,7 +16,7 @@
     "jiti": "^2.6.1",
     "prettier": "^3.8.1",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.57.1"
+    "typescript-eslint": "^8.57.2"
   },
   "dependencies": {
     "@actions/core": "^3.0.0",
