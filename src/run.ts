@@ -90,10 +90,12 @@ async function runTool({ loader, toolType, version, args, paths }: RunToolContex
     const exitCode = await runner({ version, args, paths })
 
     const endTime = performance.now()
-    const statusIcon = exitCode === 0 ? successIcon : failureIcon
+    const isSuccess = exitCode === 0
+    const statusIcon = isSuccess ? successIcon : failureIcon
+    const verb = isSuccess ? 'Finished' : 'Failed'
     const durationMs = Math.round(endTime - startTime)
 
-    info(`${statusIcon} Finished ${toolName} (${toolType}) in ${formatDuration(durationMs)}`)
+    info(`${statusIcon} ${verb} ${toolName} (${toolType}) in ${formatDuration(durationMs)}`)
 }
 
 function formatDuration(durationMs: number): string {
