@@ -15,7 +15,7 @@
     "eslint": "^10.1.0",
     "jiti": "^2.6.1",
     "prettier": "^3.8.1",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.2",
     "typescript-eslint": "^8.57.1"
   },
   "dependencies": {
