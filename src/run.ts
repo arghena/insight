@@ -70,10 +70,10 @@ export async function run(): Promise<void> {
         throw new Error(`[EVENT] Invalid ${eventName} event`)
     }
 
-    // eslint-disable-next-line @typescript-eslint/promise-function-async
+    /* eslint-disable @typescript-eslint/promise-function-async */
     await limit.map(tasks, ({ loader, version }) => setupTool({ loader, version }))
-    // eslint-disable-next-line @typescript-eslint/promise-function-async
     await limit.map(tasks, (task) => runTool(task))
+    /* eslint-enable @typescript-eslint/promise-function-async */
 }
 
 async function setupTool({ loader, version }: SetupToolContext): Promise<void> {
@@ -84,15 +84,20 @@ async function setupTool({ loader, version }: SetupToolContext): Promise<void> {
 
 async function runTool({ loader, toolType, version, args, paths }: RunToolContext): Promise<void> {
     const toolName = loader.name
-    const logTag = `[${toolType.toUpperCase()}]`
     const { runner } = await loader()
     const startTime = performance.now()
 
     const exitCode = await runner({ version, args, paths })
 
     const endTime = performance.now()
+    const isSuccess = exitCode === 0
+    const statusIcon = isSuccess ? successIcon : failureIcon
+    const verb = isSuccess ? 'Finished' : 'Failed'
     const durationMs = Math.round(endTime - startTime)
-    const formattedDuration = styleText('gray', `(${durationMs.toString()}ms)`, styleTextOptions)
 
-    info(`${logTag} ${exitCode === 0 ? successIcon : failureIcon} ${toolName} ${formattedDuration}`)
+    info(`${statusIcon} ${verb} ${toolName} (${toolType}) in ${formatDuration(durationMs)}`)
+}
+
+function formatDuration(durationMs: number): string {
+    return durationMs >= 1000 ? `${(durationMs / 1000).toFixed(1)}s` : `${durationMs.toString()}ms`
 }
