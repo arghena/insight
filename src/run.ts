@@ -1,9 +1,9 @@
-import { styleText, type StyleTextOptions } from 'node:util'
 import { performance } from 'node:perf_hooks'
+import { availableParallelism } from 'node:os'
+import { styleText, type StyleTextOptions } from 'node:util'
 import micromatch from 'micromatch'
 import pLimit from 'p-limit'
 import { info } from '@actions/core'
-import { concurrency } from '@/constants'
 import { commitlint } from '@/linters/commitlint'
 import { resolveConfig } from '@/config'
 import { actionContext, getChangedFilePaths } from '@/github'
@@ -11,7 +11,7 @@ import { formatterRegistry, linterRegistry, formatterKeys, linterKeys } from '@/
 import type { SetupToolContext, RunToolContext } from '@/types'
 
 const { isTitleCheckEnabled, pullRequestTitle, eventName } = actionContext
-const limit = pLimit(concurrency)
+const limit = pLimit(availableParallelism() * 2)
 const styleTextOptions = { validateStream: false } as const satisfies StyleTextOptions
 const successIcon = styleText('green', '✔', styleTextOptions)
 const failureIcon = styleText('red', '✖', styleTextOptions)

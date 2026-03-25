@@ -1,6 +1,4 @@
-import pLimit, { type LimitFunction } from 'p-limit'
 import { exec } from '@/exec'
-import { concurrency } from '@/constants'
 import { toolStepBuilderRegistry } from '@/registries'
 import {
     addSetupPromise,
@@ -11,16 +9,7 @@ import {
     getExecPromise,
 } from '@/store'
 import { fetchText, isValidHttpsUrl } from '@/fetch'
-import type { PackageManager, ToolName, InstallerOptions, ExecKey } from '@/types'
-
-const pmLimitMap = {
-    npm: pLimit(concurrency),
-    rustup: pLimit(1),
-    'cargo-binstall': pLimit(concurrency),
-    uv: pLimit(concurrency),
-    docker: pLimit(concurrency),
-    nci: pLimit(1),
-} as const satisfies Record<PackageManager, LimitFunction>
+import type { ToolName, InstallerOptions, ExecKey } from '@/types'
 
 export async function installer(
     toolName: ToolName,
@@ -53,8 +42,7 @@ export async function installer(
                 if (hasExecPromise(execKey)) {
                     await getExecPromise(execKey)
                 } else {
-                    // eslint-disable-next-line @typescript-eslint/promise-function-async
-                    const execTask = pmLimitMap[packageManager](() => exec(packageManager, args))
+                    const execTask = exec(packageManager, args)
 
                     addExecPromise(execKey, execTask)
 
