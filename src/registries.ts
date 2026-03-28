@@ -43,6 +43,18 @@ export const linterRegistry = {
 } as const satisfies Record<string, Loader>
 
 export const toolStepBuilderRegistry = {
+    'cargo-binstall': ({ toolName }) => [
+        {
+            script: `https://raw.githubusercontent.com/cargo-bins/${toolName}/main/install-from-binstall-release.sh`,
+        },
+    ],
+    docker: () => [],
+    nci: () => [
+        {
+            packageManager: 'npm',
+            args: buildNpmArgs('@antfu/ni'),
+        },
+    ],
     npm: () => [],
     rustup: ({ version }) => [
         {
@@ -58,21 +70,9 @@ export const toolStepBuilderRegistry = {
             ],
         },
     ],
-    'cargo-binstall': ({ toolName }) => [
-        {
-            script: `https://raw.githubusercontent.com/cargo-bins/${toolName}/main/install-from-binstall-release.sh`,
-        },
-    ],
     uv: ({ toolName }) => [
         {
             script: `https://github.com/astral-sh/${toolName}/releases/latest/download/${toolName}-installer.sh`,
-        },
-    ],
-    docker: () => [],
-    nci: () => [
-        {
-            packageManager: 'npm',
-            args: buildNpmArgs('@antfu/ni'),
         },
     ],
 

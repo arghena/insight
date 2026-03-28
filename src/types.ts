@@ -72,4 +72,4 @@ export type ExecKey = `${ToolName}:${string}`
 export type ToolName = PackageManager | FormatterKey | LinterKey
 
 export type ToolType = 'formatter' | 'linter' | 'other'
-export type PackageManager = 'npm' | 'rustup' | 'cargo-binstall' | 'uv' | 'docker' | 'nci'
+export type PackageManager = 'cargo-binstall' | 'docker' | 'nci' | 'npm' | 'rustup' | 'uv'

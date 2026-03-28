@@ -15,12 +15,12 @@ import type { PackageManager, ToolName, InstallerOptions, ExecKey } from '@/type
 
 const rustLimit = pLimit(1)
 const pmLimitMap = {
-    npm: pLimit(concurrency),
-    rustup: rustLimit,
     'cargo-binstall': rustLimit,
-    uv: pLimit(concurrency),
     docker: pLimit(concurrency),
     nci: pLimit(1),
+    npm: pLimit(concurrency),
+    rustup: rustLimit,
+    uv: pLimit(concurrency),
 } as const satisfies Record<PackageManager, LimitFunction>
 
 export async function installer(
