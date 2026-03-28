@@ -52,6 +52,9 @@ export const toolStepBuilderRegistry = {
         {
             script: `${toolName} toolchain install ${version} --profile minimal --no-self-update --override`,
         },
+        {
+            script: `${toolName} default ${version}`,
+        },
     ],
     'cargo-binstall': ({ toolName }) => [
         {
