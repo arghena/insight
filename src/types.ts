@@ -6,7 +6,7 @@ export type ToolStep =
           args: string[]
       }
     | {
-          script: string
+          script: `https://${string}`
       }
 
 export interface ActionContext {

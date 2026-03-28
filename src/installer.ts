@@ -1,5 +1,6 @@
 import pLimit, { type LimitFunction } from 'p-limit'
 import { exec } from '@/exec'
+import { fetchText } from '@/fetch'
 import { concurrency } from '@/constants'
 import { toolStepBuilderRegistry } from '@/registries'
 import {
@@ -10,13 +11,13 @@ import {
     hasExecPromise,
     getExecPromise,
 } from '@/store'
-import { fetchText, isValidHttpsUrl } from '@/fetch'
 import type { PackageManager, ToolName, InstallerOptions, ExecKey } from '@/types'
 
+const rustLimit = pLimit(1)
 const pmLimitMap = {
     npm: pLimit(concurrency),
-    rustup: pLimit(1),
-    'cargo-binstall': pLimit(concurrency),
+    rustup: rustLimit,
+    'cargo-binstall': rustLimit,
     uv: pLimit(concurrency),
     docker: pLimit(concurrency),
     nci: pLimit(1),
@@ -38,15 +39,15 @@ export async function installer(
 
         for (const step of steps) {
             if ('script' in step) {
-                const content = isValidHttpsUrl(step.script)
-                    ? await fetchText(step.script)
-                    : step.script
+                const content = await fetchText(step.script)
 
                 await exec('sh', [], { input: content })
             } else {
                 const { packageManager, args } = step
 
-                await installer(packageManager, version, options)
+                if (packageManager !== toolName) {
+                    await installer(packageManager, version, options)
+                }
 
                 const execKey: ExecKey = `${packageManager}:${args.join(' ')}`
 
