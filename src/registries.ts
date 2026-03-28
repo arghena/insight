@@ -44,16 +44,18 @@ export const linterRegistry = {
 
 export const toolStepBuilderRegistry = {
     npm: () => [],
-    rustup: ({ toolName, version }) => [
-        // https://github.com/rust-lang/rustup/issues/2729#issuecomment-1516103534
+    rustup: ({ version }) => [
         {
-            script: `${toolName} toolchain uninstall ${version}`,
-        },
-        {
-            script: `${toolName} toolchain install ${version} --profile minimal --no-self-update --override`,
-        },
-        {
-            script: `${toolName} default ${version}`,
+            packageManager: 'rustup',
+            args: [
+                'toolchain',
+                'install',
+                version,
+                '--profile',
+                'minimal',
+                '--no-self-update',
+                '--override',
+            ],
         },
     ],
     'cargo-binstall': ({ toolName }) => [
@@ -67,7 +69,12 @@ export const toolStepBuilderRegistry = {
         },
     ],
     docker: () => [],
-    nci: () => [{ script: `npm ${buildNpmArgs('@antfu/ni').join(' ')}` }],
+    nci: () => [
+        {
+            packageManager: 'npm',
+            args: buildNpmArgs('@antfu/ni'),
+        },
+    ],
 
     actionlint: ({ toolName, version }) => [
         {

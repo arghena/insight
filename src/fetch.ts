@@ -1,4 +1,3 @@
-import { URL } from 'node:url'
 import { HttpClient } from '@actions/http-client'
 
 const client = new HttpClient('arghena/insight')
@@ -14,14 +13,4 @@ export async function fetchText(url: `https://${string}`): Promise<string> {
     }
 
     return await res.readBody()
-}
-
-export function isValidHttpsUrl(str: string): str is `https://${string}` {
-    if (!URL.canParse(str)) {
-        return false
-    }
-
-    const url = new URL(str)
-
-    return url.protocol === 'https:'
 }
