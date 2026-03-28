@@ -45,6 +45,10 @@ export const linterRegistry = {
 export const toolStepBuilderRegistry = {
     npm: () => [],
     rustup: ({ toolName, version }) => [
+        // https://github.com/rust-lang/rustup/issues/2729#issuecomment-1516103534
+        {
+            script: `${toolName} toolchain uninstall ${version} --no-self-update`,
+        },
         {
             script: `${toolName} toolchain install ${version} --profile minimal --no-self-update --override`,
         },
