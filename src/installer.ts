@@ -16,8 +16,11 @@ import type { PackageManager, ToolName, InstallerOptions, ExecKey } from '@/type
 const pmLimitMap = {
     'cargo-binstall': pLimit(concurrency),
     docker: pLimit(concurrency),
+    // NOTE: Prevent concurrent package manager installs.
     nci: pLimit(1),
     npm: pLimit(concurrency),
+    // NOTE: Prevent unsafe concurrent installations.
+    // https://github.com/rust-lang/rustup/issues/988
     rustup: pLimit(1),
     uv: pLimit(concurrency),
 } as const satisfies Record<PackageManager, LimitFunction>
