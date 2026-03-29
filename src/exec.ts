@@ -17,8 +17,11 @@ export async function exec(
         ignoreReturnCode: true,
         env: {
             ...process.env,
-            // eslint-disable-next-line @typescript-eslint/naming-convention
+            /* eslint-disable @typescript-eslint/naming-convention */
             CARGO_INCREMENTAL: '0',
+            // PERF: Force `stable` so `rustup` ignores `rust-toolchain.toml`.
+            ...(toolName === 'cargo-binstall' ? { RUSTUP_TOOLCHAIN: 'stable' } : {}),
+            /* eslint-enable @typescript-eslint/naming-convention */
         },
     })
 
