@@ -1,14 +1,12 @@
 import { installer } from '@/installer'
 import { exec } from '@/exec'
-import type { Setup, Runner } from '@/types'
+import type { Runner } from '@/types'
 
 const toolName = 'tombi'
 
-export const setup: Setup = async ({ version }) => {
+export const runner: Runner = async ({ version, args, paths }) => {
     await installer(toolName, version)
-}
 
-export const runner: Runner = async ({ args, paths }) => {
     return await exec(toolName, ['format', '--check', ...args, '--', ...paths], {
         toolType: 'formatter',
     })

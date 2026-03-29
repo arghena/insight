@@ -2,25 +2,15 @@ import { installer } from '@/installer'
 import { exec } from '@/exec'
 import { fileExists } from '@/utils'
 import { buildDockerRunArgs } from '@/builders'
-import type { Setup, Runner } from '@/types'
+import type { Runner } from '@/types'
 
 const toolName = 'trivy'
 
-export const setup: Setup = async ({ version }) => {
+export const runner: Runner = async ({ version, args }) => {
     const hasPackageJson = await fileExists('package.json')
+    const dockerRunArgs = buildDockerRunArgs(`ghcr.io/aquasecurity/${toolName}:${version}`)
 
     await installer(toolName, version, { hasPackageJson })
-}
 
-export const runner: Runner = async ({ version, args }) => {
-    return await exec(
-        'docker',
-        [
-            ...buildDockerRunArgs(`ghcr.io/aquasecurity/${toolName}:${version}`),
-            'filesystem',
-            ...args,
-            '.',
-        ],
-        { toolName },
-    )
+    return await exec('docker', [...dockerRunArgs, 'filesystem', ...args, '.'], { toolName })
 }
