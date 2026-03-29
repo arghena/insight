@@ -9,7 +9,9 @@ export const setup: Setup = async ({ version }) => {
 }
 
 export const runner: Runner = async ({ args }) => {
-    await exec('nr', args.length === 0 ? ['build'] : args)
+    const script = args.length === 0 ? ['build'] : args
+
+    await exec('nr', script)
 
     return await exec('git', ['diff', '--quiet', 'dist/'], { toolName })
 }

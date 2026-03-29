@@ -13,10 +13,7 @@ export const setup: Setup = async ({ version }) => {
 
 export const runner: Runner = async ({ version, args, paths }) => {
     const tag = version === 'latest' ? 'v3' : `v${version}`
+    const dockerRunArgs = buildDockerRunArgs(`mvdan/${toolName}:${tag}`)
 
-    return await exec(
-        'docker',
-        [...buildDockerRunArgs(`mvdan/${toolName}:${tag}`), '--diff', ...args, '--', ...paths],
-        { toolName },
-    )
+    return await exec('docker', [...dockerRunArgs, '--diff', ...args, '--', ...paths], { toolName })
 }

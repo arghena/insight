@@ -10,9 +10,7 @@ export const setup: Setup = async ({ version }) => {
 }
 
 export const runner: Runner = async ({ version, args, paths }) => {
-    return await exec(
-        'docker',
-        [...buildDockerRunArgs(`rhysd/${toolName}:${version}`), ...args, '--', ...paths],
-        { toolName },
-    )
+    const dockerRunArgs = buildDockerRunArgs(`rhysd/${toolName}:${version}`)
+
+    return await exec('docker', [...dockerRunArgs, ...args, '--', ...paths], { toolName })
 }
