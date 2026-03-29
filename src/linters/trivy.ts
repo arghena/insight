@@ -13,14 +13,7 @@ export const setup: Setup = async ({ version }) => {
 }
 
 export const runner: Runner = async ({ version, args }) => {
-    return await exec(
-        'docker',
-        [
-            ...buildDockerRunArgs(`ghcr.io/aquasecurity/${toolName}:${version}`),
-            'filesystem',
-            ...args,
-            '.',
-        ],
-        { toolName },
-    )
+    const dockerRunArgs = buildDockerRunArgs(`ghcr.io/aquasecurity/${toolName}:${version}`)
+
+    return await exec('docker', [...dockerRunArgs, 'filesystem', ...args, '.'], { toolName })
 }
