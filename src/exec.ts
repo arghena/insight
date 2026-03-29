@@ -17,8 +17,10 @@ export async function exec(
         ignoreReturnCode: true,
         env: {
             ...process.env,
-            // eslint-disable-next-line @typescript-eslint/naming-convention
+            /* eslint-disable @typescript-eslint/naming-convention */
             CARGO_INCREMENTAL: '0',
+            CARGO_TARGET_DIR: `target/${toolName}`,
+            /* eslint-enable @typescript-eslint/naming-convention */
         },
     })
 
