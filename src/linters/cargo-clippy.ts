@@ -1,13 +1,13 @@
 import { installer } from '@/installer'
 import { exec } from '@/exec'
-import type { Runner } from '@/types'
+import type { Setup, Runner } from '@/types'
 
 const toolName = 'cargo-clippy'
 
-export const runner: Runner = async ({ version, args }) => {
-    const toolchain = version === 'latest' ? 'stable' : version
+export const setup: Setup = async ({ version }) => {
+    await installer(toolName, version === 'latest' ? 'stable' : version)
+}
 
-    await installer(toolName, toolchain)
-
+export const runner: Runner = async ({ args }) => {
     return await exec(toolName, args)
 }

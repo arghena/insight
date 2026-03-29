@@ -19,14 +19,23 @@ export interface ActionContext {
     pullRequestNumber: number
 }
 
+export interface SetupToolContext extends SetupContext {
+    loader: Loader
+}
+
 export interface RunToolContext extends RunnerContext {
     loader: Loader
     toolType: ToolType
 }
 
-export type Loader = () => Promise<{ runner: Runner }>
+export type Loader = () => Promise<{ setup: Setup; runner: Runner }>
+
+export type Setup = (setupContext: SetupContext) => Promise<void>
 export type Runner = (runnerContext: RunnerContext) => Promise<number>
 
+export interface SetupContext {
+    version: string
+}
 export interface RunnerContext {
     version: string
     args: string[]
