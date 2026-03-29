@@ -8,7 +8,7 @@ import { commitlint } from '@/linters/commitlint'
 import { resolveConfig } from '@/config'
 import { actionContext, getChangedFilePaths } from '@/github'
 import { formatterRegistry, linterRegistry, formatterKeys, linterKeys } from '@/registries'
-import type { SetupToolContext, RunToolContext } from '@/types'
+import type { RunToolContext } from '@/types'
 
 const { isTitleCheckEnabled, pullRequestTitle, eventName } = actionContext
 const limit = pLimit(concurrency)
@@ -70,16 +70,8 @@ export async function run(): Promise<void> {
         throw new Error(`[EVENT] Invalid ${eventName} event`)
     }
 
-    /* eslint-disable @typescript-eslint/promise-function-async */
-    await limit.map(tasks, ({ loader, version }) => setupTool({ loader, version }))
+    // eslint-disable-next-line @typescript-eslint/promise-function-async
     await limit.map(tasks, (task) => runTool(task))
-    /* eslint-enable @typescript-eslint/promise-function-async */
-}
-
-async function setupTool({ loader, version }: SetupToolContext): Promise<void> {
-    const { setup } = await loader()
-
-    await setup({ version })
 }
 
 async function runTool({ loader, toolType, version, args, paths }: RunToolContext): Promise<void> {

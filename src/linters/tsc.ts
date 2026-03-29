@@ -1,13 +1,11 @@
 import { installer } from '@/installer'
 import { exec } from '@/exec'
-import type { Setup, Runner } from '@/types'
+import type { Runner } from '@/types'
 
 const toolName = 'tsc'
 
-export const setup: Setup = async ({ version }) => {
+export const runner: Runner = async ({ version, args }) => {
     await installer(toolName, version)
-}
 
-export const runner: Runner = async ({ args }) => {
     return await exec(toolName, ['--incremental', 'false', '--noEmit', ...args])
 }
