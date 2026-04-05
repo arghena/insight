@@ -56,7 +56,6 @@ export async function installer(
                 if (hasExecPromise(execKey)) {
                     await getExecPromise(execKey)
                 } else {
-                    // eslint-disable-next-line @typescript-eslint/promise-function-async
                     const execTask = pmLimitMap[packageManager](() => exec(packageManager, args))
 
                     addExecPromise(execKey, execTask)

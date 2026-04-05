@@ -32,22 +32,16 @@ export default defineConfig(
             'no-template-curly-in-string': 'error',
             'one-var': ['error', 'never'],
             'no-return-assign': ['error', 'always'],
-            'no-sequences': ['error', { allowInParentheses: false }],
-            'func-style': ['error', 'declaration', { allowTypeAnnotation: true }],
-            // TODO: Migrate to `eslint-plugin-import-x`.
+            // TODO: Migrate from `no-duplicate-imports` to `eslint-plugin-import-x`.
             // https://github.com/un-ts/eslint-plugin-import-x/issues/421
             // https://github.com/un-ts/eslint-plugin-import-x/issues/200
             'no-duplicate-imports': ['error', { includeExports: true }],
-            '@typescript-eslint/switch-exhaustiveness-check': [
-                'error',
-                { allowDefaultCaseForExhaustiveSwitch: false, requireDefaultForNonUnion: true },
-            ],
+            'no-sequences': ['error', { allowInParentheses: false }],
+            'func-style': ['error', 'declaration', { allowTypeAnnotation: true }],
             '@typescript-eslint/require-array-sort-compare': 'error',
             '@typescript-eslint/explicit-function-return-type': 'error',
             '@typescript-eslint/prefer-destructuring': 'error',
             '@typescript-eslint/no-shadow': 'error',
-            '@typescript-eslint/return-await': ['error', 'always'],
-            '@typescript-eslint/promise-function-async': 'error',
             '@typescript-eslint/strict-void-return': 'error',
             '@typescript-eslint/no-useless-empty-export': 'error',
             '@typescript-eslint/default-param-last': 'error',
@@ -55,12 +49,18 @@ export default defineConfig(
             '@typescript-eslint/max-params': 'error',
             '@typescript-eslint/method-signature-style': 'error',
             '@typescript-eslint/prefer-enum-initializers': 'error',
+            '@typescript-eslint/return-await': ['error', 'always'],
+            '@typescript-eslint/promise-function-async': ['error', { checkArrowFunctions: false }],
             '@typescript-eslint/strict-boolean-expressions': [
                 'error',
                 {
                     allowString: false,
                     allowNumber: false,
                 },
+            ],
+            '@typescript-eslint/switch-exhaustiveness-check': [
+                'error',
+                { allowDefaultCaseForExhaustiveSwitch: false, requireDefaultForNonUnion: true },
             ],
             '@typescript-eslint/consistent-type-assertions': [
                 'error',
@@ -89,7 +89,7 @@ export default defineConfig(
                     prefix: ['is', 'has', 'can'],
                 },
                 {
-                    selector: 'objectLiteralProperty',
+                    selector: ['objectLiteralMethod', 'objectLiteralProperty'],
                     format: null,
                     modifiers: ['requiresQuotes'],
                 },
