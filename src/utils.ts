@@ -2,7 +2,6 @@ import { access, constants } from 'node:fs/promises'
 
 export async function fileExists(...paths: string[]): Promise<boolean> {
     try {
-        // eslint-disable-next-line @typescript-eslint/promise-function-async
         const checks = paths.map((p) => access(p, constants.F_OK))
 
         await Promise.any(checks)

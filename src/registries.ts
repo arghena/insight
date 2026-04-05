@@ -1,9 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-// We need to use the exact tool names (like `ast-grep`), so standard naming rules don't work here.
-
-/* eslint-disable @typescript-eslint/promise-function-async */
-// Dynamic imports return a `Promise` anyway, so adding `async` is just redundant.
-
 import { getKeys } from '@/utils'
 import {
     buildNpmArgs,

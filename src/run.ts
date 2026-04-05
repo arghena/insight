@@ -70,10 +70,8 @@ export async function run(): Promise<void> {
         throw new Error(`[EVENT] Invalid ${eventName} event`)
     }
 
-    /* eslint-disable @typescript-eslint/promise-function-async */
     await limit.map(tasks, ({ loader, version }) => setupTool({ loader, version }))
     await limit.map(tasks, (task) => runTool(task))
-    /* eslint-enable @typescript-eslint/promise-function-async */
 }
 
 async function setupTool({ loader, version }: SetupToolContext): Promise<void> {
