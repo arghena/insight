@@ -18,8 +18,15 @@ export async function exec(
         env: {
             ...process.env,
             /* eslint-disable @typescript-eslint/naming-convention */
+            // PERF: Disable incremental compilation in CI.
+            // https://doc.rust-lang.org/cargo/reference/environment-variables.html#environment-variables-cargo-reads
             CARGO_INCREMENTAL: '0',
+            // PERF: Install `rustc`, `rust-std`, and `cargo` concurrently.
+            // https://rust-lang.github.io/rustup/concepts/profiles.html
+            // https://rust-lang.github.io/rustup/environment-variables.html
+            RUSTUP_CONCURRENT_DOWNLOADS: '3',
             // PERF: Force `stable` so `rustup` ignores `rust-toolchain.toml`.
+            // https://github.com/actions/runner-images/blob/a8a3c8258504963ec70a688d16079d5c43622410/images/ubuntu/scripts/build/install-rust.sh#L14
             ...(toolName === 'cargo-binstall' ? { RUSTUP_TOOLCHAIN: 'stable' } : {}),
             /* eslint-enable @typescript-eslint/naming-convention */
         },
