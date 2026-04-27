@@ -21,6 +21,8 @@ updates:
       prefix: 'build'
       include: 'scope'
     groups:
+      actions:
+        patterns: ['@actions/*']
       commitlint:
         patterns: ['@commitlint/*']
   - package-ecosystem: 'github-actions'
