@@ -19,10 +19,10 @@
     "typescript-eslint": "^8.59.0"
   },
   "dependencies": {
-    "@actions/core": "^3.0.1",
-    "@actions/exec": "^3.0.0",
-    "@actions/github": "^9.1.1",
-    "@actions/http-client": "^4.0.1",
+    "@actions/core": "3.0.1",
+    "@actions/exec": "3.0.0",
+    "@actions/github": "9.1.1",
+    "@actions/http-client": "4.0.1",
     "@commitlint/config-conventional": "20.5.0",
     "@commitlint/format": "20.5.0",
     "@commitlint/lint": "20.5.0",

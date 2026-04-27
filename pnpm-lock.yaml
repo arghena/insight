@@ -9,16 +9,16 @@ importers:
   .:
     dependencies:
       '@actions/core':
-        specifier: ^3.0.1
+        specifier: 3.0.1
         version: 3.0.1
       '@actions/exec':
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0
       '@actions/github':
-        specifier: ^9.1.1
+        specifier: 9.1.1
         version: 9.1.1
       '@actions/http-client':
-        specifier: ^4.0.1
+        specifier: 4.0.1
         version: 4.0.1
       '@commitlint/config-conventional':
         specifier: 20.5.0
