@@ -8,7 +8,7 @@ import { commitlint } from '@/linters/commitlint'
 import { resolveConfig } from '@/config'
 import { actionContext, getChangedFilePaths } from '@/github'
 import { formatterRegistry, linterRegistry, formatterKeys, linterKeys } from '@/registries'
-import type { SetupToolContext, RunToolContext, RunPhase } from '@/types'
+import type { SetupToolContext, RunToolContext, Phase } from '@/types'
 
 const { isTitleCheckEnabled, pullRequestTitle, eventName } = actionContext
 const limit = pLimit(concurrency)
@@ -75,22 +75,22 @@ export async function run(): Promise<void> {
 
         return { task, phase }
     })
+    const tasksByPhase = Map.groupBy(tasksWithPhase, ({ phase }) => phase)
+    const phases: Phase[] = ['pre', 'main', 'post']
 
-    const preTasks = tasksWithPhase.filter(({ phase }) => phase === 'pre')
-    const mainTasks = tasksWithPhase.filter(({ phase }) => phase === 'main')
-    const postTasks = tasksWithPhase.filter(({ phase }) => phase === 'post')
+    for (const phase of phases) {
+        const tasksToRun = tasksByPhase.get(phase) ?? []
 
-    await limit.map(preTasks, ({ task }) => runTool(task))
-    await limit.map(mainTasks, ({ task }) => runTool(task))
-    await limit.map(postTasks, ({ task }) => runTool(task))
+        await limit.map(tasksToRun, ({ task }) => runTool(task))
+    }
 }
 
-async function setupTool({ loader, version }: SetupToolContext): Promise<RunPhase> {
-    const { setup, runPhase = 'main' } = await loader()
+async function setupTool({ loader, version }: SetupToolContext): Promise<Phase> {
+    const { setup, phase = 'main' } = await loader()
 
     await setup({ version })
 
-    return runPhase
+    return phase
 }
 
 async function runTool({ loader, toolType, version, args, paths }: RunToolContext): Promise<void> {

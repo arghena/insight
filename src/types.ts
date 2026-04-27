@@ -31,12 +31,12 @@ export interface RunToolContext extends RunnerContext {
 export type Loader = () => Promise<{
     setup: Setup
     runner: Runner
-    runPhase?: RunPhase
+    phase?: Phase
 }>
 
 export type Setup = (setupContext: SetupContext) => Promise<void>
 export type Runner = (runnerContext: RunnerContext) => Promise<number>
-export type RunPhase = 'pre' | 'main' | 'post'
+export type Phase = 'pre' | 'main' | 'post'
 
 export interface SetupContext {
     version: string

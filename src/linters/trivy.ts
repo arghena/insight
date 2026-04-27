@@ -2,11 +2,11 @@ import { installer } from '@/installer'
 import { exec } from '@/exec'
 import { fileExists } from '@/utils'
 import { buildDockerRunArgs } from '@/builders'
-import type { Setup, Runner, RunPhase } from '@/types'
+import type { Setup, Runner, Phase } from '@/types'
 
 // NOTE: Trivy's filesystem walker is strictly intolerant of concurrent modifications.
 // https://github.com/aquasecurity/trivy/discussions/7071
-export const runPhase: RunPhase = 'post'
+export const phase: Phase = 'post'
 
 const toolName = 'trivy'
 
