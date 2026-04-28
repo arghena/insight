@@ -1,15 +1,16 @@
-import { installer } from '@/installer'
 import { exec } from '@/exec'
-import type { Setup, Runner } from '@/types'
+import { installer } from '@/installer'
+import { defineTool } from '@/utils'
 
 const toolName = 'cargo-fmt'
 
-export const setup: Setup = async ({ version }) => {
-    const toolchain = version === 'latest' ? 'stable' : version
+export default defineTool({
+    setup: async ({ version }) => {
+        const toolchain = version === 'latest' ? 'stable' : version
 
-    await installer(toolName, toolchain)
-}
-
-export const runner: Runner = async ({ args }) => {
-    return await exec(toolName, ['--check', ...args])
-}
+        await installer(toolName, toolchain)
+    },
+    runner: async ({ args }) => {
+        return await exec(toolName, ['--check', ...args])
+    },
+})

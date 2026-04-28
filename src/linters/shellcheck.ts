@@ -1,19 +1,20 @@
-import { installer } from '@/installer'
 import { exec } from '@/exec'
+import { installer } from '@/installer'
+import { defineTool } from '@/utils'
 import { buildDockerRunArgs } from '@/builders'
-import type { Setup, Runner } from '@/types'
 
 const toolName = 'shellcheck'
 
-export const setup: Setup = async ({ version }) => {
-    const tag = version === 'latest' ? 'stable' : `v${version}`
+export default defineTool({
+    setup: async ({ version }) => {
+        const tag = version === 'latest' ? 'stable' : `v${version}`
 
-    await installer(toolName, tag)
-}
+        await installer(toolName, tag)
+    },
+    runner: async ({ version, args, paths }) => {
+        const tag = version === 'latest' ? 'stable' : `v${version}`
+        const dockerRunArgs = buildDockerRunArgs(`koalaman/${toolName}:${tag}`)
 
-export const runner: Runner = async ({ version, args, paths }) => {
-    const tag = version === 'latest' ? 'stable' : `v${version}`
-    const dockerRunArgs = buildDockerRunArgs(`koalaman/${toolName}:${tag}`)
-
-    return await exec('docker', [...dockerRunArgs, ...args, '--', ...paths], { toolName })
-}
+        return await exec('docker', [...dockerRunArgs, ...args, '--', ...paths], { toolName })
+    },
+})
