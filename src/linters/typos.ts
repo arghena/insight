@@ -1,13 +1,14 @@
-import { installer } from '@/installer'
 import { exec } from '@/exec'
-import type { Setup, Runner } from '@/types'
+import { installer } from '@/installer'
+import { defineTool } from '@/utils'
 
 const toolName = 'typos'
 
-export const setup: Setup = async ({ version }) => {
-    await installer(toolName, version)
-}
-
-export const runner: Runner = async ({ args, paths }) => {
-    return await exec(toolName, [...args, '--', ...paths])
-}
+export default defineTool({
+    setup: async ({ version }) => {
+        await installer(toolName, version)
+    },
+    runner: async ({ args, paths }) => {
+        return await exec(toolName, [...args, '--', ...paths])
+    },
+})

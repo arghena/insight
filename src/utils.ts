@@ -1,4 +1,9 @@
 import { access, constants } from 'node:fs/promises'
+import type { ToolModule } from '@/types'
+
+export function defineTool(config: ToolModule): ToolModule {
+    return config
+}
 
 export async function fileExists(...paths: string[]): Promise<boolean> {
     try {

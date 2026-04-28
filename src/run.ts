@@ -86,7 +86,7 @@ export async function run(): Promise<void> {
 }
 
 async function setupTool({ loader, version }: SetupToolContext): Promise<Phase> {
-    const { setup, phase = 'main' } = await loader()
+    const { setup, phase = 'main' } = (await loader()).default
 
     await setup({ version })
 
@@ -95,7 +95,7 @@ async function setupTool({ loader, version }: SetupToolContext): Promise<Phase> 
 
 async function runTool({ loader, toolType, version, args, paths }: RunToolContext): Promise<void> {
     const toolName = loader.name
-    const { runner } = await loader()
+    const { runner } = (await loader()).default
     const startTime = performance.now()
 
     const exitCode = await runner({ version, args, paths })

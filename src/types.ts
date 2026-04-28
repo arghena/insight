@@ -28,11 +28,13 @@ export interface RunToolContext extends RunnerContext {
     toolType: ToolType
 }
 
-export type Loader = () => Promise<{
+export type Loader = () => Promise<{ default: ToolModule }>
+
+export interface ToolModule {
     setup: Setup
     runner: Runner
     phase?: Phase
-}>
+}
 
 export type Setup = (setupContext: SetupContext) => Promise<void>
 export type Runner = (runnerContext: RunnerContext) => Promise<number>
