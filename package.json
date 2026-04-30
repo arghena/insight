@@ -6,7 +6,13 @@
     "typecheck": "tsc",
     "build": "esbuild --bundle --platform=node src/main.ts --outdir=dist --minify"
   },
-  "packageManager": "pnpm@10.33.2+sha512.a90faf6feeab71ad6c6e57f94e0fe1a12f5dcc22cd754db40ae9593eb6a3e0b6b12e3540218bb37ae083404b1f2ce6db2a4121e979829b4aff94b99f49da1cf8",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.0.1",
+      "onFail": "download"
+    }
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/micromatch": "^4.0.10",
@@ -16,7 +22,7 @@
     "jiti": "^2.6.1",
     "prettier": "^3.8.3",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.59.0"
+    "typescript-eslint": "^8.59.1"
   },
   "dependencies": {
     "@actions/core": "3.0.1",
