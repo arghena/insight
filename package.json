@@ -9,29 +9,29 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "^11.1.0",
+      "version": "^11.1.2",
       "onFail": "download"
     }
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/micromatch": "^4.0.10",
-    "@types/node": "^25.6.2",
+    "@types/node": "^25.8.0",
     "esbuild": "^0.28.0",
-    "eslint": "^10.3.0",
+    "eslint": "^10.4.0",
     "jiti": "^2.7.0",
     "prettier": "^3.8.3",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.59.2"
+    "typescript-eslint": "^8.59.3"
   },
   "dependencies": {
     "@actions/core": "3.0.1",
     "@actions/exec": "3.0.0",
     "@actions/github": "9.1.1",
     "@actions/http-client": "4.0.1",
-    "@commitlint/config-conventional": "21.0.0",
-    "@commitlint/format": "21.0.0",
-    "@commitlint/lint": "21.0.0",
+    "@commitlint/config-conventional": "21.0.1",
+    "@commitlint/format": "21.0.1",
+    "@commitlint/lint": "21.0.1",
     "defu": "^6.1.7",
     "micromatch": "^4.0.8",
     "p-limit": "^7.3.0",
