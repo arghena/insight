@@ -33,3 +33,8 @@ updates:
     commit-message:
       prefix: 'ci'
       include: 'scope'
+    groups:
+      # NOTE: Dependabot now splits path-based actions if they use commit SHAs.
+      # https://github.com/dependabot/dependabot-core/pull/14806
+      codeql:
+        patterns: ['github/codeql-action/*']
