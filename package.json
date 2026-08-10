@@ -7,22 +7,27 @@
     "build": "esbuild --bundle --platform=node src/main.ts --outdir=dist --minify"
   },
   "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^24.19.0",
+      "onFail": "download"
+    },
     "packageManager": {
       "name": "pnpm",
-      "version": "^11.18.0",
+      "version": "^11.21.0",
       "onFail": "download"
     }
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/micromatch": "^4.0.10",
-    "@types/node": "^26.1.2",
-    "esbuild": "^0.28.1",
-    "eslint": "^10.8.0",
+    "@types/node": "^26.2.0",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.8.1",
     "jiti": "^2.7.0",
     "prettier": "^3.9.6",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.65.0"
+    "typescript-eslint": "^8.66.0"
   },
   "dependencies": {
     "@actions/core": "3.0.1",
