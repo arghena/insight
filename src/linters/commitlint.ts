@@ -10,9 +10,6 @@ export async function commitlint(message: string): Promise<void> {
         warnings,
         input,
     } = await lint(message, config.rules, {
-        // https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-conventionalcommits/src/parser.js
-        // Copyright © [conventional-changelog team](https://github.com/conventional-changelog)
-        // Distributed under the [ISC License](https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-conventionalcommits/LICENSE.md)
         parserOpts: {
             headerPattern: /^(\w*)(?:\((.*)\))?!?: (.*)$/,
             breakingHeaderPattern: /^(\w*)(?:\((.*)\))?!: (.*)$/,
