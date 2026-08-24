@@ -10,6 +10,7 @@ prettier = [
   "**/*.yaml",
   "!**/pnpm-lock.yaml",
   "**/*.ts",
+  "**/*.mts",
   "**/*.md",
   "**/*.json",
 ]
