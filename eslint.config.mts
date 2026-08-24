@@ -37,6 +37,7 @@ export default defineConfig(
             // https://github.com/un-ts/eslint-plugin-import-x/issues/200
             'no-duplicate-imports': ['error', { includeExports: true }],
             'no-sequences': ['error', { allowInParentheses: false }],
+            'no-unmodified-loop-condition': ['error', { checkConditionalExpressions: true }],
             'func-style': ['error', 'declaration', { allowTypeAnnotation: true }],
             '@typescript-eslint/require-array-sort-compare': 'error',
             '@typescript-eslint/explicit-function-return-type': 'error',
