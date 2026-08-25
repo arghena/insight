@@ -1,6 +1,8 @@
 exit-code: 1
 
 scan:
+  disable-telemetry: true
+  skip-version-check: true
   scanners:
     - license
 
