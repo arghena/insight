@@ -13,3 +13,4 @@ trivy
 tsc
 Unopinionated
 yamllint
+zizmor
