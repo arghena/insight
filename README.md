@@ -46,7 +46,7 @@ jobs:
         # it's recommended to remove `actions/checkout`.
         uses: actions/checkout@v6
       - name: Run Insight
-        uses: arghena/insight@v0.1.0-canary.54
+        uses: arghena/insight@v0.1.0-canary.55
         with:
           # The path to the Insight config file.
           # Default: '.github/insight.toml'
@@ -147,6 +147,7 @@ prettier = "3.6.2"
 | [typos](https://github.com/crate-ci/typos)                                               | `typos`             |         ✅         |                     |
 | [vale](https://github.com/errata-ai/vale)                                                | `vale`              |         ✅         |                     |
 | [yamllint](https://github.com/adrienverge/yamllint)                                      | `yamllint`          |         ✅         |                     |
+| [zizmor](https://github.com/zizmorcore/zizmor)                                           | `zizmor`            |         ✅         |                     |
 
 ## Contributing
 

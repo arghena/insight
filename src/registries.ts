@@ -34,6 +34,7 @@ export const linterRegistry = {
     typos: () => import('@/linters/typos'),
     vale: () => import('@/linters/vale'),
     yamllint: () => import('@/linters/yamllint'),
+    zizmor: () => import('@/linters/zizmor'),
 } as const satisfies Record<string, Loader>
 
 export const toolStepBuilderRegistry = {
@@ -223,6 +224,12 @@ export const toolStepBuilderRegistry = {
         {
             packageManager: 'uv',
             args: buildUvArgs(`${toolName}@${version}`),
+        },
+    ],
+    zizmor: ({ toolName, version }) => [
+        {
+            packageManager: 'cargo-binstall',
+            args: buildBinstallArgs(getBinstallPackageName(toolName, version)),
         },
     ],
 } as const satisfies Record<ToolName, ToolStepBuilder>
