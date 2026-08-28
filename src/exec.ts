@@ -2,8 +2,11 @@ import { Buffer } from 'node:buffer'
 import { getExecOutput } from '@actions/exec'
 import { addExecError } from '@/store'
 import { isIncluded } from '@/utils'
+import { actionContext } from '@/github'
 import { formatterKeys, linterKeys } from '@/registries'
 import type { ExecOptions, ToolType } from '@/types'
+
+const { token } = actionContext
 
 export async function exec(
     command: string,
@@ -18,6 +21,7 @@ export async function exec(
         env: {
             ...process.env,
             /* eslint-disable @typescript-eslint/naming-convention */
+            ...(options?.needsToken === true ? { GITHUB_TOKEN: token } : {}),
             // PERF: Disable incremental compilation in CI.
             // https://doc.rust-lang.org/cargo/reference/environment-variables.html#environment-variables-cargo-reads
             CARGO_INCREMENTAL: '0',
