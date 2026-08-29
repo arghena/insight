@@ -33,12 +33,11 @@ jobs:
         with:
           persist-credentials: false
       - name: Setup Node and pnpm
-        # NOTE: `--frozen-lockfile` is `true` by default in CI.
-        # https://pnpm.io/cli/install#--frozen-lockfile
-        uses: pnpm/setup@84cb39b217b10273981911c288cd62326dc7c6d2 # v2.0.2
-        # with:
-        #   cache: true
-        #   cache-save-if: ${{ github.ref_name == 'canary' }}
+        uses: pnpm/setup@703c52620218391530e48b9e8870d5c0082e1b9b # v2.1.0
+        with:
+          require-lockfile: true
+          # cache: true
+          # cache-save-if: ${{ github.ref_name == 'canary' }}
       - name: Build
         run: pnpm build
       - name: Run bundle-analyzer
