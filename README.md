@@ -44,9 +44,9 @@ jobs:
       - name: Checkout repository
         # If `check-pull-request-title` is set to `true`,
         # it's recommended to remove `actions/checkout`.
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Run Insight
-        uses: arghena/insight@v0.1.0-canary.55
+        uses: arghena/insight@v0.1.0-canary.56
         with:
           # The path to the Insight config file.
           # Default: '.github/insight.toml'
@@ -113,7 +113,7 @@ check-dist = ["prepare"]
 [versions]
 # Lock formatter/linter versions.
 # Default: "latest"
-prettier = "3.6.2"
+prettier = "3.9.6"
 ```
 
 ## Available Formatters

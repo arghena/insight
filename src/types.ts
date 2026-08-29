@@ -66,6 +66,7 @@ export interface ExecOptions {
     toolName?: string
     toolType?: ToolType
     input?: string
+    needsToken?: boolean
 }
 
 export interface ExecError {

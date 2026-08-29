@@ -9,6 +9,12 @@ export default defineTool({
         await installer(toolName, version)
     },
     runner: async ({ args, paths }) => {
-        return await exec(toolName, [...args, '--', ...paths])
+        return await exec(
+            toolName,
+            [...args, '--', ...paths],
+            // NOTE: `zizmor` is running in offline mode by default.
+            // https://docs.zizmor.sh/usage/#operating-modes
+            { needsToken: true },
+        )
     },
 })
