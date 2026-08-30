@@ -1,0 +1,6 @@
+paths:
+  .github/workflows/{audit,check-pull-request-title,lint}.yml:
+    ignore:
+      # TODO: Support the new `$/` self-repository `uses:` syntax.
+      # https://github.com/rhysd/actionlint/issues/711
+      - 'specifying action "\$/" in invalid format.+'
