@@ -21,4 +21,4 @@ jobs:
         with:
           persist-credentials: false
       - name: Run Insight
-        uses: ./
+        uses: $/
