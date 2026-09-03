@@ -18,7 +18,6 @@ export async function renderErrorSummary(execErrors: ExecError[]): Promise<void>
 
     summary.addHeading('Error Summary', 1)
     summary.addTable(tableRows)
-    summary.addSeparator()
     summary.addHeading('Detailed Logs', 2)
 
     for (const { toolName, toolType, stderr } of sortedErrors) {
