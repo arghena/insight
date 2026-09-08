@@ -6,7 +6,7 @@ export function buildDockerRunArgs(imageName: string): string[] {
 }
 
 export function buildNpmArgs(...packageNames: string[]): string[] {
-    return ['install', '--global', ...packageNames]
+    return ['install', '--min-release-age', '1', '--ignore-scripts', '--global', ...packageNames]
 }
 
 export function buildRustupArgs(...componentNames: string[]): string[] {
@@ -14,11 +14,11 @@ export function buildRustupArgs(...componentNames: string[]): string[] {
 }
 
 export function buildBinstallArgs(...packageNames: string[]): string[] {
-    return ['--no-confirm', ...packageNames]
+    return ['--no-confirm', '--locked', ...packageNames]
 }
 
 export function buildUvArgs(...packageNames: string[]): string[] {
-    return ['tool', 'install', ...packageNames]
+    return ['tool', 'install', '--exclude-newer', '1 days', '--no-build', ...packageNames]
 }
 
 export function buildDockerArgs(...imageNames: string[]): string[] {
