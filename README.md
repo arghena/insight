@@ -154,6 +154,8 @@ prettier = "3.9.6"
 
 ## Minimum Release Age
 
+<!-- alex ignore attacks period -->
+
 To help mitigate supply chain attacks, we've added a 1-day cooldown period for package managers that support this feature:
 
 - `npm`
