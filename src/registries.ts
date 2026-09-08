@@ -50,7 +50,16 @@ export const toolStepBuilderRegistry = {
             args: buildNpmArgs('@antfu/ni'),
         },
     ],
-    npm: () => [],
+    npm: () => [
+        // NOTE: `min-release-age` wasn't added to `npm` until v11.10.0.
+        // But `ubuntu-latest` currently ships with `npm` v10.9.8 out of the box.
+        // https://docs.npmjs.com/cli/v11/using-npm/changelog#11100-2026-02-11
+        // https://github.com/actions/runner-images/blob/57fdccbc4a47d85e23cc79eaeb63cb8ae0e997b5/images/ubuntu/Ubuntu2404-Readme.md?plain=1#L37
+        {
+            packageManager: 'npm',
+            args: ['install', '--global', 'npm'],
+        },
+    ],
     rustup: ({ version }) => [
         {
             packageManager: 'rustup',

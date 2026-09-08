@@ -3,6 +3,7 @@ alex
 clippy
 commitlint
 config
+cooldown
 eslint
 [Ff]ormatters
 rustfmt

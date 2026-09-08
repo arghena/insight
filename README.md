@@ -36,6 +36,9 @@ This is because users won't have access to those files locally when browsing the
 > - Insight only checks `added` and `modified` files.
 
 ```yaml
+permissions:
+  contents: read
+
 jobs:
   insight:
     name: Insight
@@ -46,7 +49,7 @@ jobs:
         # it's recommended to remove `actions/checkout`.
         uses: actions/checkout@v7
       - name: Run Insight
-        uses: arghena/insight@v0.1.0-canary.56
+        uses: arghena/insight@v0.1.0-canary.57
         with:
           # The path to the Insight config file.
           # Default: '.github/insight.toml'
@@ -148,6 +151,13 @@ prettier = "3.9.6"
 | [vale](https://github.com/errata-ai/vale)                                                | `vale`              |         ✅         |                     |
 | [yamllint](https://github.com/adrienverge/yamllint)                                      | `yamllint`          |         ✅         |                     |
 | [zizmor](https://github.com/zizmorcore/zizmor)                                           | `zizmor`            |         ✅         |                     |
+
+## Minimum Release Age
+
+To help mitigate supply chain attacks, we've added a 1-day cooldown period for package managers that support this feature:
+
+- `npm`
+- `uv`
 
 ## Contributing
 
