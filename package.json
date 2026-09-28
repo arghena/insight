@@ -21,13 +21,13 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/micromatch": "^4.0.10",
-    "@types/node": "^26.6.2",
+    "@types/node": "^26.6.3",
     "esbuild": "^0.28.2",
     "eslint": "^10.11.0",
     "jiti": "^2.7.0",
-    "prettier": "^3.9.8",
+    "prettier": "^3.9.9",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.70.0"
+    "typescript-eslint": "^8.70.1"
   },
   "dependencies": {
     "@actions/core": "3.0.1",
@@ -40,7 +40,7 @@
     "defu": "^6.1.7",
     "micromatch": "^4.0.8",
     "p-limit": "^7.3.3",
-    "smol-toml": "^1.8.0",
+    "smol-toml": "^1.9.0",
     "zod": "^4.6.5"
   }
 }
