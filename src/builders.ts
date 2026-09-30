@@ -2,7 +2,7 @@ import { cwd } from 'node:process'
 import type { ToolName } from '@/types'
 
 export function buildDockerRunArgs(imageName: string): string[] {
-    return ['run', '--rm', '-v', `${cwd()}:/mnt`, '-w', '/mnt', imageName]
+    return ['run', '--init', '--rm', '-v', `${cwd()}:/mnt`, '-w', '/mnt', imageName]
 }
 
 export function buildNpmArgs(...packageNames: string[]): string[] {
