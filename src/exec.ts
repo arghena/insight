@@ -23,7 +23,9 @@ export async function exec(
             /* eslint-disable @typescript-eslint/naming-convention */
             ...(options?.needsToken === true ? { GITHUB_TOKEN: token } : {}),
             // PERF: Disable incremental compilation in CI.
+            // Since Cargo v1.99.0, the default is `CARGO_BUILD_INCREMENTAL=false` when the `CI` env var is set.
             // https://doc.rust-lang.org/cargo/reference/environment-variables.html#environment-variables-cargo-reads
+            // https://doc.rust-lang.org/cargo/reference/config.html#buildincremental
             CARGO_INCREMENTAL: '0',
             // PERF: Install `rustc`, `rust-std`, and `cargo` concurrently.
             // https://rust-lang.github.io/rustup/concepts/profiles.html
