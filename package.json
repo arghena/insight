@@ -9,12 +9,12 @@
   "devEngines": {
     "runtime": {
       "name": "node",
-      "version": "^24.21.0",
+      "version": "^24.22.0",
       "onFail": "download"
     },
     "packageManager": {
       "name": "pnpm",
-      "version": "^12.11.2",
+      "version": "^12.14.0",
       "onFail": "download"
     }
   },
@@ -23,11 +23,11 @@
     "@types/micromatch": "^4.0.10",
     "@types/node": "^26.6.5",
     "esbuild": "^0.28.2",
-    "eslint": "^10.12.0",
+    "eslint": "^10.13.0",
     "jiti": "^2.7.0",
     "prettier": "^3.9.10",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.71.1"
+    "typescript-eslint": "^8.71.2"
   },
   "dependencies": {
     "@actions/core": "3.0.1",
@@ -41,6 +41,6 @@
     "micromatch": "^4.0.8",
     "p-limit": "^7.3.3",
     "smol-toml": "^1.9.1",
-    "zod": "^4.6.5"
+    "zod": "^4.6.7"
   }
 }
