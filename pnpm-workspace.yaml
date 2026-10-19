@@ -10,8 +10,8 @@ lockfile:
 saveTypes: true
 autoDedupe: true
 dedupePeers: true
+# addMissingPeerTypes: true
 # virtualStoreType: global
-# https://github.com/orgs/pnpm/discussions/15689
 trustPolicy: no-downgrade
 trustPolicyIgnoreAfter: 10080 # 1 week
 minimumReleaseAge: 1440 # 1 day
