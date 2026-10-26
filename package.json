@@ -9,13 +9,13 @@
   "devEngines": {
     "runtime": {
       "name": "node",
-      "version": "^24.22.0",
+      "version": "24.22.1",
       "onFail": "download"
     },
     "packageManager": {
       "name": "pnpm",
-      "version": "^12.14.0",
-      "onFail": "download"
+      "version": "12.15.0",
+      "onFail": "warn"
     }
   },
   "devDependencies": {
@@ -27,16 +27,16 @@
     "jiti": "^2.7.0",
     "prettier": "^3.9.10",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.71.2"
+    "typescript-eslint": "^8.72.0"
   },
   "dependencies": {
     "@actions/core": "3.0.1",
     "@actions/exec": "3.0.0",
     "@actions/github": "9.1.1",
     "@actions/http-client": "4.0.1",
-    "@commitlint/config-conventional": "21.2.3",
+    "@commitlint/config-conventional": "21.2.4",
     "@commitlint/format": "21.2.3",
-    "@commitlint/lint": "21.2.3",
+    "@commitlint/lint": "21.2.4",
     "defu": "^6.1.7",
     "micromatch": "^4.0.8",
     "p-limit": "^7.3.3",
