@@ -49,7 +49,7 @@ jobs:
         # it's recommended to remove `actions/checkout`.
         uses: actions/checkout@v7
       - name: Run Insight
-        uses: arghena/insight@v0.1.0-canary.57
+        uses: arghena/insight@v0.1.0-canary.58
         with:
           # The path to the Insight config file.
           # Default: '.github/insight.toml'
