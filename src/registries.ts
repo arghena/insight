@@ -37,6 +37,7 @@ export const linterRegistry = {
     zizmor: () => import('@/linters/zizmor'),
 } as const satisfies Record<string, Loader>
 
+// TODO: Migrate toolchain to [mise](https://mise.jdx.dev).
 export const toolStepBuilderRegistry = {
     'cargo-binstall': ({ toolName }) => [
         {
@@ -50,18 +51,7 @@ export const toolStepBuilderRegistry = {
             args: buildNpmArgs('@antfu/ni'),
         },
     ],
-    npm: () => [
-        // NOTE: `min-release-age` wasn't added to `npm` until v11.10.0.
-        // But `ubuntu-latest` v24.04 currently ships with `npm` v10.9.8 out of the box.
-        // https://docs.npmjs.com/cli/v11/using-npm/changelog#11100-2026-02-11
-        // https://github.com/actions/runner-images/blob/57fdccbc4a47d85e23cc79eaeb63cb8ae0e997b5/images/ubuntu/Ubuntu2404-Readme.md?plain=1#L37
-        // https://github.com/actions/runner-images/blob/8197087fc536320d1441203fdb5da9ae1b44b863/images/ubuntu/Ubuntu2604-Readme.md?plain=1#L34
-        // https://github.com/actions/runner-images/issues/14748
-        {
-            packageManager: 'npm',
-            args: ['install', '--global', 'npm'],
-        },
-    ],
+    npm: () => [],
     rustup: ({ version }) => [
         {
             packageManager: 'rustup',
