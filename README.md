@@ -49,7 +49,7 @@ jobs:
         # it's recommended to remove `actions/checkout`.
         uses: actions/checkout@v7
       - name: Run Insight
-        uses: arghena/insight@v0.1.0-canary.58
+        uses: arghena/insight@v0.1.0-canary.59
         with:
           # The path to the Insight config file.
           # Default: '.github/insight.toml'
@@ -158,6 +158,7 @@ prettier = "3.9.6"
 
 To help mitigate supply chain attacks, we've added a 1-day cooldown period for package managers that support this feature:
 
+- `cargo-binstall`
 - `npm`
 - `uv`
 
