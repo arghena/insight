@@ -14,7 +14,7 @@ export function buildRustupArgs(...componentNames: string[]): string[] {
 }
 
 export function buildBinstallArgs(...packageNames: string[]): string[] {
-    return ['--no-confirm', '--locked', ...packageNames]
+    return ['--min-publish-age', '1 days', '--no-confirm', '--locked', ...packageNames]
 }
 
 export function buildUvArgs(...packageNames: string[]): string[] {
